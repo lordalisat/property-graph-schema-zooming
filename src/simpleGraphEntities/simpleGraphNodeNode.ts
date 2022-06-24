@@ -2,7 +2,6 @@ import { SimpleGraphNode } from "./simpleGraphElement";
 import { Id } from "types/id";
 import { Label } from "types/label";
 import { NodeType } from "types/simpleGraph/nodeType";
-import { EdgeType } from "types/simpleGraph/edgesType";
 import { EdgeDirection, EdgeLabel, ValueType } from "types/simpleGraph/edgeLabel";
 import { Property } from "types/property";
 

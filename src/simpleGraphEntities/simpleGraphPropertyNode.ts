@@ -2,7 +2,6 @@ import { SimpleGraphNode } from "./simpleGraphElement";
 import { Id } from "types/id";
 import { Label } from "types/label";
 import { NodeType } from "types/simpleGraph/nodeType";
-import { EdgeType } from "types/simpleGraph/edgesType";
 import { EdgeLabel } from "types/simpleGraph/edgeLabel";
 
 export class SimpleGraphPropertyNode extends SimpleGraphNode {
@@ -17,7 +16,7 @@ export class SimpleGraphPropertyNode extends SimpleGraphNode {
         this.incomingEdges.add({nodeId: nodeId, edgeLabel: edgeLabel});
     }
     
-    public addOutgoingEdge(nodeId: Id, edgeLabel: EdgeLabel) {
+    public addOutgoingEdge() {
         throw new Error("Property nodes can not have Outgoing Edges");
     }
 }
