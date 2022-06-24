@@ -14,14 +14,6 @@ export class SimpleGraphEdgeNode extends SimpleGraphNode {
         Object.assign(this, args);
     }
 
-    public addIncomingEdge(nodeId: Id, edgeLabel: EdgeLabel) {
-        this.incomingEdges.add({nodeId: nodeId, edgeLabel: edgeLabel});
-    }
-    
-    public addOutgoingEdge(nodeId: Id, edgeLabel: EdgeLabel) {
-        this.outgoingEdges.add({nodeId: nodeId, edgeLabel: edgeLabel});
-    }
-
     public addEdgeEdge(nodeId: Id, direction: EdgeDirection) {
         this.addOutgoingEdge(nodeId, direction);
     }

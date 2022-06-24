@@ -18,6 +18,11 @@ export abstract class SimpleGraphNode {
         return this._outgoingEdges;
     }
 
-    abstract addIncomingEdge(nodeId: Id, edgeLabel?: EdgeLabel): void;
-    abstract addOutgoingEdge(nodeId: Id, edgeLabel?: EdgeLabel): void;
+    public addIncomingEdge(nodeId: Id, edgeLabel: EdgeLabel) {
+        this.incomingEdges.push({nodeId: nodeId, edgeLabel: edgeLabel});
+    }
+    
+    public addOutgoingEdge(nodeId: Id, edgeLabel: EdgeLabel) {
+        this.outgoingEdges.push({nodeId: nodeId, edgeLabel: edgeLabel});
+    }
 }

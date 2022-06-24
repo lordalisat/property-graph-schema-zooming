@@ -11,10 +11,6 @@ export class SimpleGraphPropertyNode extends SimpleGraphNode {
         super();
         Object.assign(this, args);
     }
-
-    public addIncomingEdge(nodeId: Id, edgeLabel: EdgeLabel): void {
-        this.incomingEdges.add({nodeId: nodeId, edgeLabel: edgeLabel});
-    }
     
     public addOutgoingEdge() {
         throw new Error("Property nodes can not have Outgoing Edges");

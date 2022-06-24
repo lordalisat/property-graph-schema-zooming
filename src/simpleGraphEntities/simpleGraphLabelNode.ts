@@ -12,7 +12,7 @@ export class SimpleGraphLabelNode extends SimpleGraphNode {
     }
 
     public addIncomingEdge(nodeId: Id) {
-        this.incomingEdges.add({nodeId: nodeId, edgeLabel: "label"});
+        this.incomingEdges.push({nodeId: nodeId, edgeLabel: "label"});
     }
     
     public addOutgoingEdge() {
