@@ -5,22 +5,11 @@ import { NodeType } from "types/simpleGraph/nodeType";
 import { EdgeType } from "types/simpleGraph/edgesType";
 
 export class SimpleGraphLabelNode extends SimpleGraphNode {
-    protected nodeType = NodeType.label;
-    protected label: Label;
-    protected incomingEdges: EdgeType;
-    protected outgoingEdges: EdgeType;
+    nodeType = NodeType.label;
 
-    constructor(args: {nodeId: Id}) {
+    constructor(args: {nodeId: Id, label: Label}) {
         super();
         Object.assign(this, args);
-    }
-
-    public getIncomingEdges(): EdgeType {
-        return this.incomingEdges;
-    }
-
-    public getOutgoingEdges(): EdgeType {
-        return this.outgoingEdges;
     }
 
     public addIncomingEdge(nodeId: Id) {
