@@ -1,10 +1,8 @@
+import { induceWorkload } from "functions/workloadInduction";
 import { Id } from "types/id";
 import { NodeType } from "types/simpleGraph/nodeType";
 import { Workload } from "types/workload";
-import { SimpleGraphEdgeNode } from "./simpleGraphEdgeNode";
-import { SimpleGraphLabelNode } from "./simpleGraphLabelNode";
-import { SimpleGraphNodeNode } from "./simpleGraphNodeNode";
-import { SimpleGraphPropertyNode } from "./simpleGraphPropertyNode";
+import { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
 
 abstract class SimpleGraph {
     nodes: Map<`${NodeType}_${Id}`, SimpleGraphNodeNode>;
@@ -12,22 +10,58 @@ abstract class SimpleGraph {
     labels: Map<`${NodeType}_${Id}`, SimpleGraphLabelNode>;
     properties: Map<`${NodeType}_${Id}`, SimpleGraphPropertyNode>;
 
-    protected constructor() {};
+    protected constructor() {
+        this.nodes = new Map();
+        this.edges = new Map();
+        this.labels = new Map();
+        this.properties = new Map();
+    };
 
     public addNode(node: SimpleGraphNodeNode) {
-        this.nodes.set(`${node.nodeType}_${node.nodeId}`, node)
+        this.nodes.set(`${node.nodeType}_${node.id}`, node)
+    }
+
+    public addNodes(nodes: SimpleGraphNodeNode[]) {
+        for (const node of nodes) {
+            this.addNode(node);
+        }
     }
 
     public addEdge(node: SimpleGraphEdgeNode) {
-        this.edges.set(`${node.nodeType}_${node.nodeId}`, node)
+        this.edges.set(`${node.nodeType}_${node.id}`, node)
+    }
+
+    public addEdges(nodes: SimpleGraphEdgeNode[]) {
+        for (const node of nodes) {
+            this.addEdge(node);
+        }
     }
 
     public addLabel(node: SimpleGraphLabelNode) {
-        this.labels.set(`${node.nodeType}_${node.nodeId}`, node)
+        this.labels.set(`${node.nodeType}_${node.id}`, node)
+    }
+
+    public addLabels(nodes: SimpleGraphLabelNode[]) {
+        for (const node of nodes) {
+            this.addLabel(node);
+        }
     }
 
     public addProperty(node: SimpleGraphPropertyNode) {
-        this.properties.set(`${node.nodeType}_${node.nodeId}`, node)
+        this.properties.set(`${node.nodeType}_${node.id}`, node)
+    }
+
+    public addProperties(nodes: SimpleGraphPropertyNode[]) {
+        for (const node of nodes) {
+            this.addProperty(node);
+        }
+    }
+
+    public emptyGraph() {
+        this.nodes = new Map();
+        this.edges = new Map();
+        this.labels = new Map();
+        this.properties = new Map();
     }
 }
 
@@ -43,7 +77,7 @@ export class DataSimpleGraph extends SimpleGraph {
     }
 
     public induceWorkload(workload: Workload) {
-        return;
+        return induceWorkload(this, workload);
     }
 }
 

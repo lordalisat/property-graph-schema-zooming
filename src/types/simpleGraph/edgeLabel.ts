@@ -1,13 +1,9 @@
-export type EdgeLabel = ValueType | EdgeDirection | "label";
+import { Property } from "types/property";
+
+export type EdgeLabel = Property | EdgeDirection | "label";
 
 export enum EdgeDirection {
     "from",
     "to",
     "connects"
-}
-
-export enum ValueType {
-    "String",
-    "Number",
-    "Boolean"
 }
