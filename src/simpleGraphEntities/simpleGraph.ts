@@ -1,5 +1,6 @@
 import { Id } from "types/id";
 import { NodeType } from "types/simpleGraph/nodeType";
+import { Workload } from "types/workload";
 import { SimpleGraphEdgeNode } from "./simpleGraphEdgeNode";
 import { SimpleGraphLabelNode } from "./simpleGraphLabelNode";
 import { SimpleGraphNodeNode } from "./simpleGraphNodeNode";
@@ -39,6 +40,10 @@ export class DataSimpleGraph extends SimpleGraph {
         }
 
         return DataSimpleGraph._instance;
+    }
+
+    public induceWorkload(workload: Workload) {
+        return;
     }
 }
 

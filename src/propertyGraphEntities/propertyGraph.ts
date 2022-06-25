@@ -1,5 +1,4 @@
 import { Id } from "types/id";
-import { Workload } from "types/workload";
 import { PropertyGraphEdge } from "./propertyGraphEdge";
 import { PropertyGraphNode } from "./propertyGraphNode";
 
@@ -27,9 +26,6 @@ export class DataPropertyGraph extends PropertyGraph {
         }
 
         return DataPropertyGraph._instance;
-    }
-    public induceWorkload(workload: Workload) {
-        return;
     }
 }
 
