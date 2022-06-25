@@ -10,66 +10,65 @@ import {
 } from "./simpleGraphNode";
 
 abstract class SimpleGraph {
-  nodes: Map<SimpleId, SimpleGraphNodeNode>;
-  edges: Map<SimpleId, SimpleGraphEdgeNode>;
-  labels: Map<SimpleId, SimpleGraphLabelNode>;
-  properties: Map<SimpleId, SimpleGraphPropertyNode>;
+  nodeNodes: Map<SimpleId, SimpleGraphNodeNode>;
+  edgeNodes: Map<SimpleId, SimpleGraphEdgeNode>;
+  labelNodes: Map<SimpleId, SimpleGraphLabelNode>;
+  propertyNodes: Map<SimpleId, SimpleGraphPropertyNode>;
 
-  incomingEdges: Map<SimpleId, Array<SimpleGraphEdge>>;
-  outgoingEdges: Map<SimpleId, Array<SimpleGraphEdge>>;
+  edges: Array<SimpleGraphEdge>;
 
   protected constructor() {
-    this.nodes = new Map();
-    this.edges = new Map();
-    this.labels = new Map();
-    this.properties = new Map();
+    this.nodeNodes = new Map();
+    this.edgeNodes = new Map();
+    this.labelNodes = new Map();
+    this.propertyNodes = new Map();
   }
 
   public addNode(node: SimpleGraphNodeNode) {
-    this.nodes.set(`${node.nodeType}_${node.id}`, node);
+    this.nodeNodes.set(`${node.nodeType}_${node.id}`, node);
   }
 
   public addNodes(nodes: SimpleGraphNodeNode[]) {
-    for (const node of nodes) {
+    nodes.forEach((node) => {
       this.addNode(node);
-    }
+    });
   }
 
   public addEdge(node: SimpleGraphEdgeNode) {
-    this.edges.set(`${node.nodeType}_${node.id}`, node);
+    this.edgeNodes.set(`${node.nodeType}_${node.id}`, node);
   }
 
   public addEdges(nodes: SimpleGraphEdgeNode[]) {
-    for (const node of nodes) {
+    nodes.forEach((node) => {
       this.addEdge(node);
-    }
+    });
   }
 
   public addLabel(node: SimpleGraphLabelNode) {
-    this.labels.set(`${node.nodeType}_${node.id}`, node);
+    this.labelNodes.set(`${node.nodeType}_${node.id}`, node);
   }
 
   public addLabels(nodes: SimpleGraphLabelNode[]) {
-    for (const node of nodes) {
+    nodes.forEach((node) => {
       this.addLabel(node);
-    }
+    });
   }
 
   public addProperty(node: SimpleGraphPropertyNode) {
-    this.properties.set(`${node.nodeType}_${node.id}`, node);
+    this.propertyNodes.set(`${node.nodeType}_${node.id}`, node);
   }
 
   public addProperties(nodes: SimpleGraphPropertyNode[]) {
-    for (const node of nodes) {
+    nodes.forEach((node) => {
       this.addProperty(node);
-    }
+    });
   }
 
   public emptyGraph() {
-    this.nodes = new Map();
-    this.edges = new Map();
-    this.labels = new Map();
-    this.properties = new Map();
+    this.nodeNodes = new Map();
+    this.edgeNodes = new Map();
+    this.labelNodes = new Map();
+    this.propertyNodes = new Map();
   }
 }
 

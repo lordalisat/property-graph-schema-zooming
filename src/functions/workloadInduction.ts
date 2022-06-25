@@ -11,7 +11,7 @@ export function induceWorkload(
   const inducedGraph = InducedSimpleGraph.instance;
   inducedGraph.emptyGraph();
 
-  const inducedLabels = graph.labels;
+  const inducedLabels = graph.labelNodes;
 
   return inducedGraph;
 }
