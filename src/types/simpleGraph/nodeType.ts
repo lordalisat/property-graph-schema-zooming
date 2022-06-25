@@ -1,6 +1,6 @@
 export enum NodeType {
-    "node",
-    "edge",
-    "label",
-    "propertyType",
+  "node",
+  "edge",
+  "label",
+  "propertyType",
 }
