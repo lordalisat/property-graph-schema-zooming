@@ -1,16 +1,26 @@
 import { Id } from "types/id";
+import { Workload } from "types/workload";
 import { PropertyGraphEdge } from "./propertyGraphEdge";
 import { PropertyGraphNode } from "./propertyGraphNode";
 
 abstract class PropertyGraph {
-    protected static _instance: PropertyGraph;
     nodes: Map<Id, PropertyGraphNode>;
     edges: Map<Id, PropertyGraphEdge>;
 
     protected constructor() {};
+
+    public addNode(node: PropertyGraphNode) {
+        this.nodes.set(node.id, node);
+    }
+
+    public addEdge(edge: PropertyGraphEdge) {
+        this.edges.set(edge.id, edge);
+    }
 }
 
 export class DataPropertyGraph extends PropertyGraph {
+    private static _instance: DataPropertyGraph;
+
     public static get instance(): DataPropertyGraph {
         if (!DataPropertyGraph._instance) {
             DataPropertyGraph._instance = new DataPropertyGraph();
@@ -18,9 +28,14 @@ export class DataPropertyGraph extends PropertyGraph {
 
         return DataPropertyGraph._instance;
     }
+    public induceWorkload(workload: Workload) {
+        return;
+    }
 }
 
 export class InducedPropertyGraph extends PropertyGraph {
+    private static _instance: InducedPropertyGraph;
+
     public static get instance(): InducedPropertyGraph {
         if (!InducedPropertyGraph._instance) {
             InducedPropertyGraph._instance = new InducedPropertyGraph();
@@ -31,6 +46,8 @@ export class InducedPropertyGraph extends PropertyGraph {
 }
 
 export class SchemaPropertyGraph extends PropertyGraph {
+    private static _instance: SchemaPropertyGraph;
+
     public static get instance(): SchemaPropertyGraph {
         if (!SchemaPropertyGraph._instance) {
             SchemaPropertyGraph._instance = new SchemaPropertyGraph();
