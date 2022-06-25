@@ -2,20 +2,41 @@ import { Id } from "types/id";
 import { PropertyGraphEdge } from "./propertyGraphEdge";
 import { PropertyGraphNode } from "./propertyGraphNode";
 
-export class PropertyGraph {
-    private static instance: PropertyGraph;
+abstract class PropertyGraph {
+    protected static _instance: PropertyGraph;
     nodes: Map<Id, PropertyGraphNode>;
     edges: Map<Id, PropertyGraphEdge>;
 
-    private constructor() {};
+    protected constructor() {};
+}
 
-    public static getInstance(): PropertyGraph {
-        if (!PropertyGraph.instance) {
-            PropertyGraph.instance = new PropertyGraph();
+export class DataPropertyGraph extends PropertyGraph {
+    public static get instance(): DataPropertyGraph {
+        if (!DataPropertyGraph._instance) {
+            DataPropertyGraph._instance = new DataPropertyGraph();
         }
 
-        return PropertyGraph.instance;
+        return DataPropertyGraph._instance;
     }
-
-
 }
+
+export class InducedPropertyGraph extends PropertyGraph {
+    public static get instance(): InducedPropertyGraph {
+        if (!InducedPropertyGraph._instance) {
+            InducedPropertyGraph._instance = new InducedPropertyGraph();
+        }
+
+        return InducedPropertyGraph._instance;
+    }
+}
+
+export class SchemaPropertyGraph extends PropertyGraph {
+    public static get instance(): SchemaPropertyGraph {
+        if (!SchemaPropertyGraph._instance) {
+            SchemaPropertyGraph._instance = new SchemaPropertyGraph();
+        }
+
+        return SchemaPropertyGraph._instance;
+    }
+}
+

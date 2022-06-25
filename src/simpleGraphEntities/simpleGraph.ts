@@ -4,22 +4,42 @@ import { SimpleGraphLabelNode } from "./simpleGraphLabelNode";
 import { SimpleGraphNodeNode } from "./simpleGraphNodeNode";
 import { SimpleGraphPropertyNode } from "./simpleGraphPropertyNode";
 
-export class SimpleGraph {
-    private static instance: SimpleGraph;
+abstract class SimpleGraph {
+    protected static _instance: SimpleGraph;
     nodes: Map<Id, SimpleGraphNodeNode>;
     edges: Map<Id, SimpleGraphEdgeNode>;
     labels: Map<Id, SimpleGraphLabelNode>;
     properties: Map<Id, SimpleGraphPropertyNode>;
 
-    private constructor() {};
+    protected constructor() {};
+}
 
-    public static getInstance(): SimpleGraph {
-        if (!SimpleGraph.instance) {
-            SimpleGraph.instance = new SimpleGraph();
+export class DataSimpleGraph extends SimpleGraph {
+    public static get instance(): DataSimpleGraph {
+        if (!DataSimpleGraph._instance) {
+            DataSimpleGraph._instance = new DataSimpleGraph();
         }
 
-        return SimpleGraph.instance;
+        return DataSimpleGraph._instance;
     }
+}
 
+export class InducedSimpleGraph extends SimpleGraph {
+    public static get instance(): InducedSimpleGraph {
+        if (!InducedSimpleGraph._instance) {
+            InducedSimpleGraph._instance = new InducedSimpleGraph();
+        }
 
+        return InducedSimpleGraph._instance;
+    }
+}
+
+export class SchemaSimpleGraph extends SimpleGraph {
+    public static get instance(): SchemaSimpleGraph {
+        if (!SchemaSimpleGraph._instance) {
+            SchemaSimpleGraph._instance = new SchemaSimpleGraph();
+        }
+
+        return SchemaSimpleGraph._instance;
+    }
 }
