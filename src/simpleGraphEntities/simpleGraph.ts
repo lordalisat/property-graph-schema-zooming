@@ -1,7 +1,7 @@
 import { induceWorkload } from "functions/workloadInduction";
 import { SimpleId } from "types/id";
 import { Workload } from "types/workload";
-import { SimpleGraphEdge } from "./simpleGraphEdge";
+import { SimpleGraphEdge, SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
 import {
   SimpleGraphEdgeNode,
   SimpleGraphLabelNode,
@@ -15,7 +15,9 @@ abstract class SimpleGraph {
   labelNodes: Map<SimpleId, SimpleGraphLabelNode>;
   propertyNodes: Map<SimpleId, SimpleGraphPropertyNode>;
 
-  edges: Array<SimpleGraphEdge>;
+  labelEdges: Array<SimpleGraphLabelEdge>;
+  propertyEdges: Array<SimpleGraphPropertyEdge>;
+  edgeEdges: Array<SimpleGraphEdgeEdge>;
 
   protected constructor() {
     this.nodeNodes = new Map();
