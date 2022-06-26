@@ -9,12 +9,15 @@ import {
 } from "./simpleGraphNode";
 
 export abstract class SimpleGraphEdge {
-  readonly startNode!: SimpleGraphNode;
-  readonly endNode!: SimpleGraphNode;
+  abstract readonly startNode: SimpleGraphNode;
+  abstract readonly endNode: SimpleGraphNode;
   readonly label!: EdgeLabel;
 }
 
 export class SimpleGraphLabelEdge extends SimpleGraphEdge {
+  readonly startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
+  readonly endNode: SimpleGraphLabelNode;
+
   constructor(
     startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
     endNode: SimpleGraphLabelNode
@@ -29,6 +32,8 @@ export class SimpleGraphLabelEdge extends SimpleGraphEdge {
 }
 
 export class SimpleGraphPropertyEdge extends SimpleGraphEdge {
+  readonly startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
+  readonly endNode: SimpleGraphPropertyNode;
   constructor(
     startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
     endNode: SimpleGraphPropertyNode,
@@ -44,6 +49,8 @@ export class SimpleGraphPropertyEdge extends SimpleGraphEdge {
 }
 
 export class SimpleGraphEdgeEdge extends SimpleGraphEdge {
+  readonly startNode: SimpleGraphEdgeNode;
+  readonly endNode: SimpleGraphNodeNode;
   constructor(
     startNode: SimpleGraphEdgeNode,
     endNode: SimpleGraphNodeNode,

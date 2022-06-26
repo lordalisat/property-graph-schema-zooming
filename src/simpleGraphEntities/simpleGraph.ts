@@ -1,7 +1,12 @@
-import { induceWorkload } from "functions/workloadInduction";
+import { induceWorkload, InductionMethod } from "functions/workloadInduction";
 import { SimpleId } from "types/id";
 import { Workload } from "types/workload";
-import { SimpleGraphEdge, SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
+import {
+  SimpleGraphEdge,
+  SimpleGraphEdgeEdge,
+  SimpleGraphLabelEdge,
+  SimpleGraphPropertyEdge,
+} from "./simpleGraphEdge";
 import {
   SimpleGraphEdgeNode,
   SimpleGraphLabelNode,
@@ -10,67 +15,84 @@ import {
 } from "./simpleGraphNode";
 
 abstract class SimpleGraph {
-  nodeNodes: Map<SimpleId, SimpleGraphNodeNode>;
-  edgeNodes: Map<SimpleId, SimpleGraphEdgeNode>;
-  labelNodes: Map<SimpleId, SimpleGraphLabelNode>;
-  propertyNodes: Map<SimpleId, SimpleGraphPropertyNode>;
+  nodeNodes: Array<SimpleGraphNodeNode>;
+  edgeNodes: Array<SimpleGraphEdgeNode>;
+  labelNodes: Array<SimpleGraphLabelNode>;
+  propertyNodes: Array<SimpleGraphPropertyNode>;
 
   labelEdges: Array<SimpleGraphLabelEdge>;
   propertyEdges: Array<SimpleGraphPropertyEdge>;
   edgeEdges: Array<SimpleGraphEdgeEdge>;
 
   protected constructor() {
-    this.nodeNodes = new Map();
-    this.edgeNodes = new Map();
-    this.labelNodes = new Map();
-    this.propertyNodes = new Map();
-  }
-
-  public addNode(node: SimpleGraphNodeNode) {
-    this.nodeNodes.set(`${node.nodeType}_${node.id}`, node);
-  }
-
-  public addNodes(nodes: SimpleGraphNodeNode[]) {
-    nodes.forEach((node) => {
-      this.addNode(node);
-    });
-  }
-
-  public addEdge(node: SimpleGraphEdgeNode) {
-    this.edgeNodes.set(`${node.nodeType}_${node.id}`, node);
-  }
-
-  public addEdges(nodes: SimpleGraphEdgeNode[]) {
-    nodes.forEach((node) => {
-      this.addEdge(node);
-    });
-  }
-
-  public addLabel(node: SimpleGraphLabelNode) {
-    this.labelNodes.set(`${node.nodeType}_${node.id}`, node);
-  }
-
-  public addLabels(nodes: SimpleGraphLabelNode[]) {
-    nodes.forEach((node) => {
-      this.addLabel(node);
-    });
-  }
-
-  public addProperty(node: SimpleGraphPropertyNode) {
-    this.propertyNodes.set(`${node.nodeType}_${node.id}`, node);
-  }
-
-  public addProperties(nodes: SimpleGraphPropertyNode[]) {
-    nodes.forEach((node) => {
-      this.addProperty(node);
-    });
+    this.emptyGraph();
   }
 
   public emptyGraph() {
-    this.nodeNodes = new Map();
-    this.edgeNodes = new Map();
-    this.labelNodes = new Map();
-    this.propertyNodes = new Map();
+    this.nodeNodes = [];
+    this.edgeNodes = [];
+    this.labelNodes = [];
+    this.propertyNodes = [];
+
+    this.labelEdges = [];
+    this.propertyEdges = [];
+    this.edgeEdges = [];
+  }
+
+  public addNodeNode(node: SimpleGraphNodeNode) {
+    this.nodeNodes.push(node);
+  }
+
+  public addNodeNodes(nodes: SimpleGraphNodeNode[]) {
+    this.nodeNodes.push(...nodes);
+  }
+
+  public addEdgeNode(node: SimpleGraphEdgeNode) {
+    this.edgeNodes.push(node);
+  }
+
+  public addEdgeNodes(nodes: SimpleGraphEdgeNode[]) {
+    this.edgeNodes.push(...nodes);
+  }
+
+  public addLabelNode(node: SimpleGraphLabelNode) {
+    this.labelNodes.push(node);
+  }
+
+  public addLabelNodes(nodes: SimpleGraphLabelNode[]) {
+    this.labelNodes.push(...nodes);
+  }
+
+  public addPropertyNode(node: SimpleGraphPropertyNode) {
+    this.propertyNodes.push(node);
+  }
+
+  public addPropertyNodes(nodes: SimpleGraphPropertyNode[]) {
+    this.propertyNodes.push(...nodes);
+  }
+
+  public addLabelEdge(edge: SimpleGraphLabelEdge) {
+    this.labelEdges.push(edge);
+  }
+
+  public addLabelEdges(edges: SimpleGraphLabelEdge[]) {
+    this.labelEdges.push(...edges);
+  }
+
+  public addPropertyEdge(edge: SimpleGraphPropertyEdge) {
+    this.propertyEdges.push(edge);
+  }
+
+  public addPropertyEdges(edges: SimpleGraphPropertyEdge[]) {
+    this.propertyEdges.push(...edges);
+  }
+
+  public addEdgeEdge(edge: SimpleGraphEdgeEdge) {
+    this.edgeEdges.push(edge);
+  }
+
+  public addEdgeEdges(edges: SimpleGraphEdgeEdge[]) {
+    this.edgeEdges.push(...edges);
   }
 }
 
@@ -85,8 +107,8 @@ export class DataSimpleGraph extends SimpleGraph {
     return DataSimpleGraph._instance;
   }
 
-  public induceWorkload(workload: Workload) {
-    return induceWorkload(this, workload);
+  public induceWorkload(workload: Workload, inductionMethod: InductionMethod) {
+    return induceWorkload(this, workload, inductionMethod);
   }
 }
 
