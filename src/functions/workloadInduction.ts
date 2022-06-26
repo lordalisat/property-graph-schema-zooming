@@ -41,31 +41,35 @@ export function induceWorkload(
   });
 
   //Get all Property edges connected to the Node or Edge nodes
-  inducedGraph.addPropertyEdges(
-    graph.propertyEdges.filter((edge) => {
-      inducedGraph.nodeNodes.includes(edge.startNode) ||
-        inducedGraph.edgeNodes.includes(edge.startNode);
-    })
-  );
+  inducedGraph.propertyEdges = graph.propertyEdges.filter((edge) => {
+    inducedGraph.nodeNodes.includes(edge.startNode) ||
+      inducedGraph.edgeNodes.includes(edge.startNode);
+  });
 
-  inducedGraph.addPropertyNodes(
-    inducedGraph.propertyEdges.map((edge) => edge.endNode)
+  inducedGraph.propertyNodes = inducedGraph.propertyEdges.map(
+    (edge) => edge.endNode
   );
 
   //Get all Label edges connected to the Node or Edge nodes
-  inducedGraph.addLabelEdges(
-    graph.labelEdges.filter((edge) => {
-      inducedGraph.nodeNodes.includes(edge.startNode) ||
-        inducedGraph.edgeNodes.includes(edge.startNode);
-    })
-  );
+  inducedGraph.labelEdges = graph.labelEdges.filter((edge) => {
+    inducedGraph.nodeNodes.includes(edge.startNode) ||
+      inducedGraph.edgeNodes.includes(edge.startNode);
+  });
 
-  inducedGraph.addLabelNodes(
-    inducedGraph.labelEdges.map((edge) => edge.endNode)
-  );
+  inducedGraph.labelNodes = inducedGraph.labelEdges.map((edge) => edge.endNode);
 
   if (inductionMethod === InductionMethod.project) {
+    //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
+    inducedGraph.nodeNodes = [...graph.nodeNodes];
+    inducedGraph.edgeNodes = [...graph.nodeNodes];
+    inducedGraph.edgeEdges = [...graph.edgeEdges];
   } else if (inductionMethod === InductionMethod.filter) {
+    //Add all Edge edges where both start and end nodes are included in the graph
+    //TODO check for existance of both edges per Edge node?
+    inducedGraph.edgeEdges = graph.edgeEdges.filter((edge) => {
+      inducedGraph.edgeNodes.includes(edge.startNode) &&
+        inducedGraph.nodeNodes.includes(edge.endNode);
+    });
   }
 
   return inducedGraph;
