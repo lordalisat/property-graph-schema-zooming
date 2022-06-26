@@ -2,17 +2,6 @@ import {
   DataSimpleGraph,
   InducedSimpleGraph,
 } from "simpleGraphEntities/simpleGraph";
-import {
-  SimpleGraphLabelEdge,
-  SimpleGraphPropertyEdge,
-} from "simpleGraphEntities/simpleGraphEdge";
-import {
-  SimpleGraphEdgeNode,
-  SimpleGraphLabelNode,
-  SimpleGraphNodeNode,
-  SimpleGraphPropertyNode,
-} from "simpleGraphEntities/simpleGraphNode";
-import { toSimpleId } from "types/id";
 import { NodeType } from "types/simpleGraph/nodeType";
 import { Workload } from "types/workload";
 
@@ -59,7 +48,9 @@ export function induceWorkload(
     })
   );
 
-  inducedGraph.addPropertyNodes(inducedGraph.propertyEdges.map((edge) => edge.endNode));
+  inducedGraph.addPropertyNodes(
+    inducedGraph.propertyEdges.map((edge) => edge.endNode)
+  );
 
   //Get all Label edges connected to the Node or Edge nodes
   inducedGraph.addLabelEdges(
@@ -69,13 +60,12 @@ export function induceWorkload(
     })
   );
 
-  inducedGraph.addLabelNodes(inducedGraph.labelEdges.map((edge) => edge.endNode));
+  inducedGraph.addLabelNodes(
+    inducedGraph.labelEdges.map((edge) => edge.endNode)
+  );
 
   if (inductionMethod === InductionMethod.project) {
-
-  }
-  else if (inductionMethod === InductionMethod.filter) {
-     
+  } else if (inductionMethod === InductionMethod.filter) {
   }
 
   return inducedGraph;

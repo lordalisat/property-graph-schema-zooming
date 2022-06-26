@@ -1,4 +1,4 @@
-export type Property = String;
+export type Property = string;
 
 export enum PropertyType {
   "String",

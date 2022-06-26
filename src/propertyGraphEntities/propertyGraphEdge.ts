@@ -7,7 +7,7 @@ import { Value } from "types/propertyGraph/value";
 export class PropertyGraphEdge extends PropertyGraphElement {
   readonly startNode!: Id;
   readonly endNode!: Id;
-  readonly isDirected: Boolean = true;
+  readonly isDirected: boolean = true;
 
   constructor(args: {
     id: Id;
@@ -15,7 +15,7 @@ export class PropertyGraphEdge extends PropertyGraphElement {
     properties: Map<Property, Value>;
     startNode: Id;
     endNode: Id;
-    isDirected?: Boolean;
+    isDirected?: boolean;
   }) {
     super();
     Object.assign(this, args);

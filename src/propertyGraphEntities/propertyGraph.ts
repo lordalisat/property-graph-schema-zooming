@@ -6,8 +6,6 @@ abstract class PropertyGraph {
   nodes: Map<Id, PropertyGraphNode>;
   edges: Map<Id, PropertyGraphEdge>;
 
-  protected constructor() {}
-
   public addNode(node: PropertyGraphNode) {
     this.nodes.set(node.id, node);
   }
