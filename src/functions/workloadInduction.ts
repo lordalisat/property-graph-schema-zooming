@@ -61,7 +61,7 @@ export function induceWorkload(
   if (inductionMethod === InductionMethod.project) {
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
     inducedGraph.nodeNodes = [...graph.nodeNodes];
-    inducedGraph.edgeNodes = [...graph.nodeNodes];
+    inducedGraph.edgeNodes = [...graph.edgeNodes];
     inducedGraph.edgeEdges = [...graph.edgeEdges];
   } else if (inductionMethod === InductionMethod.filter) {
     //Add all Edge edges where both start and end nodes are included in the graph
