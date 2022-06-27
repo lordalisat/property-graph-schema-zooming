@@ -25,7 +25,7 @@ export function induceWorkload(
 
   // Get edges that end at the label nodes.
   const workloadEdges = graph.labelEdges.filter((edge) => {
-    Array.from(workloadNodes).includes(edge.endNode);
+    workloadNodes.includes(edge.endNode);
   });
 
   workloadEdges.forEach((edge) => {
