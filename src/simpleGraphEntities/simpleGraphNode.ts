@@ -6,43 +6,34 @@ import { PropertyType } from "types/property";
 export abstract class SimpleGraphNode {
   readonly id!: SimpleId;
   readonly label!: Label;
-  protected nodeType!: NodeType;
 }
 
 export class SimpleGraphNodeNode extends SimpleGraphNode {
-  nodeType = NodeType.node;
-
   constructor(id: Id) {
     super();
-    Object.assign(this, { id: toSimpleId(this.nodeType, id), label: "node" });
+    Object.assign(this, { id: toSimpleId(NodeType.node, id), label: "node" });
   }
 }
 
 export class SimpleGraphEdgeNode extends SimpleGraphNode {
-  nodeType = NodeType.edge;
-
   constructor(id: Id) {
     super();
-    Object.assign(this, { id: toSimpleId(this.nodeType, id), label: "edge" });
+    Object.assign(this, { id: toSimpleId(NodeType.edge, id), label: "edge" });
   }
 }
 
 export class SimpleGraphLabelNode extends SimpleGraphNode {
-  nodeType = NodeType.label;
-
   constructor(label: Label) {
     super();
-    Object.assign(this, { id: toSimpleId(this.nodeType, label), label: label });
+    Object.assign(this, { id: toSimpleId(NodeType.label, label), label: label });
   }
 }
 
 export class SimpleGraphPropertyNode extends SimpleGraphNode {
-  nodeType = NodeType.propertyType;
-
   constructor(propertyType: PropertyType) {
     super();
     Object.assign(this, {
-      id: toSimpleId(this.nodeType, propertyType.toString()),
+      id: toSimpleId(NodeType.propertyType, propertyType.toString()),
       label: propertyType,
     });
   }
