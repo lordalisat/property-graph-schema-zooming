@@ -3,38 +3,63 @@ import { NodeType } from "types/simpleGraph/nodeType";
 import { Label } from "types/label";
 import { PropertyType } from "types/property";
 
-export abstract class SimpleGraphNode {
+interface SimpleGraphNodeType {
+  id: SimpleId;
+  label: Label;
+  type: NodeType;
+}
+
+export interface SimpleGraphNodeNode extends SimpleGraphNodeType {}
+export interface SimpleGraphEdgeNode extends SimpleGraphNodeType {}
+export interface SimpleGraphPropertyNode extends SimpleGraphNodeType {}
+export interface SimpleGraphLabelNode extends SimpleGraphNodeType {}
+
+export class SimpleGraphNode {
   readonly id!: SimpleId;
   readonly label!: Label;
-}
+  readonly type!: NodeType;
 
-export class SimpleGraphNodeNode extends SimpleGraphNode {
-  constructor(id: Id) {
-    super();
-    Object.assign(this, { id: toSimpleId(NodeType.node, id), label: "node" });
+  static nodeNode(
+    this: new () => SimpleGraphNodeNode,
+    data: { id: Id }
+  ): SimpleGraphNodeNode {
+    return Object.assign(new this(), {
+      id: toSimpleId(NodeType.node, data.id),
+      label: "node",
+      type: NodeType.node,
+    });
   }
-}
 
-export class SimpleGraphEdgeNode extends SimpleGraphNode {
-  constructor(id: Id) {
-    super();
-    Object.assign(this, { id: toSimpleId(NodeType.edge, id), label: "edge" });
+  static edgeNode(
+    this: new () => SimpleGraphEdgeNode,
+    data: { id: Id }
+  ): SimpleGraphEdgeNode {
+    return Object.assign(new this(), {
+      id: toSimpleId(NodeType.edge, data.id),
+      label: "node",
+      type: NodeType.edge,
+    });
   }
-}
 
-export class SimpleGraphLabelNode extends SimpleGraphNode {
-  constructor(label: Label) {
-    super();
-    Object.assign(this, { id: toSimpleId(NodeType.label, label), label: label });
+  static labelNode(
+    this: new () => SimpleGraphPropertyNode,
+    data: { label: Label }
+  ): SimpleGraphPropertyNode {
+    return Object.assign(new this(), {
+      id: toSimpleId(NodeType.label, data.label),
+      label: data.label,
+      type: NodeType.label,
+    });
   }
-}
 
-export class SimpleGraphPropertyNode extends SimpleGraphNode {
-  constructor(propertyType: PropertyType) {
-    super();
-    Object.assign(this, {
-      id: toSimpleId(NodeType.propertyType, propertyType.toString()),
-      label: propertyType,
+  static propertyNode(
+    this: new () => SimpleGraphLabelNode,
+    data: { propertyType: PropertyType }
+  ): SimpleGraphLabelNode {
+    return Object.assign(new this(), {
+      id: toSimpleId(NodeType.propertyType, data.propertyType.toString()),
+      label: data.propertyType,
+      type: NodeType.propertyType,
     });
   }
 }

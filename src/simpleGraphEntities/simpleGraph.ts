@@ -1,10 +1,6 @@
 import { induceWorkload, InductionMethod } from "functions/workloadInduction";
 import { Workload } from "types/workload";
-import {
-  SimpleGraphEdgeEdge,
-  SimpleGraphLabelEdge,
-  SimpleGraphPropertyEdge,
-} from "./simpleGraphEdge";
+import { SimpleGraphEdge, SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
 import {
   SimpleGraphEdgeNode,
   SimpleGraphLabelNode,

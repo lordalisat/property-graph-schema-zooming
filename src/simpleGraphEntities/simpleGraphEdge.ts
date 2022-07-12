@@ -1,5 +1,6 @@
 import { Property } from "types/property";
 import { EdgeDirection, EdgeLabel } from "types/simpleGraph/edgeLabel";
+import { EdgeType } from "types/simpleGraph/edgeType";
 import {
   SimpleGraphEdgeNode,
   SimpleGraphLabelNode,
@@ -8,59 +9,61 @@ import {
   SimpleGraphPropertyNode,
 } from "./simpleGraphNode";
 
-export abstract class SimpleGraphEdge {
-  abstract readonly startNode: SimpleGraphNode;
-  abstract readonly endNode: SimpleGraphNode;
-  readonly label!: EdgeLabel;
+interface SimpleGraphEdgeType {
+  startNode: SimpleGraphNode;
+  endNode: SimpleGraphNode;
+  label: EdgeLabel;
+  type: EdgeType;
 }
+export interface SimpleGraphLabelEdge extends SimpleGraphEdgeType {}
+export interface SimpleGraphPropertyEdge extends SimpleGraphEdgeType {}
+export interface SimpleGraphEdgeEdge extends SimpleGraphEdgeType {}
 
-export class SimpleGraphLabelEdge extends SimpleGraphEdge {
-  readonly startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
-  readonly endNode: SimpleGraphLabelNode;
-
-  constructor(
-    startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
-    endNode: SimpleGraphLabelNode
-  ) {
-    super();
-    Object.assign(this, {
-      startNode: startNode,
-      endNode: endNode,
+export class SimpleGraphEdge {
+  static labelEdge(
+    this: new () => SimpleGraphLabelEdge,
+    data: {
+      startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
+      endNode: SimpleGraphLabelNode;
+    }
+  ): SimpleGraphLabelEdge {
+    return Object.assign(new this(), {
+      startNode: data.startNode,
+      endNode: data.endNode,
       label: "label",
+      type: EdgeType.label,
     });
   }
-}
 
-export class SimpleGraphPropertyEdge extends SimpleGraphEdge {
-  readonly startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
-  readonly endNode: SimpleGraphPropertyNode;
-  constructor(
-    startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
-    endNode: SimpleGraphPropertyNode,
-    property: Property
-  ) {
-    super();
-    Object.assign(this, {
-      startNode: startNode,
-      endNode: endNode,
-      label: property,
+  static propertyEdge(
+    this: new () => SimpleGraphPropertyEdge,
+    data: {
+      startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
+      endNode: SimpleGraphPropertyNode;
+      property: Property;
+    }
+  ): SimpleGraphPropertyEdge {
+    return Object.assign(new this(), {
+      startNode: data.startNode,
+      endNode: data.endNode,
+      label: data.property,
+      type: EdgeType.property,
     });
   }
-}
 
-export class SimpleGraphEdgeEdge extends SimpleGraphEdge {
-  readonly startNode: SimpleGraphEdgeNode;
-  readonly endNode: SimpleGraphNodeNode;
-  constructor(
-    startNode: SimpleGraphEdgeNode,
-    endNode: SimpleGraphNodeNode,
-    direction: EdgeDirection
-  ) {
-    super();
-    Object.assign(this, {
-      startNode: startNode,
-      endNode: endNode,
-      label: direction,
+  static edgeEdge(
+    this: new () => SimpleGraphEdgeEdge,
+    data: {
+      startNode: SimpleGraphEdgeNode;
+      endNode: SimpleGraphNodeNode;
+      direction: EdgeDirection;
+    }
+  ): SimpleGraphEdgeEdge {
+    return Object.assign(new this(), {
+      startNode: data.startNode,
+      endNode: data.endNode,
+      label: data.direction,
+      type: EdgeType.edge,
     });
   }
 }
