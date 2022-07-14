@@ -3,7 +3,7 @@ import { NodeType } from "types/simpleGraph/nodeType";
 import { Label } from "types/label";
 import { PropertyType } from "types/property";
 
-interface SimpleGraphNodeType {
+export interface SimpleGraphNodeType {
   id: SimpleId;
   label: Label;
   type: NodeType;

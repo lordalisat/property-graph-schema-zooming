@@ -9,9 +9,9 @@ import {
   SimpleGraphPropertyNode,
 } from "./simpleGraphNode";
 
-interface SimpleGraphEdgeType {
-  startNode: SimpleGraphNode;
-  endNode: SimpleGraphNode;
+export interface SimpleGraphEdgeType {
+  sourceNode: SimpleGraphNode;
+  targetNode: SimpleGraphNode;
   label: EdgeLabel;
   type: EdgeType;
 }
