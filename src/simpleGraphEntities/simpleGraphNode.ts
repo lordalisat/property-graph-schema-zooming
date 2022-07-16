@@ -9,10 +9,10 @@ export interface SimpleGraphNodeType {
   type: NodeType;
 }
 
-export interface SimpleGraphNodeNode extends SimpleGraphNodeType {}
-export interface SimpleGraphEdgeNode extends SimpleGraphNodeType {}
-export interface SimpleGraphPropertyNode extends SimpleGraphNodeType {}
-export interface SimpleGraphLabelNode extends SimpleGraphNodeType {}
+export type SimpleGraphNodeNode = SimpleGraphNodeType
+export type SimpleGraphEdgeNode = SimpleGraphNodeType
+export type SimpleGraphPropertyNode = SimpleGraphNodeType
+export type SimpleGraphLabelNode = SimpleGraphNodeType
 
 export class SimpleGraphNode {
   readonly id!: SimpleId;

@@ -56,7 +56,9 @@ export function induceWorkload(
       inducedGraph.edgeNodes.includes(edge.sourceNode);
   });
 
-  inducedGraph.labelNodes = inducedGraph.labelEdges.map((edge) => edge.targetNode);
+  inducedGraph.labelNodes = inducedGraph.labelEdges.map(
+    (edge) => edge.targetNode
+  );
 
   if (inductionMethod === InductionMethod.project) {
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing

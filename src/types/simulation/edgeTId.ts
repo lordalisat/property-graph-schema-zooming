@@ -5,6 +5,5 @@ import { PId } from "./pIdMaps";
 export interface EdgeTId {
   sourceNode: SimpleGraphNodeType,
   label: EdgeLabel,
-  targetNode: SimpleGraphNodeType,
   oldPId: PId,
 }

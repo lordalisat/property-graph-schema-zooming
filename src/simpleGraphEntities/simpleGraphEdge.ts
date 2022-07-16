@@ -15,9 +15,9 @@ export interface SimpleGraphEdgeType {
   label: EdgeLabel;
   type: EdgeType;
 }
-export interface SimpleGraphLabelEdge extends SimpleGraphEdgeType {}
-export interface SimpleGraphPropertyEdge extends SimpleGraphEdgeType {}
-export interface SimpleGraphEdgeEdge extends SimpleGraphEdgeType {}
+export type SimpleGraphLabelEdge = SimpleGraphEdgeType
+export type SimpleGraphPropertyEdge = SimpleGraphEdgeType
+export type SimpleGraphEdgeEdge = SimpleGraphEdgeType
 
 export class SimpleGraphEdge {
   static labelEdge(
