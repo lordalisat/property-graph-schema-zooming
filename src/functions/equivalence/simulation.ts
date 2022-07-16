@@ -29,7 +29,7 @@ export class Simulation extends Equivalence {
     const seen = {};
     return edgeTIds.filter((edge) => {
       const key = JSON.stringify(edge);
-      return seen.hasOwnProperty(key) ? false : (seen[key] = true);
+      return seen[key] ? false : (seen[key] = true);
     })
   }
   
@@ -45,7 +45,7 @@ export class Simulation extends Equivalence {
     const seen = {};
     return edges.filter((edge) => {
       const key = JSON.stringify(edge);
-      return seen.hasOwnProperty(key) ? false : (seen[key] = true);
+      return seen[key] ? false : (seen[key] = true);
     })
   }
 
