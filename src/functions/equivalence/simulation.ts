@@ -107,7 +107,7 @@ export class Simulation extends Equivalence {
 
     const schemaNodesMap = new Map(this.nodes.map((node) => {
       const simpleId = toSimpleId(node.type, this.pIds.new_pid.get(node.id).toString());
-      return [simpleId,
+      return [this.pIds.new_pid.get(node.id),
         {
         id: simpleId,
         label: node.label,
@@ -116,8 +116,8 @@ export class Simulation extends Equivalence {
     }));
 
     const edges = this.uniqEdges(this.edges.map((edge) => {
-      const sourceNode = schemaNodesMap.get(toSimpleId(edge.sourceNode.type, this.pIds.new_pid.get(edge.sourceNode.id).toString()));
-      const targetNode = schemaNodesMap.get(toSimpleId(edge.targetNode.type, this.pIds.new_pid.get(edge.targetNode.id).toString()));
+      const sourceNode = schemaNodesMap.get(this.pIds.new_pid.get(edge.sourceNode.id));
+      const targetNode = schemaNodesMap.get(this.pIds.new_pid.get(edge.targetNode.id));
       return {
         sourceNode: sourceNode,
         label: edge.label,
