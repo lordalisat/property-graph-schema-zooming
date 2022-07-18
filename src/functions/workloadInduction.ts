@@ -18,18 +18,13 @@ export function induceWorkload(
   const inducedGraph = InducedSimpleGraph.instance;
   inducedGraph.emptyGraph();
 
-  // Get all Label nodes that occur in the workload and add them to the induced graph.
-  const workloadNodes = graph.labelNodes.filter((node) => {
-    workload.has(node.label);
-  });
-
   // Get edges that end at the label nodes.
   const workloadEdges = graph.labelEdges.filter((edge) => {
-    workloadNodes.includes(edge.targetNode);
+    workload.has(edge.targetNode.label);
   });
 
   workloadEdges.forEach((edge) => {
-    if (edge.sourceNode.nodeType == NodeType.node) {
+    if (edge.sourceNode.type == NodeType.node) {
       if (!inducedGraph.nodeNodes.includes(edge.sourceNode)) {
         inducedGraph.addNodeNode(edge.sourceNode);
       }
