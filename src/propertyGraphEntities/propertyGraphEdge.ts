@@ -5,16 +5,16 @@ import { Id } from "types/id";
 import { Value } from "types/propertyGraph/value";
 
 export class PropertyGraphEdge extends PropertyGraphElement {
-  readonly startNode!: Id;
-  readonly endNode!: Id;
+  readonly sourceNode!: Id;
+  readonly targetNode!: Id;
   readonly isDirected: boolean = true;
 
   constructor(args: {
     id: Id;
     labels: Array<Label>;
     properties: Map<Property, Value>;
-    startNode: Id;
-    endNode: Id;
+    sourceNode: Id;
+    targetNode: Id;
     isDirected?: boolean;
   }) {
     super();

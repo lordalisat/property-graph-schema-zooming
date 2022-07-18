@@ -1,7 +1,8 @@
 export type Property = string;
 
 export enum PropertyType {
-  "String",
-  "Number",
-  "Boolean",
+  "string",
+  "number",
+  "boolean",
+  "other",
 }

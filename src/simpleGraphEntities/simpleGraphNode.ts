@@ -9,57 +9,57 @@ export interface SimpleGraphNodeType {
   type: NodeType;
 }
 
-export type SimpleGraphNodeNode = SimpleGraphNodeType
-export type SimpleGraphEdgeNode = SimpleGraphNodeType
-export type SimpleGraphPropertyNode = SimpleGraphNodeType
-export type SimpleGraphLabelNode = SimpleGraphNodeType
+export type SimpleGraphNodeNode = SimpleGraphNodeType;
+export type SimpleGraphEdgeNode = SimpleGraphNodeType;
+export type SimpleGraphPropertyNode = SimpleGraphNodeType;
+export type SimpleGraphLabelNode = SimpleGraphNodeType;
 
-export class SimpleGraphNode {
+export class SimpleGraphNode implements SimpleGraphNodeType {
   readonly id!: SimpleId;
   readonly label!: Label;
   readonly type!: NodeType;
 
   static nodeNode(
     this: new () => SimpleGraphNodeNode,
-    data: { id: Id }
+    id: Id
   ): SimpleGraphNodeNode {
     return Object.assign(new this(), {
-      id: toSimpleId(NodeType.node, data.id),
+      id: toSimpleId(NodeType.node, id),
       label: "node",
       type: NodeType.node,
-    });
+    }) as SimpleGraphNodeNode;
   }
 
   static edgeNode(
     this: new () => SimpleGraphEdgeNode,
-    data: { id: Id }
+    id: Id
   ): SimpleGraphEdgeNode {
     return Object.assign(new this(), {
-      id: toSimpleId(NodeType.edge, data.id),
+      id: toSimpleId(NodeType.edge, id),
       label: "node",
       type: NodeType.edge,
-    });
+    }) as SimpleGraphEdgeNode;
   }
 
   static labelNode(
     this: new () => SimpleGraphPropertyNode,
-    data: { label: Label }
+    label: Label
   ): SimpleGraphPropertyNode {
     return Object.assign(new this(), {
-      id: toSimpleId(NodeType.label, data.label),
-      label: data.label,
+      id: toSimpleId(NodeType.label, label),
+      label: label,
       type: NodeType.label,
-    });
+    }) as SimpleGraphPropertyNode;
   }
 
   static propertyNode(
     this: new () => SimpleGraphLabelNode,
-    data: { propertyType: PropertyType }
+    propertyType: PropertyType
   ): SimpleGraphLabelNode {
     return Object.assign(new this(), {
-      id: toSimpleId(NodeType.propertyType, data.propertyType.toString()),
-      label: data.propertyType,
+      id: toSimpleId(NodeType.propertyType, propertyType.toString()),
+      label: propertyType,
       type: NodeType.propertyType,
-    });
+    }) as SimpleGraphLabelNode;
   }
 }

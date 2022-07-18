@@ -1,4 +1,4 @@
-import { InducedSimpleGraph, SchemaSimpleGraph } from "simpleGraphEntities/simpleGraph";
+import { SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
 import { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
 import { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
 import { toSimpleId } from "types/id";
@@ -49,7 +49,8 @@ export class Simulation extends Equivalence {
     })
   }
 
-  public calculateSchema(graph: InducedSimpleGraph): SchemaSimpleGraph {
+  public calculateSchema(): SimpleGraph {
+    const graph = simpleGraphService.induced;
     this.currentPId = 0;
     this.storage = new Map();
 
@@ -58,8 +59,7 @@ export class Simulation extends Equivalence {
 
     this.build_bsim(this.k);
 
-    const schemaGraph = this.graphFromPIds();
-    return schemaGraph;
+    return this.graphFromPIds();
   }
   
   private build_bsim(k: number)
@@ -97,12 +97,10 @@ export class Simulation extends Equivalence {
       this.pIds.new_pid.set(node.id, pId);
       this.pIds.j_pid.get(node.id).push(pId);
     })
-
-    return;
   }
 
-  private graphFromPIds(): SchemaSimpleGraph {
-    const schemaGraph = SchemaSimpleGraph.instance;
+  private graphFromPIds(): SimpleGraph {
+    const schemaGraph = simpleGraphService.schema;
     schemaGraph.emptyGraph();
 
     const schemaNodesMap = new Map(this.nodes.map((node) => {

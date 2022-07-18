@@ -1,6 +1,6 @@
 import {
-  DataSimpleGraph,
-  InducedSimpleGraph,
+  SimpleGraph,
+  simpleGraphService,
 } from "simpleGraphEntities/simpleGraph";
 import { NodeType } from "types/simpleGraph/nodeType";
 import { Workload } from "types/workload";
@@ -11,11 +11,11 @@ export enum InductionMethod {
 }
 
 export function induceWorkload(
-  graph: DataSimpleGraph,
   workload: Workload,
   inductionMethod: InductionMethod
-): InducedSimpleGraph {
-  const inducedGraph = InducedSimpleGraph.instance;
+): SimpleGraph {
+  const graph = simpleGraphService.data;
+  const inducedGraph = simpleGraphService.induced;
   inducedGraph.emptyGraph();
 
   // Get edges that end at the label nodes.

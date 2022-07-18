@@ -1,10 +1,35 @@
+import { graphType } from "types/graphType";
 import { Id } from "types/id";
 import { PropertyGraphEdge } from "./propertyGraphEdge";
 import { PropertyGraphNode } from "./propertyGraphNode";
 
-abstract class PropertyGraph {
+export interface PropertyGraph {
+  type: graphType;
+
   nodes: Map<Id, PropertyGraphNode>;
   edges: Map<Id, PropertyGraphEdge>;
+
+  emptyGraph(): void;
+
+  addNode(node: PropertyGraphNode): void;
+  addEdge(edge: PropertyGraphEdge): void;
+}
+
+class HiddenPropertyGraph {
+  type: graphType;
+
+  nodes: Map<Id, PropertyGraphNode>;
+  edges: Map<Id, PropertyGraphEdge>;
+
+  constructor(type: graphType) {
+    this.type = type;
+    this.emptyGraph();
+  }
+
+  public emptyGraph() {
+    this.nodes = new Map();
+    this.edges = new Map();
+  }
 
   public addNode(node: PropertyGraphNode) {
     this.nodes.set(node.id, node);
@@ -15,38 +40,8 @@ abstract class PropertyGraph {
   }
 }
 
-export class DataPropertyGraph extends PropertyGraph {
-  private static _instance: DataPropertyGraph;
-
-  public static get instance(): DataPropertyGraph {
-    if (!DataPropertyGraph._instance) {
-      DataPropertyGraph._instance = new DataPropertyGraph();
-    }
-
-    return DataPropertyGraph._instance;
-  }
-}
-
-export class InducedPropertyGraph extends PropertyGraph {
-  private static _instance: InducedPropertyGraph;
-
-  public static get instance(): InducedPropertyGraph {
-    if (!InducedPropertyGraph._instance) {
-      InducedPropertyGraph._instance = new InducedPropertyGraph();
-    }
-
-    return InducedPropertyGraph._instance;
-  }
-}
-
-export class SchemaPropertyGraph extends PropertyGraph {
-  private static _instance: SchemaPropertyGraph;
-
-  public static get instance(): SchemaPropertyGraph {
-    if (!SchemaPropertyGraph._instance) {
-      SchemaPropertyGraph._instance = new SchemaPropertyGraph();
-    }
-
-    return SchemaPropertyGraph._instance;
-  }
-}
+export const propertyGraphService = {
+  data: new HiddenPropertyGraph(graphType.data),
+  induced: new HiddenPropertyGraph(graphType.induced),
+  schema: new HiddenPropertyGraph(graphType.schema),
+};

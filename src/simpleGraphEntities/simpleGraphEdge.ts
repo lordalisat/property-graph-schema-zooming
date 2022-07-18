@@ -15,55 +15,54 @@ export interface SimpleGraphEdgeType {
   label: EdgeLabel;
   type: EdgeType;
 }
-export type SimpleGraphLabelEdge = SimpleGraphEdgeType
-export type SimpleGraphPropertyEdge = SimpleGraphEdgeType
-export type SimpleGraphEdgeEdge = SimpleGraphEdgeType
+export type SimpleGraphLabelEdge = SimpleGraphEdgeType;
+export type SimpleGraphPropertyEdge = SimpleGraphEdgeType;
+export type SimpleGraphEdgeEdge = SimpleGraphEdgeType;
 
-export class SimpleGraphEdge {
+export class SimpleGraphEdge implements SimpleGraphEdgeType {
+  readonly sourceNode!: SimpleGraphNode;
+  readonly targetNode!: SimpleGraphNode;
+  readonly label!: EdgeLabel;
+  readonly type!: EdgeType;
+
   static labelEdge(
     this: new () => SimpleGraphLabelEdge,
-    data: {
-      startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
-      endNode: SimpleGraphLabelNode;
-    }
+    sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
+    targetNode: SimpleGraphLabelNode
   ): SimpleGraphLabelEdge {
     return Object.assign(new this(), {
-      startNode: data.startNode,
-      endNode: data.endNode,
+      sourceNode: sourceNode,
+      targetNode: targetNode,
       label: "label",
       type: EdgeType.label,
-    });
+    }) as SimpleGraphLabelEdge;
   }
 
   static propertyEdge(
     this: new () => SimpleGraphPropertyEdge,
-    data: {
-      startNode: SimpleGraphNodeNode | SimpleGraphEdgeNode;
-      endNode: SimpleGraphPropertyNode;
-      property: Property;
-    }
+    sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
+    targetNode: SimpleGraphPropertyNode,
+    property: Property
   ): SimpleGraphPropertyEdge {
     return Object.assign(new this(), {
-      startNode: data.startNode,
-      endNode: data.endNode,
-      label: data.property,
+      sourceNode: sourceNode,
+      targetNode: targetNode,
+      label: property,
       type: EdgeType.property,
-    });
+    }) as SimpleGraphPropertyEdge;
   }
 
   static edgeEdge(
     this: new () => SimpleGraphEdgeEdge,
-    data: {
-      startNode: SimpleGraphEdgeNode;
-      endNode: SimpleGraphNodeNode;
-      direction: EdgeDirection;
-    }
+    sourceNode: SimpleGraphEdgeNode,
+    targetNode: SimpleGraphNodeNode,
+    direction: EdgeDirection
   ): SimpleGraphEdgeEdge {
     return Object.assign(new this(), {
-      startNode: data.startNode,
-      endNode: data.endNode,
-      label: data.direction,
+      sourceNode: sourceNode,
+      targetNode: targetNode,
+      label: direction,
       type: EdgeType.edge,
-    });
+    }) as SimpleGraphEdgeEdge;
   }
 }

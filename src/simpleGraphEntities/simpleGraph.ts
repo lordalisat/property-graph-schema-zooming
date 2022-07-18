@@ -1,5 +1,4 @@
-import { induceWorkload, InductionMethod } from "functions/workloadInduction";
-import { Workload } from "types/workload";
+import { graphType } from "types/graphType";
 import {
   SimpleGraphEdgeEdge,
   SimpleGraphLabelEdge,
@@ -12,7 +11,9 @@ import {
   SimpleGraphPropertyNode,
 } from "./simpleGraphNode";
 
-abstract class SimpleGraph {
+export interface SimpleGraph {
+  type: graphType;
+
   nodeNodes: Array<SimpleGraphNodeNode>;
   edgeNodes: Array<SimpleGraphEdgeNode>;
   labelNodes: Array<SimpleGraphLabelNode>;
@@ -22,7 +23,38 @@ abstract class SimpleGraph {
   propertyEdges: Array<SimpleGraphPropertyEdge>;
   edgeEdges: Array<SimpleGraphEdgeEdge>;
 
-  protected constructor() {
+  emptyGraph(): void;
+
+  addNodeNode(node: SimpleGraphNodeNode): void;
+  addNodeNodes(nodes: SimpleGraphNodeNode[]): void;
+  addEdgeNode(node: SimpleGraphEdgeNode): void;
+  addEdgeNodes(nodes: SimpleGraphEdgeNode[]): void;
+  addLabelNode(node: SimpleGraphLabelNode): void;
+  addLabelNodes(nodes: SimpleGraphLabelNode[]): void;
+  addPropertyNode(node: SimpleGraphPropertyNode): void;
+  addPropertyNodes(nodes: SimpleGraphPropertyNode[]): void;
+  addLabelEdge(edge: SimpleGraphLabelEdge): void;
+  addLabelEdges(edges: SimpleGraphLabelEdge[]): void;
+  addPropertyEdge(edge: SimpleGraphPropertyEdge): void;
+  addPropertyEdges(edges: SimpleGraphPropertyEdge[]): void;
+  addEdgeEdge(edge: SimpleGraphEdgeEdge): void;
+  addEdgeEdges(edges: SimpleGraphEdgeEdge[]): void;
+}
+
+class HiddenSimpleGraph implements SimpleGraph {
+  type: graphType;
+
+  nodeNodes: Array<SimpleGraphNodeNode>;
+  edgeNodes: Array<SimpleGraphEdgeNode>;
+  labelNodes: Array<SimpleGraphLabelNode>;
+  propertyNodes: Array<SimpleGraphPropertyNode>;
+
+  labelEdges: Array<SimpleGraphLabelEdge>;
+  propertyEdges: Array<SimpleGraphPropertyEdge>;
+  edgeEdges: Array<SimpleGraphEdgeEdge>;
+
+  constructor(type: graphType) {
+    this.type = type;
     this.emptyGraph();
   }
 
@@ -94,42 +126,12 @@ abstract class SimpleGraph {
   }
 }
 
-export class DataSimpleGraph extends SimpleGraph {
-  private static _instance: DataSimpleGraph;
-
-  public static get instance(): DataSimpleGraph {
-    if (!DataSimpleGraph._instance) {
-      DataSimpleGraph._instance = new DataSimpleGraph();
-    }
-
-    return DataSimpleGraph._instance;
-  }
-
-  public induceWorkload(workload: Workload, inductionMethod: InductionMethod) {
-    return induceWorkload(this, workload, inductionMethod);
-  }
-}
-
-export class InducedSimpleGraph extends SimpleGraph {
-  private static _instance: InducedSimpleGraph;
-
-  public static get instance(): InducedSimpleGraph {
-    if (!InducedSimpleGraph._instance) {
-      InducedSimpleGraph._instance = new InducedSimpleGraph();
-    }
-
-    return InducedSimpleGraph._instance;
-  }
-}
-
-export class SchemaSimpleGraph extends SimpleGraph {
-  private static _instance: SchemaSimpleGraph;
-
-  public static get instance(): SchemaSimpleGraph {
-    if (!SchemaSimpleGraph._instance) {
-      SchemaSimpleGraph._instance = new SchemaSimpleGraph();
-    }
-
-    return SchemaSimpleGraph._instance;
-  }
-}
+export const simpleGraphService: {
+  data: SimpleGraph;
+  induced: SimpleGraph;
+  schema: SimpleGraph;
+} = {
+  data: new HiddenSimpleGraph(graphType.data),
+  induced: new HiddenSimpleGraph(graphType.induced),
+  schema: new HiddenSimpleGraph(graphType.schema),
+};
