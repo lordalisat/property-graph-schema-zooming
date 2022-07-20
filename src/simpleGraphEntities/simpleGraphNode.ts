@@ -20,46 +20,42 @@ export class SimpleGraphNode implements SimpleGraphNodeType {
   readonly type!: NodeType;
 
   static nodeNode(
-    this: new () => SimpleGraphNodeNode,
     id: Id
   ): SimpleGraphNodeNode {
-    return Object.assign(new this(), {
+    return {
       id: toSimpleId(NodeType.node, id),
       label: "node",
       type: NodeType.node,
-    }) as SimpleGraphNodeNode;
+    } as SimpleGraphNodeNode;
   }
 
   static edgeNode(
-    this: new () => SimpleGraphEdgeNode,
     id: Id
   ): SimpleGraphEdgeNode {
-    return Object.assign(new this(), {
+    return {
       id: toSimpleId(NodeType.edge, id),
       label: "node",
       type: NodeType.edge,
-    }) as SimpleGraphEdgeNode;
+    } as SimpleGraphEdgeNode;
   }
 
   static labelNode(
-    this: new () => SimpleGraphPropertyNode,
     label: Label
   ): SimpleGraphPropertyNode {
-    return Object.assign(new this(), {
+    return {
       id: toSimpleId(NodeType.label, label),
       label: label,
       type: NodeType.label,
-    }) as SimpleGraphPropertyNode;
+    } as SimpleGraphPropertyNode;
   }
 
   static propertyNode(
-    this: new () => SimpleGraphLabelNode,
     propertyType: PropertyType
   ): SimpleGraphLabelNode {
-    return Object.assign(new this(), {
+    return {
       id: toSimpleId(NodeType.propertyType, propertyType.toString()),
-      label: propertyType,
+      label: propertyType.toString(),
       type: NodeType.propertyType,
-    }) as SimpleGraphLabelNode;
+    } as SimpleGraphLabelNode;
   }
 }

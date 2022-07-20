@@ -26,43 +26,40 @@ export class SimpleGraphEdge implements SimpleGraphEdgeType {
   readonly type!: EdgeType;
 
   static labelEdge(
-    this: new () => SimpleGraphLabelEdge,
     sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
     targetNode: SimpleGraphLabelNode
   ): SimpleGraphLabelEdge {
-    return Object.assign(new this(), {
+    return {
       sourceNode: sourceNode,
       targetNode: targetNode,
       label: "label",
       type: EdgeType.label,
-    }) as SimpleGraphLabelEdge;
+    } as SimpleGraphLabelEdge;
   }
 
   static propertyEdge(
-    this: new () => SimpleGraphPropertyEdge,
     sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode,
     targetNode: SimpleGraphPropertyNode,
     property: Property
   ): SimpleGraphPropertyEdge {
-    return Object.assign(new this(), {
+    return {
       sourceNode: sourceNode,
       targetNode: targetNode,
       label: property,
       type: EdgeType.property,
-    }) as SimpleGraphPropertyEdge;
+    } as SimpleGraphPropertyEdge;
   }
 
   static edgeEdge(
-    this: new () => SimpleGraphEdgeEdge,
     sourceNode: SimpleGraphEdgeNode,
     targetNode: SimpleGraphNodeNode,
     direction: EdgeDirection
   ): SimpleGraphEdgeEdge {
-    return Object.assign(new this(), {
+    return {
       sourceNode: sourceNode,
       targetNode: targetNode,
       label: direction,
       type: EdgeType.edge,
-    }) as SimpleGraphEdgeEdge;
+    } as SimpleGraphEdgeEdge;
   }
 }
