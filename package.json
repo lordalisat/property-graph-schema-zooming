@@ -1,27 +1,27 @@
 {
   "name": "property-graph-schema-zooming",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "run-p -l type-check:watch start:dev",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
-    "start:dev": "parcel ./src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "npx prettier --write src/**/*.ts",
-    "lint": "npx eslint src/**/*.ts"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.1",
+    "@tsconfig/svelte": "^3.0.0",
+    "svelte": "^3.49.0",
+    "svelte-check": "^2.8.0",
+    "svelte-preprocess": "^4.10.7",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint-config-prettier": "^8.5.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "@types/d3": "^7.4.0",
-    "d3": "^7.4.4"
   }
 }
