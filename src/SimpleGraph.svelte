@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { drag, pointRadial, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity } from "d3";
+  import { drag, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity } from "d3";
 
   import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force"
 import { onMount } from "svelte";
@@ -19,20 +19,21 @@ import { onMount } from "svelte";
   let edges: SimpleGraphEdgeType[] = [];
 	let transform = zoomIdentity;
 	const colourScale = scaleOrdinal(schemeCategory10);
+  let mLinkNum = {};
 
   let width = 1200
   $: height = width
   $: nodes = [...graph.nodeNodes, ...graph.edgeNodes, ...graph.labelNodes, ...graph.propertyNodes];
   $: edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
 
-  $: console.log(nodes);
-  $: console.log(edges);
+  // $: console.log(nodes);
+  // $: console.log(edges);
 
   let simulation;
     onMount(() => {
       simulation = forceSimulation(nodes)
         .force("link", forceLink(edges).distance(140))
-        .force("charge", forceManyBody().strength(-200))
+        .force("charge", forceManyBody().strength(-800))
         .force("center", forceCenter(width / 2, height / 2))
         .on('tick', simulationUpdate);
 
@@ -52,6 +53,7 @@ import { onMount } from "svelte";
     simulation.tick();
     nodes = [...nodes];
     edges = [...edges];
+    setLinkIndexAndNum(edges);
   }
 
   function zoomed(currentEvent) {
@@ -88,6 +90,74 @@ import { onMount } from "svelte";
 	function resize() {
 		({ width, height } = svg.getBoundingClientRect());
 	}
+
+  // sort the links by source, then target
+  function sortEdges(edges) {								
+    edges.sort(function(a,b) {
+      if (a.source > b.source) 
+      {
+          return 1;
+      }
+      else if (a.source < b.source) 
+      {
+          return -1;
+      }
+      else 
+      {
+          if (a.target > b.target) 
+          {
+              return 1;
+          }
+          if (a.target < b.target) 
+          {
+              return -1;
+          }
+          else 
+          {
+              return 0;
+          }
+      }
+    });
+  }
+    
+  //any links with duplicate source and target get an incremented 'linknum'
+  function setLinkIndexAndNum(edges)
+  {
+    sortEdges(edges);
+    for (var i = 0; i < edges.length; i++) {
+      if (i != 0 &&
+        edges[i].source == edges[i-1].source &&
+        edges[i].target == edges[i-1].target) 
+      {
+        edges[i].linkIndex = edges[i-1].linkIndex + 1;
+      }
+      else 
+      {
+        edges[i].linkIndex = 1;
+      }
+      // save the total number of links between two nodes
+      mLinkNum[edges[i].source.id + ':' + edges[i].target.id] = edges[i].linkIndex;
+    }
+  }
+  
+  function arcPath(leftHand, d) {
+    var x1 = leftHand ? d.source.x : d.target.x,
+        y1 = leftHand ? d.source.y : d.target.y,
+        x2 = leftHand ? d.target.x : d.source.x,
+        y2 = leftHand ? d.target.y : d.source.y,
+        dx = x2 - x1,
+        dy = y2 - y1,
+        dr = Math.sqrt(dx * dx + dy * dy),
+        sweep = leftHand ? 0 : 1;
+        // get the total link numbers between source and target node
+        var lTotalLinkNum = mLinkNum[d.source.id + ":" + d.target.id];
+
+        if (lTotalLinkNum > 1) {
+          dr = dr/(1 + (1/lTotalLinkNum) * (d.linkIndex - 1));
+        }
+
+        return `M${x1} ${y1} A ${dr}, ${dr} 0, 0, ${sweep} ${x2}, ${y2}`;
+}
 </script>
 
 
@@ -97,16 +167,16 @@ import { onMount } from "svelte";
       <marker id="arrow" viewBox="0 0 10 10" refX="26" refY="5"
       markerWidth="13" markerHeight="13"
       orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill='#999' style='stroke: none'/>
+        <path d="M 0 0 L 10 5 L 0 10 z"/>
       </marker>
     </defs>
     {#each edges as edge}
-    <g class="edge" transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
+    <g class='edge' transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
       <title>{edge.label}</title>
-      <line  x1='{edge.source.x}' y1='{edge.source.y}' x2='{edge.target.x}' y2='{edge.target.y}'/>
-      <path id={edge.source.id + '_' + edge.target.id} d={'M ' + edge.source.x + ' ' + edge.source.y + ' L ' + edge.target.x + ' ' + edge.target.y} />
+      <path id='{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(true, edge)} />
+      <path class='invis' id='invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge.source.x < edge.target.x, edge)} />
       <text>
-        <textPath href={'#' + edge.source.id + '_' + edge.target.id} startOffset='50%' style="">
+        <textPath href='#invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' startOffset='50%' style="">
           {edge.label.toString()}
         </textPath>
       </text>
@@ -127,15 +197,27 @@ import { onMount } from "svelte";
 		float: left;
 	}
 
+  .invis {
+    fill: none;
+    stroke: none;
+    marker-end:none;
+  }
+
 	circle {
 		stroke: #fff;
     stroke-width: 1.5;
 	}
 
-  line {
+  path {
+    fill: none;
     stroke: #999;
     stroke-opacity: 0.6;
     marker-end:url(#arrow);
+  }
+
+  marker path{
+    fill:#999;
+    stroke: none;
   }
 
   text {

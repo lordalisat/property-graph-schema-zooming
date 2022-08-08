@@ -1,7 +1,8 @@
-import type { Id } from "../types/id";
-import { graphType } from "../types/graphType";
+import { graphType } from "types/graphType";
+import type { Id } from "types/id";
 import type { PropertyGraphEdge } from "./propertyGraphEdge";
 import type { PropertyGraphNode } from "./propertyGraphNode";
+
 export interface PropertyGraph {
   type: graphType;
 

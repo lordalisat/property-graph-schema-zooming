@@ -1,11 +1,11 @@
-import { SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
-import { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
-import { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
+import { type SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
+import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
+import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
 import { toSimpleId } from "types/id";
-import { Label } from "types/label";
-import { EdgeTId } from "types/simulation/edgeTId";
-import { PId, PIdMaps } from "types/simulation/pIdMaps";
-import { SignatureStorage } from "types/simulation/signatureStorage";
+import type { Label } from "types/label";
+import type { EdgeTId } from "types/simulation/edgeTId";
+import type { PId, PIdMaps } from "types/simulation/pIdMaps";
+import type { SignatureStorage } from "types/simulation/signatureStorage";
 import { Equivalence } from "./equivalence";
 
 export class Simulation extends Equivalence {
@@ -80,9 +80,9 @@ export class Simulation extends Equivalence {
     this.pIds.old_pid = new Map(this.pIds.new_pid);
 
     const edgeTIds: Array<EdgeTId> = this.uniqEdgeTId(this.edges.map((edge) => {
-      const oldPId = this.pIds.old_pid.get(edge.targetNode.id);
+      const oldPId = this.pIds.old_pid.get(edge.target.id);
       return {
-        sourceNode: edge.sourceNode,
+        source: edge.source,
         label: edge.label,
         oldPId: oldPId,
       }
@@ -90,7 +90,7 @@ export class Simulation extends Equivalence {
 
     this.nodes.forEach((node) => {
       let sig = this.pIds.j_pid.get(node.id)[0].toString();
-      edgeTIds.filter((edge) => edge.sourceNode.id === node.id).forEach((edge) => {
+      edgeTIds.filter((edge) => edge.source.id === node.id).forEach((edge) => {
         sig = `${sig}(${edge.label},${edge.oldPId})`;
       });
       const pId = this.insert(sig);
@@ -114,12 +114,12 @@ export class Simulation extends Equivalence {
     }));
 
     const edges = this.uniqEdges(this.edges.map((edge) => {
-      const sourceNode = schemaNodesMap.get(this.pIds.new_pid.get(edge.sourceNode.id));
-      const targetNode = schemaNodesMap.get(this.pIds.new_pid.get(edge.targetNode.id));
+      const source = schemaNodesMap.get(this.pIds.new_pid.get(edge.source.id));
+      const target = schemaNodesMap.get(this.pIds.new_pid.get(edge.target.id));
       return {
-        sourceNode: sourceNode,
+        source: source,
         label: edge.label,
-        targetNode: targetNode,
+        target: target,
         type: edge.type
       }
     }))

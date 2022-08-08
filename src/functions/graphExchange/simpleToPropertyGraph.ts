@@ -1,7 +1,7 @@
 import { PropertyGraph, propertyGraphService } from "propertyGraphEntities/propertyGraph";
 import { PropertyGraphEdge } from "propertyGraphEntities/propertyGraphEdge";
 import { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
-import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
+import type SimpleGraph from "SimpleGraph.svelte";
 import { fromSimpleId } from "types/id";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 

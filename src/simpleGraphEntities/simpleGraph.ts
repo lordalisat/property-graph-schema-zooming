@@ -1,4 +1,4 @@
-import { graphType } from "../types/graphType";
+import { graphType } from "types/graphType";
 import type { SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
 import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
 

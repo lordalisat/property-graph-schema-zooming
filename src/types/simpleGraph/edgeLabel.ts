@@ -1,4 +1,4 @@
-import type { Property } from "../property";
+import type { Property } from "types/property";
 
 export type EdgeLabel = Property | EdgeDirection | "label";
 

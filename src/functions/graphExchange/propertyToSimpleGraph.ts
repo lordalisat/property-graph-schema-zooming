@@ -1,11 +1,11 @@
-import { PropertyGraph } from "propertyGraphEntities/propertyGraph";
+import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
 import { SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
 import { SimpleGraphEdge } from "simpleGraphEntities/simpleGraphEdge";
 import { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "simpleGraphEntities/simpleGraphNode";
-import { Id } from "types/id";
-import { Label } from "types/label";
+import type { Id } from "types/id";
+import type { Label } from "types/label";
 import { Property, PropertyType } from "types/property";
-import { Value } from "types/propertyGraph/value";
+import type { Value } from "types/propertyGraph/value";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {

@@ -1,9 +1,9 @@
-import type { SimpleGraphNodeType } from "src/simpleGraphEntities/simpleGraphNode";
-import type { EdgeLabel } from "../simpleGraph/edgeLabel";
+import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
+import type { EdgeLabel } from "types/simpleGraph/edgeLabel";
 import type { PId } from "./pIdMaps";
 
 export interface EdgeTId {
-  sourceNode: SimpleGraphNodeType,
+  source: SimpleGraphNodeType,
   label: EdgeLabel,
   oldPId: PId,
 }

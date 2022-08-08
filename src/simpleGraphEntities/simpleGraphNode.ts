@@ -1,7 +1,7 @@
-import { toSimpleId, type Id, type SimpleId } from "../types/id";
-import type { Label } from "../types/label";
-import type { PropertyType } from "../types/property";
-import { NodeType } from "../types/simpleGraph/nodeType";
+import { type SimpleId, type Id, toSimpleId } from "types/id";
+import type { Label } from "types/label";
+import type { PropertyType } from "types/property";
+import { NodeType } from "types/simpleGraph/nodeType";
 
 export interface SimpleGraphNodeType {
   x?: number;

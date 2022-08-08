@@ -1,13 +1,14 @@
-import type { Property } from "../types/property";
-import type { EdgeDirection, EdgeLabel } from "../types/simpleGraph/edgeLabel";
-import { EdgeType } from "../types/simpleGraph/edgeType";
-import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNode, SimpleGraphNodeNode, SimpleGraphNodeType, SimpleGraphPropertyNode } from "./simpleGraphNode";
+import type { Property } from "types/property";
+import type { EdgeLabel, EdgeDirection } from "types/simpleGraph/edgeLabel";
+import { EdgeType } from "types/simpleGraph/edgeType";
+import type { SimpleGraphNodeType, SimpleGraphNodeNode, SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
 
 export interface SimpleGraphEdgeType {
   source: SimpleGraphNodeType;
   target: SimpleGraphNodeType;
   label: EdgeLabel;
   type: EdgeType;
+  linkIndex?: number;
 }
 export type SimpleGraphLabelEdge = SimpleGraphEdgeType;
 export type SimpleGraphPropertyEdge = SimpleGraphEdgeType;
