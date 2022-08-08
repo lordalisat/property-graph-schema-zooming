@@ -1,4 +1,4 @@
-import { SimpleId } from "types/id";
+import type { SimpleId } from "../id";
 
 export type PId = number;
 

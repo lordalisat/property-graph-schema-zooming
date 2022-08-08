@@ -1,9 +1,11 @@
-import { Id, SimpleId, toSimpleId } from "types/id";
-import { NodeType } from "types/simpleGraph/nodeType";
-import { Label } from "types/label";
-import { PropertyType } from "types/property";
+import { toSimpleId, type Id, type SimpleId } from "../types/id";
+import type { Label } from "../types/label";
+import type { PropertyType } from "../types/property";
+import { NodeType } from "../types/simpleGraph/nodeType";
 
 export interface SimpleGraphNodeType {
+  x?: number;
+  y?: number;
   id: SimpleId;
   label: Label;
   type: NodeType;
@@ -14,11 +16,7 @@ export type SimpleGraphEdgeNode = SimpleGraphNodeType;
 export type SimpleGraphPropertyNode = SimpleGraphNodeType;
 export type SimpleGraphLabelNode = SimpleGraphNodeType;
 
-export class SimpleGraphNode implements SimpleGraphNodeType {
-  readonly id!: SimpleId;
-  readonly label!: Label;
-  readonly type!: NodeType;
-
+export class SimpleGraphNode {
   static nodeNode(
     id: Id
   ): SimpleGraphNodeNode {
@@ -34,7 +32,7 @@ export class SimpleGraphNode implements SimpleGraphNodeType {
   ): SimpleGraphEdgeNode {
     return {
       id: toSimpleId(NodeType.edge, id),
-      label: "node",
+      label: "edge",
       type: NodeType.edge,
     } as SimpleGraphEdgeNode;
   }

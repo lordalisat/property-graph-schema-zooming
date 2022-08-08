@@ -1,8 +1,8 @@
+import type { Id } from "src/types/id";
+import type { Label } from "src/types/label";
+import type { Property } from "src/types/property";
+import type { Value } from "src/types/propertyGraph/value";
 import { PropertyGraphElement } from "./propertyGraphElement";
-import { Label } from "types/label";
-import { Property } from "types/property";
-import { Id } from "types/id";
-import { Value } from "types/propertyGraph/value";
 
 export class PropertyGraphEdge extends PropertyGraphElement {
   readonly sourceNode!: Id;

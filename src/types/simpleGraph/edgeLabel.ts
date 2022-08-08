@@ -1,9 +1,9 @@
-import { Property } from "types/property";
+import type { Property } from "../property";
 
 export type EdgeLabel = Property | EdgeDirection | "label";
 
 export enum EdgeDirection {
-  "from",
-  "to",
-  "connects",
+  "from" = "from",
+  "to" = "to",
+  "connects" = "connects",
 }

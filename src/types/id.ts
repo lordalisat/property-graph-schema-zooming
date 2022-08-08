@@ -1,4 +1,4 @@
-import { NodeType } from "./simpleGraph/nodeType";
+import type { NodeType } from "./simpleGraph/nodeType";
 
 export type Id = string;
 

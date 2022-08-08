@@ -1,15 +1,6 @@
-import { graphType } from "types/graphType";
-import {
-  SimpleGraphEdgeEdge,
-  SimpleGraphLabelEdge,
-  SimpleGraphPropertyEdge,
-} from "./simpleGraphEdge";
-import {
-  SimpleGraphEdgeNode,
-  SimpleGraphLabelNode,
-  SimpleGraphNodeNode,
-  SimpleGraphPropertyNode,
-} from "./simpleGraphNode";
+import { graphType } from "../types/graphType";
+import type { SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
+import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
 
 export interface SimpleGraph {
   type: graphType;
