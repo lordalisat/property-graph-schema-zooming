@@ -164,7 +164,7 @@ import { onMount } from "svelte";
 <figure class="c">
   <svg bind:this={svg} {width} {height}>
     <defs>
-      <marker id="arrow" viewBox="0 0 10 10" refX="26" refY="5"
+      <marker id="arrow" viewBox="0 0 10 10" refX="26" refY="6"
       markerWidth="13" markerHeight="13"
       orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z"/>
