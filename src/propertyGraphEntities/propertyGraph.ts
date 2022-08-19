@@ -15,7 +15,7 @@ export interface PropertyGraph {
   addEdge(edge: PropertyGraphEdge): void;
 }
 
-class HiddenPropertyGraph {
+class HiddenPropertyGraph implements PropertyGraph {
   type: graphType;
 
   nodes: Map<Id, PropertyGraphNode>;
