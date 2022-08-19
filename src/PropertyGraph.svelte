@@ -44,8 +44,8 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
     ]
   });
 
-  $: console.log(nodes);
-  $: console.log(edges);
+  // $: console.log(nodes);
+  // $: console.log(edges);
 
   let simulation;
     onMount(() => {
@@ -80,12 +80,18 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
   }
 
 	function dragsubject(currentEvent) {
-        const node = simulation.find(transform.invertX(currentEvent.x), transform.invertY(currentEvent.y), 20);
-        if (node) {
-            node.x = transform.applyX(node.x);
-            node.y = transform.applyY(node.y);
-        }
-        return node;
+    const nodes = simulation.nodes();
+    const node = nodes.filter((node) => {
+      return (node.x - (.5 * node.width) < transform.invertX(currentEvent.x))
+      && (node.x + (.5 * node.width) > transform.invertX(currentEvent.x))
+      && (node.y - (.5 * node.height) < transform.invertY(currentEvent.y))
+      && (node.y + (.5 * node.height) > transform.invertY(currentEvent.y))
+    })[0];
+    if (node) {
+        node.x = transform.applyX(node.x);
+        node.y = transform.applyY(node.y);
+    }
+    return node;
 	}
 
   function dragstarted(currentEvent) {
