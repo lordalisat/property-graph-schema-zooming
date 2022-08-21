@@ -179,7 +179,7 @@
   <svg bind:this={svg} {width} {height}>
     <defs>
       <marker
-        id="arrow"
+        id="simple_arrow"
         viewBox="0 0 10 10"
         refX="26"
         refY="6"
@@ -256,7 +256,7 @@
     fill: none;
     stroke: #999;
     stroke-opacity: 0.6;
-    marker-end: url(#arrow);
+    marker-end: url(#simple_arrow);
   }
 
   marker path {

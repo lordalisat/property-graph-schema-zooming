@@ -34,7 +34,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
       throw new Error("Edges must have same directionality");
     }
 
-    const isDirected = connectedEdges[0].label === EdgeDirection.connects;
+    const isDirected = connectedEdges[0].label !== EdgeDirection.connects;
     let source;
     let target;
     if (!isDirected || connectedEdges[0].label === EdgeDirection.from) {

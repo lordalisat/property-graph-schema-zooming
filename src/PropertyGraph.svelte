@@ -237,7 +237,7 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
 <figure class="c">
   <svg bind:this={svg} {width} {height}>
     <defs>
-      <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+      <marker id="prop_arrow" viewBox="0 0 10 10" refX="10" refY="5"
       markerWidth="13" markerHeight="13"
       orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" fill='#999' style='stroke: none'/>
@@ -245,7 +245,7 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
     </defs>
     {#each edges as edge}
     <g class="edge" transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
-      <path id='{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge)} marker-end={edge.directional ? 'url(#arrow)' : null}/>
+      <path id='{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge)} marker-end={edge.directional ? 'url(#prop_arrow)' : null}/>
     </g>
     {/each}
     {#each nodes as point}
@@ -274,7 +274,6 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
 
   marker path{
     fill:#999;
-    fill-opacity: 0.6;
     stroke: none;
   }
 
