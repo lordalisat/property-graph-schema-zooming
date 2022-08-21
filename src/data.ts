@@ -1,52 +1,43 @@
-import { type PropertyGraph, propertyGraphService } from "propertyGraphEntities/propertyGraph";
+import { propertyToSimpleGraph } from "functions/graphExchange/propertyToSimpleGraph";
+import { simpleToPropertyGraph } from "functions/graphExchange/simpleToPropertyGraph";
+import { induceWorkload, InductionMethod } from "functions/workloadInduction";
+import { propertyGraphService } from "propertyGraphEntities/propertyGraph";
 import { PropertyGraphEdge } from "propertyGraphEntities/propertyGraphEdge";
 import { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
-import { simpleGraphService, type SimpleGraph } from "./simpleGraphEntities/simpleGraph";
-import { SimpleGraphEdge } from "./simpleGraphEntities/simpleGraphEdge";
-import { SimpleGraphNode } from "./simpleGraphEntities/simpleGraphNode";
-import { EdgeDirection } from "./types/simpleGraph/edgeLabel";
+import type { Workload } from "types/workload";
 
+export const propData = propertyGraphService.data;
 
-export const propertyGraph: PropertyGraph = propertyGraphService.data;
+propData.addNode(new PropertyGraphNode({ id: "n1", labels: ["Person"], properties: new Map([["name", "Alice"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n2", labels: ["Person"], properties: new Map([["name", "Bob"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n3", labels: ["Person"], properties: new Map([["name", "Charlie"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n4", labels: ["Person"], properties: new Map([["name", "David"]]) }));
 
-propertyGraph.addNode(new PropertyGraphNode({ id: "n1", labels: ["Person"], properties: new Map([["name", "Alice"]]) }));
-propertyGraph.addNode(new PropertyGraphNode({ id: "n2", labels: ["Person"], properties: new Map([["name", "Bob"]]) }));
-propertyGraph.addNode(new PropertyGraphNode({ id: "n3", labels: ["Person"], properties: new Map([["name", "Charlie"]]) }));
-propertyGraph.addNode(new PropertyGraphNode({ id: "n4", labels: ["Person"], properties: new Map([["name", "David"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n5", labels: ["Club"], properties: new Map([["name", "Graffiti Club"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n6", labels: ["Club"], properties: new Map([["name", "Horse Club"]]) }));
 
-propertyGraph.addNode(new PropertyGraphNode({ id: "n5", labels: ["Club"], properties: new Map([["name", "Graffiti Club"]]) }));
-propertyGraph.addNode(new PropertyGraphNode({ id: "n6", labels: ["Club"], properties: new Map([["name", "Horse Club"]]) }));
+propData.addNode(new PropertyGraphNode({ id: "n7", labels: ["City"], properties: new Map([["name", "Eindhoven"]]) }));
 
-propertyGraph.addNode(new PropertyGraphNode({ id: "n7", labels: ["City"], properties: new Map([["name", "Eindhoven"]]) }));
+propData.addEdge(new PropertyGraphEdge({ id: "e1", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n2", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e2", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n3", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e3", labels: ["follows"], properties: new Map(), sourceNode: "n3", targetNode: "n1", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e4", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n2", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e5", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n4", isDirected: true }));
 
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e1", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n2", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e2", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n3", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e3", labels: ["follows"], properties: new Map(), sourceNode: "n3", targetNode: "n1", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e4", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n2", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e5", labels: ["follows"], properties: new Map(), sourceNode: "n1", targetNode: "n4", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e6", labels: ["memberOf"], properties: new Map(), sourceNode: "n1", targetNode: "n5", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e7", labels: ["memberOf"], properties: new Map(), sourceNode: "n1", targetNode: "n6", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e8", labels: ["memberOf"], properties: new Map(), sourceNode: "n3", targetNode: "n6", isDirected: true }));
 
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e6", labels: ["memberOf"], properties: new Map(), sourceNode: "n1", targetNode: "n5", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e7", labels: ["memberOf"], properties: new Map(), sourceNode: "n1", targetNode: "n6", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e8", labels: ["memberOf"], properties: new Map(), sourceNode: "n3", targetNode: "n6", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e9", labels: ["livesIn"], properties: new Map(), sourceNode: "n1", targetNode: "n7", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e10", labels: ["livesIn"], properties: new Map(), sourceNode: "n3", targetNode: "n7", isDirected: true }));
+propData.addEdge(new PropertyGraphEdge({ id: "e11", labels: ["livesIn"], properties: new Map(), sourceNode: "n4", targetNode: "n7", isDirected: true }));
 
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e9", labels: ["livesIn"], properties: new Map(), sourceNode: "n1", targetNode: "n7", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e10", labels: ["livesIn"], properties: new Map(), sourceNode: "n3", targetNode: "n7", isDirected: true }));
-propertyGraph.addEdge(new PropertyGraphEdge({ id: "e11", labels: ["livesIn"], properties: new Map(), sourceNode: "n4", targetNode: "n7", isDirected: true }));
+export const simpleData = propertyToSimpleGraph(propData);
 
-export const simpleGraph: SimpleGraph = simpleGraphService.schema;
+const workload: Workload = [{ label: "Person", occurence: 1 }, { label: "Club", occurence: .5 }, {label: "follows", occurence: 1}, { label: "Random", occurence: .8 }];
 
-function getRandomInt(max) {
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max + 1));
-}
+export let threshold = 1;
+export let inductionMethod = InductionMethod.filter;
 
-simpleGraph.nodeNodes = [...Array(5).keys()].map(i => SimpleGraphNode.nodeNode(i.toString()));
-simpleGraph.edgeNodes = [...Array(5).keys()].map(i => SimpleGraphNode.edgeNode(i.toString()));
-
-for (let i = 0; i <= 4; i++) {
-  const startNode = simpleGraph.nodeNodes[getRandomInt(4)];
-  const endNode = simpleGraph.nodeNodes[getRandomInt(4)];
-  const edge = simpleGraph.edgeNodes[i];
-  simpleGraph.edgeEdges.push(SimpleGraphEdge.edgeEdge(edge, startNode, EdgeDirection.from));
-  simpleGraph.edgeEdges.push(SimpleGraphEdge.edgeEdge(edge, endNode, EdgeDirection.to));
-}
+export const simpleInduced = induceWorkload(workload, inductionMethod, threshold);
+export const propInduced = simpleToPropertyGraph(simpleInduced);

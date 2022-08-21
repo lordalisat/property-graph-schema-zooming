@@ -1,18 +1,21 @@
 import { graphType } from "types/graphType";
+import type { Id } from "types/id";
 import type { SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
-import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
+import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphNodeType, SimpleGraphPropertyNode } from "./simpleGraphNode";
 
 export interface SimpleGraph {
   type: graphType;
 
-  nodeNodes: Array<SimpleGraphNodeNode>;
-  edgeNodes: Array<SimpleGraphEdgeNode>;
-  labelNodes: Array<SimpleGraphLabelNode>;
-  propertyNodes: Array<SimpleGraphPropertyNode>;
+  nodeNodes: Map<Id, SimpleGraphNodeNode>;
+  edgeNodes: Map<Id, SimpleGraphEdgeNode>;
+  labelNodes: Map<Id, SimpleGraphLabelNode>;
+  propertyNodes: Map<Id, SimpleGraphPropertyNode>;
 
   labelEdges: Array<SimpleGraphLabelEdge>;
   propertyEdges: Array<SimpleGraphPropertyEdge>;
   edgeEdges: Array<SimpleGraphEdgeEdge>;
+
+  getNode(id: Id): SimpleGraphNodeType;
 
   emptyGraph(): void;
 
@@ -35,10 +38,10 @@ export interface SimpleGraph {
 class HiddenSimpleGraph implements SimpleGraph {
   type: graphType;
 
-  nodeNodes: Array<SimpleGraphNodeNode>;
-  edgeNodes: Array<SimpleGraphEdgeNode>;
-  labelNodes: Array<SimpleGraphLabelNode>;
-  propertyNodes: Array<SimpleGraphPropertyNode>;
+  nodeNodes: Map<Id, SimpleGraphNodeNode>;
+  edgeNodes: Map<Id, SimpleGraphEdgeNode>;
+  labelNodes: Map<Id, SimpleGraphLabelNode>;
+  propertyNodes: Map<Id, SimpleGraphPropertyNode>;
 
   labelEdges: Array<SimpleGraphLabelEdge>;
   propertyEdges: Array<SimpleGraphPropertyEdge>;
@@ -49,11 +52,15 @@ class HiddenSimpleGraph implements SimpleGraph {
     this.emptyGraph();
   }
 
+  public getNode(id: Id) {
+    return this.nodeNodes.get(id) ?? this.edgeNodes.get(id) ?? this.labelNodes.get(id) ?? this.propertyNodes.get(id);
+  }
+
   public emptyGraph() {
-    this.nodeNodes = [];
-    this.edgeNodes = [];
-    this.labelNodes = [];
-    this.propertyNodes = [];
+    this.nodeNodes = new Map();
+    this.edgeNodes = new Map();
+    this.labelNodes = new Map();
+    this.propertyNodes = new Map();
 
     this.labelEdges = [];
     this.propertyEdges = [];
@@ -61,35 +68,35 @@ class HiddenSimpleGraph implements SimpleGraph {
   }
 
   public addNodeNode(node: SimpleGraphNodeNode) {
-    this.nodeNodes.push(node);
+    this.nodeNodes.set(node.id, node);
   }
 
   public addNodeNodes(nodes: SimpleGraphNodeNode[]) {
-    this.nodeNodes.push(...nodes);
+    nodes.forEach((node) => this.addNodeNode(node));
   }
 
   public addEdgeNode(node: SimpleGraphEdgeNode) {
-    this.edgeNodes.push(node);
+    this.edgeNodes.set(node.id, node);
   }
 
   public addEdgeNodes(nodes: SimpleGraphEdgeNode[]) {
-    this.edgeNodes.push(...nodes);
+    nodes.forEach((node) => this.addEdgeNode(node));
   }
 
   public addLabelNode(node: SimpleGraphLabelNode) {
-    this.labelNodes.push(node);
+    this.labelNodes.set(node.id, node);
   }
 
   public addLabelNodes(nodes: SimpleGraphLabelNode[]) {
-    this.labelNodes.push(...nodes);
+    nodes.forEach((node) => this.addLabelNode(node));
   }
 
   public addPropertyNode(node: SimpleGraphPropertyNode) {
-    this.propertyNodes.push(node);
+    this.propertyNodes.set(node.id, node);
   }
 
   public addPropertyNodes(nodes: SimpleGraphPropertyNode[]) {
-    this.propertyNodes.push(...nodes);
+    nodes.forEach((node) => this.addPropertyNode(node));
   }
 
   public addLabelEdge(edge: SimpleGraphLabelEdge) {

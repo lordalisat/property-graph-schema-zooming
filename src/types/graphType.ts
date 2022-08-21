@@ -1,5 +1,5 @@
 export enum graphType {
-  "data",
-  "induced",
-  "schema",
+  "data" = "data",
+  "induced" = "induced",
+  "schema" = "schema",
 }

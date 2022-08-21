@@ -23,11 +23,11 @@ import { onMount } from "svelte";
 
   let width = 1200
   $: height = width
-  $: nodes = [...graph.nodeNodes, ...graph.edgeNodes, ...graph.labelNodes, ...graph.propertyNodes];
+  $: nodes = [...graph.nodeNodes.values(), ...graph.edgeNodes.values(), ...graph.labelNodes.values(), ...graph.propertyNodes.values()];
   $: edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
 
-  // $: console.log(nodes);
-  // $: console.log(edges);
+  $: console.log(nodes);
+  $: console.log(edges);
 
   let simulation;
     onMount(() => {
@@ -173,10 +173,10 @@ import { onMount } from "svelte";
     {#each edges as edge}
     <g class='edge' transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
       <title>{edge.label}</title>
-      <path id='{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(true, edge)} />
-      <path class='invis' id='invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge.source.x < edge.target.x, edge)} />
+      <path id='{graph.type}_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(true, edge)} />
+      <path class='invis' id='invis_{graph.type}_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge.source.x < edge.target.x, edge)} />
       <text>
-        <textPath href='#invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' startOffset='50%' style="">
+        <textPath href='#invis_{graph.type}_{edge.source.id}_{edge.target.id}_{edge.linkIndex}' startOffset='50%' style="">
           {edge.label.toString()}
         </textPath>
       </text>

@@ -1,15 +1,17 @@
 import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
-import { SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
+import { type SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
 import { SimpleGraphEdge } from "simpleGraphEntities/simpleGraphEdge";
-import { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNode, SimpleGraphNodeNode, SimpleGraphPropertyNode } from "simpleGraphEntities/simpleGraphNode";
+import { type SimpleGraphEdgeNode, type SimpleGraphLabelNode, SimpleGraphNode, type SimpleGraphNodeNode, type SimpleGraphPropertyNode } from "simpleGraphEntities/simpleGraphNode";
 import type { Id } from "types/id";
 import type { Label } from "types/label";
-import { Property, PropertyType } from "types/property";
+import { type Property, PropertyType } from "types/property";
 import type { Value } from "types/propertyGraph/value";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
-  const simpleGraph = simpleGraphService[graph.type] as SimpleGraph;
+  console.log(graph.type.toString());
+  const simpleGraph = simpleGraphService[graph.type.valueOf()] as SimpleGraph;
+  console.log(simpleGraph);
   simpleGraph.emptyGraph();
 
   const nodeMap: Map<Id, SimpleGraphNodeNode> = new Map();
