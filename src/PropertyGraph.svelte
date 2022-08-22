@@ -1,6 +1,5 @@
 <script lang='ts'>
-  import App from "App.svelte";
-import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity } from "d3";
+  import { drag, select, zoom, zoomIdentity } from "d3";
 
   import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force"
   import type { PropertyGraphElement } from "propertyGraphEntities/propertyGraphElement";
@@ -18,13 +17,13 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
   export let graph: PropertyGraph;
 
   let svg;
+  let width;
+  let height;
   let nodes: PropertyGraphElement[] = [];
   let edges: Edge[] = [];
 	let transform = zoomIdentity;
   let mLinkNum = {};
 
-  let width = 1200
-  $: height = width
   $: nodes = [...graph.nodes.values(), ...graph.edges.values()];
   $: nodes.forEach((node) => node.setPrintOptions());
   $: edges = [...graph.edges.values()].flatMap((edge) => {
@@ -231,8 +230,7 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
 }
 </script>
 
-
-<figure class="c">
+<figure bind:clientHeight={height} bind:clientWidth={width}>
   <svg bind:this={svg} {width} {height}>
     <defs>
       <marker id="prop_arrow" viewBox="0 0 10 10" refX="10" refY="5"
@@ -259,6 +257,12 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
 </figure>
 
 <style>
+  figure {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
 	svg {
 		float: left;
     font-family: monospace;

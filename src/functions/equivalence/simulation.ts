@@ -64,8 +64,6 @@ export class Simulation extends Equivalence {
 
     this.build_bsim(this.k);
 
-    console.log(this.pIds);
-
     return this.graphFromPIds();
   }
   
@@ -133,9 +131,7 @@ export class Simulation extends Equivalence {
     }))
 
     const splitEdges = this.groupBy(edges, "type");
-    console.log(splitEdges);
     const splitNodes = this.groupBy([...schemaNodesMap.values()], "type");
-    console.log(splitNodes);
 
     schemaGraph.nodeNodes = splitNodes[NodeType.node] ?? [];
     schemaGraph.edgeNodes = splitNodes[NodeType.edge] ?? [];
@@ -145,8 +141,6 @@ export class Simulation extends Equivalence {
     schemaGraph.edgeEdges = splitEdges[EdgeType.edge] ?? [];
     schemaGraph.labelEdges = splitEdges[EdgeType.label] ?? [];
     schemaGraph.propertyEdges = splitEdges[EdgeType.property] ?? [];
-
-    console.log(schemaGraph);
 
     return schemaGraph;
   }

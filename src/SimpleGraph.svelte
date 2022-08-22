@@ -15,6 +15,7 @@
     forceSimulation,
   } from "d3-force";
   import { onMount } from "svelte";
+import type { Writable } from "svelte/store";
   import type { SimpleGraph } from "./simpleGraphEntities/simpleGraph";
   import type { SimpleGraphEdgeType } from "./simpleGraphEntities/simpleGraphEdge";
   import type { SimpleGraphNodeType } from "./simpleGraphEntities/simpleGraphNode";
@@ -25,33 +26,35 @@
   export let graph: SimpleGraph;
 
   let svg;
+  let width;
+  let height;
   let nodes: SimpleGraphNodeType[] = [];
   let edges: SimpleGraphEdgeType[] = [];
   let transform = zoomIdentity;
   const colourScale = scaleOrdinal(schemeCategory10);
   let mLinkNum = {};
-
-  let width = 1200;
-  $: height = width;
-  $: nodes = [
-    ...graph.nodeNodes.values(),
-    ...graph.edgeNodes.values(),
-    ...graph.labelNodes.values(),
-    ...graph.propertyNodes.values(),
-  ];
-  $: edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
-
-  $: console.log(nodes);
-  $: console.log(edges);
-
-  let simulation;
-  onMount(() => {
-    simulation = forceSimulation(nodes)
-      .force("link", forceLink(edges).distance(140))
+  const simulation = forceSimulation()
       .force("charge", forceManyBody().strength(-800))
-      .force("center", forceCenter(width / 2, height / 2))
       .on("tick", simulationUpdate);
 
+  $: {
+    console.log("update");
+    nodes = [
+      ...graph.nodeNodes.values(),
+      ...graph.edgeNodes.values(),
+      ...graph.labelNodes.values(),
+      ...graph.propertyNodes.values(),
+    ];
+    edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
+  }
+
+  // $: console.log(nodes);
+  // $: console.log(edges);
+  $: setLinkIndexAndNum(edges);
+  $: simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
+  $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
+
+  onMount(() => {
     select(svg)
       .call(
         drag()
@@ -72,7 +75,6 @@
     simulation.tick();
     nodes = [...nodes];
     edges = [...edges];
-    setLinkIndexAndNum(edges);
   }
 
   function zoomed(currentEvent) {
@@ -173,8 +175,9 @@
   }
 </script>
 
-<figure class="c">
-  <svg bind:this={svg} {width} {height}>
+<!-- <svelte:window on:resize='{resize}'/> -->
+<figure bind:clientWidth={width} bind:clientHeight={height}>
+  <svg bind:this={svg} width={width} height={height}>
     <defs>
       <marker
         id="simple_arrow"
@@ -235,8 +238,15 @@
 </figure>
 
 <style>
+  figure {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
   svg {
     float: left;
+    font-family: monospace;
   }
 
   .invis {
