@@ -17,8 +17,6 @@ import { drag, json, scaleOrdinal, schemeCategory10, select, zoom, zoomIdentity 
   // an array of our particles
   export let graph: PropertyGraph;
 
-  console.log(graph);
-
   let svg;
   let nodes: PropertyGraphElement[] = [];
   let edges: Edge[] = [];

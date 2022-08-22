@@ -9,9 +9,7 @@ import type { Value } from "types/propertyGraph/value";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
-  console.log(graph.type.toString());
   const simpleGraph = simpleGraphService[graph.type.valueOf()] as SimpleGraph;
-  console.log(simpleGraph);
   simpleGraph.emptyGraph();
 
   const nodeMap: Map<Id, SimpleGraphNodeNode> = new Map();

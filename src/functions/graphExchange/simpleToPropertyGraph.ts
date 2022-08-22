@@ -11,7 +11,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
 
   propertyGraph.nodes = new Map([...graph.nodeNodes.values()].map((node) => {
     const labels = graph.labelEdges.filter((edge) => edge.source === node).map((edge) => edge.target.label);
-    const properties = new Map(graph.propertyEdges.filter((edge) => edge.source === node).map((edge) => [edge.label.toString(), edge.source.label]));
+    const properties = new Map(graph.propertyEdges.filter((edge) => edge.source === node).map((edge) => [edge.label.toString(), edge.target.label]));
 
     const id = fromSimpleId(node.id);
     const propertyNode = new PropertyGraphNode({ id: id, labels: labels, properties: properties });
@@ -21,7 +21,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
 
   propertyGraph.edges = new Map([...graph.edgeNodes.values()].map((node) => {
     const labels = graph.labelEdges.filter((edge) => edge.source === node).map((edge) => edge.target.label);
-    const properties = new Map(graph.propertyEdges.filter((edge) => edge.source === node).map((edge) => [edge.label.toString(), edge.source.label]));
+    const properties = new Map(graph.propertyEdges.filter((edge) => edge.source === node).map((edge) => [edge.label.toString(), edge.target.label]));
     const connectedEdges = graph.edgeEdges.filter((edge) => edge.source === node);
 
     if (connectedEdges.length != 2) {

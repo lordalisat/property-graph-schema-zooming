@@ -23,14 +23,14 @@ export function induceWorkload(
   inducedGraph.emptyGraph();
 
   if (threshold === 0) {
-    inducedGraph.nodeNodes = graph.nodeNodes;
-    inducedGraph.edgeNodes = graph.edgeNodes;
-    inducedGraph.labelNodes = graph.labelNodes;
-    inducedGraph.propertyNodes = graph.propertyNodes;
+    inducedGraph.nodeNodes = new Map([...graph.nodeNodes.values()].map((node) => ([node.id, { ...node }])));
+    inducedGraph.edgeNodes = new Map([...graph.edgeNodes.values()].map((node) => ([node.id, { ...node }])));
+    inducedGraph.labelNodes = new Map([...graph.labelNodes.values()].map((node) => ([node.id, { ...node }])));
+    inducedGraph.propertyNodes = new Map([...graph.propertyNodes.values()].map((node) => ([node.id, { ...node }])));
 
-    inducedGraph.edgeEdges = graph.edgeEdges;
-    inducedGraph.labelEdges = graph.labelEdges;
-    inducedGraph.propertyEdges = graph.propertyEdges;
+    inducedGraph.edgeEdges = [...graph.edgeEdges.map((edge) => ({ ...edge, source: inducedGraph.edgeNodes.get(edge.source.id), target: inducedGraph.nodeNodes.get(edge.target.id) }))];
+    inducedGraph.labelEdges = [...graph.labelEdges.map((edge) => ({ ...edge, source: inducedGraph.getNode(edge.source.id), target: inducedGraph.labelNodes.get(edge.target.id) }))];
+    inducedGraph.propertyEdges = [...graph.propertyEdges.map((edge) => ({ ...edge, source: inducedGraph.getNode(edge.source.id), target: inducedGraph.propertyNodes.get(edge.target.id) }))];
 
     return inducedGraph;
   }

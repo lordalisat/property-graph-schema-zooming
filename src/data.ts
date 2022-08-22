@@ -1,3 +1,4 @@
+import { Simulation } from "functions/equivalence/simulation";
 import { propertyToSimpleGraph } from "functions/graphExchange/propertyToSimpleGraph";
 import { simpleToPropertyGraph } from "functions/graphExchange/simpleToPropertyGraph";
 import { induceWorkload, InductionMethod } from "functions/workloadInduction";
@@ -36,8 +37,11 @@ export const simpleData = propertyToSimpleGraph(propData);
 
 const workload: Workload = [{ label: "Person", occurence: 1 }, { label: "Club", occurence: .5 }, {label: "follows", occurence: 1}, { label: "Random", occurence: .8 }];
 
-export let threshold = 1;
+export let threshold = 0;
 export let inductionMethod = InductionMethod.filter;
 
 export const simpleInduced = induceWorkload(workload, inductionMethod, threshold);
 export const propInduced = simpleToPropertyGraph(simpleInduced);
+
+export const simpleSchema = new Simulation().calculateSchema(simpleInduced);
+export const propSchema = simpleToPropertyGraph(simpleSchema);

@@ -3,6 +3,8 @@ import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
 import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
 import { toSimpleId } from "types/id";
 import type { Label } from "types/label";
+import { EdgeType } from "types/simpleGraph/edgeType";
+import { NodeType } from "types/simpleGraph/nodeType";
 import type { EdgeTId } from "types/simulation/edgeTId";
 import type { PId, PIdMaps } from "types/simulation/pIdMaps";
 import type { SignatureStorage } from "types/simulation/signatureStorage";
@@ -14,7 +16,11 @@ export class Simulation extends Equivalence {
   private k = 2;
   private nodes: SimpleGraphNodeType[];
   private edges: SimpleGraphEdgeType[];
-  private pIds: PIdMaps;
+  private pIds: PIdMaps = {
+    old_pid: new Map(),
+    new_pid: new Map(),
+    j_pid: new Map(),
+  };
 
   private insert(s: string): PId {
     if (this.storage.has(s)) {
@@ -49,15 +55,16 @@ export class Simulation extends Equivalence {
     })
   }
 
-  public calculateSchema(): SimpleGraph {
-    const graph = simpleGraphService.induced;
+  public calculateSchema(graph: SimpleGraph): SimpleGraph {
     this.currentPId = 0;
     this.storage = new Map();
 
-    this.nodes = [...graph.nodeNodes, ...graph.edgeNodes, ...graph.labelNodes, ...graph.propertyNodes];
+    this.nodes = [...graph.nodeNodes.values(), ...graph.edgeNodes.values(), ...graph.labelNodes.values(), ...graph.propertyNodes.values()];
     this.edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
 
     this.build_bsim(this.k);
+
+    console.log(this.pIds);
 
     return this.graphFromPIds();
   }
@@ -77,6 +84,7 @@ export class Simulation extends Equivalence {
       })
       return;
     }
+    this.build_bsim(k - 1);
     this.pIds.old_pid = new Map(this.pIds.new_pid);
 
     const edgeTIds: Array<EdgeTId> = this.uniqEdgeTId(this.edges.map((edge) => {
@@ -125,16 +133,20 @@ export class Simulation extends Equivalence {
     }))
 
     const splitEdges = this.groupBy(edges, "type");
+    console.log(splitEdges);
     const splitNodes = this.groupBy([...schemaNodesMap.values()], "type");
+    console.log(splitNodes);
 
-    schemaGraph.nodeNodes = splitNodes["node"] ?? [];
-    schemaGraph.edgeNodes = splitNodes["edge"] ?? [];
-    schemaGraph.labelNodes = splitNodes["label"] ?? [];
-    schemaGraph.propertyNodes = splitNodes["property"] ?? [];
+    schemaGraph.nodeNodes = splitNodes[NodeType.node] ?? [];
+    schemaGraph.edgeNodes = splitNodes[NodeType.edge] ?? [];
+    schemaGraph.labelNodes = splitNodes[NodeType.label] ?? [];
+    schemaGraph.propertyNodes = splitNodes[NodeType.propertyType] ?? [];
 
-    schemaGraph.edgeEdges = splitEdges["edge"] ?? [];
-    schemaGraph.labelEdges = splitEdges["label"] ?? [];
-    schemaGraph.propertyEdges = splitEdges["property"] ?? [];
+    schemaGraph.edgeEdges = splitEdges[EdgeType.edge] ?? [];
+    schemaGraph.labelEdges = splitEdges[EdgeType.label] ?? [];
+    schemaGraph.propertyEdges = splitEdges[EdgeType.property] ?? [];
+
+    console.log(schemaGraph);
 
     return schemaGraph;
   }

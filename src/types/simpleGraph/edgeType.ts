@@ -1,5 +1,5 @@
 export enum EdgeType {
-  "edge",
-  "label",
-  "property",
+  "edge" = "edge",
+  "label" = "label",
+  "property" = "property",
 }

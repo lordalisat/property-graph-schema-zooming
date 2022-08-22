@@ -24,8 +24,6 @@
   // an array of our particles
   export let graph: SimpleGraph;
 
-  console.log(graph);
-
   let svg;
   let nodes: SimpleGraphNodeType[] = [];
   let edges: SimpleGraphEdgeType[] = [];
