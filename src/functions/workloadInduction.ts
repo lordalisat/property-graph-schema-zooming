@@ -79,9 +79,17 @@ export function induceWorkload(
 
   if (inductionMethod === InductionMethod.project) {
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
-    inducedGraph.nodeNodes = new Map([...graph.nodeNodes.values()].map((node) => ([node.id, { ...node }])));
-    inducedGraph.edgeNodes = new Map([...graph.edgeNodes.values()].map((node) => ([node.id, { ...node }])));
-    inducedGraph.edgeEdges = [...graph.edgeEdges.map((edge) => ({ ...edge, source: inducedGraph.getNode(edge.source.id), target: inducedGraph.getNode(edge.target.id) }))];
+    [...graph.nodeNodes.values()].map((node) => {
+      if (!inducedGraph.nodeNodes.has(node.id)) {
+        inducedGraph.addNodeNode({ ...node })
+      } [node.id, { ...node }]
+    });
+    [...graph.edgeNodes.values()].map((node) => {
+      if (!inducedGraph.edgeNodes.has(node.id)) {
+        inducedGraph.addEdgeNode({ ...node })
+      } [node.id, { ...node }]
+    });
+    inducedGraph.edgeEdges = [...graph.edgeEdges.map((edge) => ({ ...edge, source: inducedGraph.edgeNodes.get(edge.source.id), target: inducedGraph.nodeNodes.get(edge.target.id) }))];
   } else if (inductionMethod === InductionMethod.filter) {
     //Add all Edge edges where both start and end nodes are included in the graph
     //TODO check for existance of both edges per Edge node?

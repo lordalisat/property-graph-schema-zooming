@@ -8,7 +8,7 @@ import { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
 import { derived, writable } from "svelte/store";
 import type { Workload } from "types/workload";
 
-export const data = propertyGraphService.data;
+const data = propertyGraphService.data;
 
 data.addNode(new PropertyGraphNode({ id: "n1", labels: ["Person"], properties: new Map([["name", "Alice"]]) }));
 data.addNode(new PropertyGraphNode({ id: "n2", labels: ["Person"], properties: new Map([["name", "Bob"]]) }));
@@ -33,5 +33,7 @@ data.addEdge(new PropertyGraphEdge({ id: "e8", labels: ["memberOf"], properties:
 data.addEdge(new PropertyGraphEdge({ id: "e9", labels: ["livesIn"], properties: new Map(), sourceNode: "n1", targetNode: "n7", isDirected: true }));
 data.addEdge(new PropertyGraphEdge({ id: "e10", labels: ["livesIn"], properties: new Map(), sourceNode: "n3", targetNode: "n7", isDirected: true }));
 data.addEdge(new PropertyGraphEdge({ id: "e11", labels: ["livesIn"], properties: new Map(), sourceNode: "n4", targetNode: "n7", isDirected: true }));
+
+export const propData = writable(data);
 
 export const workload: Workload = [{ label: "Person", occurence: 1 }, { label: "Club", occurence: .5 }, {label: "follows", occurence: 1}, { label: "Random", occurence: .8 }];

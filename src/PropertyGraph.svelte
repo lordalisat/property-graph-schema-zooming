@@ -3,7 +3,9 @@
 
   import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force"
   import type { PropertyGraphElement } from "propertyGraphEntities/propertyGraphElement";
+import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
   import { onMount } from "svelte";
+import type { Writable } from "svelte/store";
   import type { PropertyGraph } from "./propertyGraphEntities/propertyGraph";
 
   interface Edge {
@@ -14,7 +16,7 @@
   }
 
   // an array of our particles
-  export let graph: PropertyGraph;
+  export let graph: Writable<PropertyGraph>;
 
   let svg;
   let width;
@@ -23,35 +25,37 @@
   let edges: Edge[] = [];
 	let transform = zoomIdentity;
   let mLinkNum = {};
+  const simulation = forceSimulation()
+      .force("charge", forceManyBody().strength(-800))
+      .on("tick", simulationUpdate);
 
-  $: nodes = [...graph.nodes.values(), ...graph.edges.values()];
-  $: nodes.forEach((node) => node.setPrintOptions());
-  $: edges = [...graph.edges.values()].flatMap((edge) => {
-    return [
-      {
-        source: graph.nodes.get(edge.sourceNode),
-        target: edge,
-        directional: false,
-      },
-      {
-        source: edge,
-        target: graph.nodes.get(edge.targetNode),
-        directional: edge.isDirected,
-      }
-    ]
+  graph.subscribe(graph => {
+    nodes = [...graph.nodes.values(), ...graph.edges.values()];
+    nodes.forEach((node) => node.setPrintOptions());
+    edges = [...graph.edges.values()].flatMap((edge) => {
+      return [
+        {
+          source: graph.nodes.get(edge.sourceNode),
+          target: edge,
+          directional: false,
+        },
+        {
+          source: edge,
+          target: graph.nodes.get(edge.targetNode),
+          directional: edge.isDirected,
+        }
+      ]
+    });
+    setLinkIndexAndNum(edges);
+    simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
+    simulation.restart();
   });
+  $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
 
   // $: console.log(nodes);
   // $: console.log(edges);
 
-  let simulation;
     onMount(() => {
-      simulation = forceSimulation(nodes)
-        .force("link", forceLink(edges).distance(140))
-        .force("charge", forceManyBody().strength(-1200))
-        .force("center", forceCenter(width / 2, height / 2))
-        .on('tick', simulationUpdate);
-
       select(svg)
         .call(drag()
           .container(svg)
@@ -68,7 +72,6 @@
     simulation.tick();
     nodes = [...nodes];
     edges = [...edges];
-    setLinkIndexAndNum(edges);
   }
 
   function zoomed(currentEvent) {
@@ -78,7 +81,7 @@
 
 	function dragsubject(currentEvent) {
     const nodes = simulation.nodes();
-    const node = nodes.filter((node) => {
+    const node = nodes.filter((node: PropertyGraphNode) => {
       return (node.x - (.5 * node.width) < transform.invertX(currentEvent.x))
       && (node.x + (.5 * node.width) > transform.invertX(currentEvent.x))
       && (node.y - (.5 * node.height) < transform.invertY(currentEvent.y))

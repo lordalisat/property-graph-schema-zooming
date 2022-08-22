@@ -14,7 +14,8 @@ export abstract class PropertyGraphElement {
   readonly properties!: Map<Property, Value>;
 
   public setPrintOptions(textWidth = 9, textHeight = 24) {
-    const strings = [...this.labels, ...this.mapToStrings(this.properties)]
+    const strings = [...this.labels, ...this.mapToStrings(this.properties)];
+    if (strings.length === 0) strings.push(`\xa0*\xa0`);
     const maxLen = strings.reduce((prev, cur) => prev > cur.length ? prev : cur.length, 0);
     this.width = maxLen * textWidth;
     this.height = strings.length * textHeight;

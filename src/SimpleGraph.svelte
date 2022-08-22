@@ -23,7 +23,7 @@ import type { Writable } from "svelte/store";
   const nodeRadius = 20;
 
   // an array of our particles
-  export let graph: SimpleGraph;
+  export let graph: Writable<SimpleGraph>;
 
   let svg;
   let width;
@@ -37,7 +37,7 @@ import type { Writable } from "svelte/store";
       .force("charge", forceManyBody().strength(-800))
       .on("tick", simulationUpdate);
 
-  $: {
+  graph.subscribe(graph => {
     console.log("update");
     nodes = [
       ...graph.nodeNodes.values(),
@@ -46,12 +46,13 @@ import type { Writable } from "svelte/store";
       ...graph.propertyNodes.values(),
     ];
     edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
-  }
+    setLinkIndexAndNum(edges);
+    simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
+    simulation.restart();
+  });
 
-  // $: console.log(nodes);
-  // $: console.log(edges);
-  $: setLinkIndexAndNum(edges);
-  $: simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
+  $: console.log(nodes);
+  $: console.log(edges);
   $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
 
   onMount(() => {
@@ -198,18 +199,18 @@ import type { Writable } from "svelte/store";
       >
         <title>{edge.label}</title>
         <path
-          id="{graph.type}_{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
+          id="{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
           d={arcPath(true, edge)}
         />
         <path
           class="invis"
-          id="invis_{graph.type}_{edge.source.id}_{edge.target
+          id="invis_{edge.source.id}_{edge.target
             .id}_{edge.linkIndex}"
           d={arcPath(edge.source.x < edge.target.x, edge)}
         />
         <text>
           <textPath
-            href="#invis_{graph.type}_{edge.source.id}_{edge.target
+            href="#invis_{edge.source.id}_{edge.target
               .id}_{edge.linkIndex}"
             startOffset="50%"
             style=""

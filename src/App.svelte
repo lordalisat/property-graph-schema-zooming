@@ -1,38 +1,39 @@
 <script lang='ts'>
 	import SimpleGraph from './SimpleGraph.svelte';
 
-	import {data, workload} from './data';
+	import {propData, workload} from './data';
   import PropertyGraph from 'PropertyGraph.svelte';
   import SplitPane from 'SplitPane.svelte';
   import { propertyToSimpleGraph } from 'functions/graphExchange/propertyToSimpleGraph';
   import { induceWorkload, InductionMethod } from 'functions/workloadInduction';
   import { simpleToPropertyGraph } from 'functions/graphExchange/simpleToPropertyGraph';
   import { Simulation } from 'functions/equivalence/simulation';
+  import { writable } from 'svelte/store';
 
   let inductionMethod = InductionMethod.project;
   let threshold = 0;
 
-  let simpleData = propertyToSimpleGraph(data);
+  let simpleData = writable(propertyToSimpleGraph($propData));
 
-  let simpleInduced = induceWorkload(workload, inductionMethod, threshold);
-  let propInduced = simpleToPropertyGraph(simpleInduced);
+  let simpleInduced = writable(induceWorkload(workload, inductionMethod, threshold));
+  let propInduced = writable(simpleToPropertyGraph($simpleInduced));
 
-  let simpleSchema = new Simulation().calculateSchema(simpleInduced);
-  let propSchema = simpleToPropertyGraph(simpleSchema);
+  let simpleSchema = writable(new Simulation().calculateSchema($simpleInduced));
+  let propSchema = writable(simpleToPropertyGraph($simpleSchema));
 
-  $: simpleData = propertyToSimpleGraph(data);
+  $: simpleData.set(propertyToSimpleGraph($propData));
 
-  $: simpleInduced = induceWorkload(workload, inductionMethod, threshold);
-  $: propInduced = simpleToPropertyGraph(simpleInduced);
+  $: simpleInduced.set(induceWorkload(workload, inductionMethod, threshold));
+  $: propInduced.set(simpleToPropertyGraph($simpleInduced));
 
-  $: simpleSchema = new Simulation().calculateSchema(simpleInduced);
-  $: propSchema = simpleToPropertyGraph(simpleSchema);
+  $: simpleSchema.set(new Simulation().calculateSchema($simpleInduced));
+  $: propSchema.set(simpleToPropertyGraph($simpleSchema));
 
   const graphList = [
     { name: 'SimpleData', component: SimpleGraph, graph: simpleData },
     { name: 'SimpleInduced', component: SimpleGraph, graph: simpleInduced },
     { name: 'SimpleSchema', component: SimpleGraph, graph: simpleSchema },
-    { name: 'PropertyData', component: PropertyGraph, graph: data },
+    { name: 'PropertyData', component: PropertyGraph, graph: propData },
     { name: 'PropertyInduced', component: PropertyGraph, graph: propInduced },
     { name: 'PropertySchema', component: PropertyGraph, graph: propSchema },
   ];
