@@ -25,11 +25,10 @@ import type { Writable } from "svelte/store";
   let edges: Edge[] = [];
 	let transform = zoomIdentity;
   let mLinkNum = {};
-  const simulation = forceSimulation()
-      .force("charge", forceManyBody().strength(-800))
-      .on("tick", simulationUpdate);
+  const simulation = forceSimulation();
 
   graph.subscribe(graph => {
+    simulation.stop();
     nodes = [...graph.nodes.values(), ...graph.edges.values()];
     nodes.forEach((node) => node.setPrintOptions());
     edges = [...graph.edges.values()].flatMap((edge) => {
@@ -47,7 +46,10 @@ import type { Writable } from "svelte/store";
       ]
     });
     setLinkIndexAndNum(edges);
-    simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
+    simulation.nodes(nodes)
+      .force("link", forceLink(edges).distance(140))
+      .force("charge", forceManyBody().strength(-1200))
+      .on("tick", simulationUpdate);
     simulation.restart();
   });
   $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
@@ -267,7 +269,6 @@ import type { Writable } from "svelte/store";
   }
 
 	svg {
-		float: left;
     font-family: monospace;
 	}
 

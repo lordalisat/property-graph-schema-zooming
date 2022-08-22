@@ -33,12 +33,10 @@ import type { Writable } from "svelte/store";
   let transform = zoomIdentity;
   const colourScale = scaleOrdinal(schemeCategory10);
   let mLinkNum = {};
-  const simulation = forceSimulation()
-      .force("charge", forceManyBody().strength(-800))
-      .on("tick", simulationUpdate);
+  const simulation = forceSimulation();
 
   graph.subscribe(graph => {
-    console.log("update");
+    simulation.stop();
     nodes = [
       ...graph.nodeNodes.values(),
       ...graph.edgeNodes.values(),
@@ -47,12 +45,16 @@ import type { Writable } from "svelte/store";
     ];
     edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
     setLinkIndexAndNum(edges);
-    simulation.nodes(nodes).force("link", forceLink(edges).distance(140));
-    simulation.restart();
+    simulation.nodes(nodes)
+      .force("link", forceLink(edges).distance(140))
+      .force("charge", forceManyBody().strength(-800))
+      .on("tick", simulationUpdate);
+    simulation.alpha(1).restart();
+    console.log(simulation);
   });
 
-  $: console.log(nodes);
-  $: console.log(edges);
+  // $: console.log(nodes);
+  // $: console.log(edges);
   $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
 
   onMount(() => {
