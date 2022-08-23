@@ -14,11 +14,11 @@
     forceManyBody,
     forceSimulation,
   } from "d3-force";
+import type { SimpleGraph } from "simpleGraphEntities/simpleGraph";
+import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
+import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
   import { onDestroy, onMount } from "svelte";
 import type { Writable } from "svelte/store";
-  import type { SimpleGraph } from "./simpleGraphEntities/simpleGraph";
-  import type { SimpleGraphEdgeType } from "./simpleGraphEntities/simpleGraphEdge";
-  import type { SimpleGraphNodeType } from "./simpleGraphEntities/simpleGraphNode";
 
   const nodeRadius = 20;
 

@@ -6,7 +6,7 @@
 import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
   import { onDestroy, onMount } from "svelte";
 import type { Writable } from "svelte/store";
-  import type { PropertyGraph } from "./propertyGraphEntities/propertyGraph";
+  import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
 
   interface Edge {
     source: PropertyGraphElement,
