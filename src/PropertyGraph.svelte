@@ -4,7 +4,7 @@
   import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force"
   import type { PropertyGraphElement } from "propertyGraphEntities/propertyGraphElement";
 import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 import type { Writable } from "svelte/store";
   import type { PropertyGraph } from "./propertyGraphEntities/propertyGraph";
 
@@ -50,25 +50,29 @@ import type { Writable } from "svelte/store";
       .force("link", forceLink(edges).distance(140))
       .force("charge", forceManyBody().strength(-1200))
       .on("tick", simulationUpdate);
-    simulation.restart();
+    simulation.alpha(1).restart();
   });
   $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
 
   // $: console.log(nodes);
   // $: console.log(edges);
 
-    onMount(() => {
-      select(svg)
-        .call(drag()
-          .container(svg)
-          .subject(dragsubject)
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended))
-        .call(zoom()
-          .scaleExtent([1 / 10, 8])
-          .on('zoom', zoomed));
-    });
+  onMount(() => {
+    select(svg)
+      .call(drag()
+        .container(svg)
+        .subject(dragsubject)
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended))
+      .call(zoom()
+        .scaleExtent([1 / 10, 8])
+        .on('zoom', zoomed));
+  });
+
+  onDestroy(() => {
+    simulation.stop();
+  })
 
   function simulationUpdate () {
     simulation.tick();

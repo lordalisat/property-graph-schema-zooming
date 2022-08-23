@@ -57,6 +57,7 @@
 	.left {
 		flex-grow: 0;
 		flex-shrink: 0;
+		overflow: hidden;
 	}
 
 	.right {

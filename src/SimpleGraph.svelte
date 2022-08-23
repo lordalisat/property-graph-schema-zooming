@@ -14,7 +14,7 @@
     forceManyBody,
     forceSimulation,
   } from "d3-force";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 import type { Writable } from "svelte/store";
   import type { SimpleGraph } from "./simpleGraphEntities/simpleGraph";
   import type { SimpleGraphEdgeType } from "./simpleGraphEntities/simpleGraphEdge";
@@ -73,6 +73,10 @@ import type { Writable } from "svelte/store";
           .on("zoom", zoomed)
       );
   });
+
+  onDestroy(() => {
+    simulation.stop();
+  })
 
   function simulationUpdate() {
     simulation.tick();
