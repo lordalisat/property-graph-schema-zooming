@@ -27,11 +27,11 @@ export class PropertyGraph {
     const graph = new PropertyGraph();
     try {
       const obj = JSON.parse(json);
-      graph.nodes = obj.nodes.map((node) => {
+      graph.nodes = new Map(obj.nodes.map((node) => {
         const nodeObj = PropertyGraphNode.fromJSON(node);
         return [nodeObj.id, nodeObj];
-      })
-      graph.edges = obj.edges.map((edge) => {
+      }));
+      graph.edges = new Map(obj.edges.map((edge) => {
         const edgeObj = PropertyGraphEdge.fromJSON(edge);
         if (!graph.nodes.has(edgeObj.sourceNode)) {
           throw new Error("Edge needs valid source");
@@ -40,7 +40,8 @@ export class PropertyGraph {
           throw new Error("Edge needs valid target");
         }
         return [edgeObj.id, edgeObj];
-      })
+      }));
+      return graph;
     }
     catch (error) {
       console.error("Invalid JSON: ", error);

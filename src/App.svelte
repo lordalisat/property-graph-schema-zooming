@@ -9,6 +9,7 @@
   import { simpleToPropertyGraph } from 'functions/graphExchange/simpleToPropertyGraph';
   import { Simulation } from 'functions/equivalence/simulation';
   import { writable } from 'svelte/store';
+  import { PropertyGraph as prop } from 'propertyGraphEntities/propertyGraph';
 
   let inductionMethod = InductionMethod.project;
   let threshold = 0;
@@ -21,6 +22,10 @@
   let simpleSchema = writable(new Simulation().calculateSchema($simpleInduced));
   let propSchema = writable(simpleToPropertyGraph($simpleSchema));
 
+  console.log($propSchema.toJSON());
+
+  let propTest = writable(prop.fromJSON($propSchema.toJSON()));
+
   $: simpleData.set(propertyToSimpleGraph($propData));
 
   $: simpleInduced.set(induceWorkload($simpleData, workload, inductionMethod, threshold));
@@ -28,6 +33,7 @@
 
   $: simpleSchema.set(new Simulation().calculateSchema($simpleInduced));
   $: propSchema.set(simpleToPropertyGraph($simpleSchema));
+  $: propTest.set(prop.fromJSON($propSchema.toJSON()));
 
   const graphList = [
     { name: 'SimpleData', component: SimpleGraph, graph: simpleData },
@@ -36,6 +42,7 @@
     { name: 'PropertyData', component: PropertyGraph, graph: propData },
     { name: 'PropertyInduced', component: PropertyGraph, graph: propInduced },
     { name: 'PropertySchema', component: PropertyGraph, graph: propSchema },
+    { name: 'PropertyTest', component: PropertyGraph, graph: propTest },
   ];
 	let selectedGraph = graphList[0];
 </script>

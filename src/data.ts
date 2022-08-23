@@ -1,14 +1,10 @@
-import { Simulation } from "functions/equivalence/simulation";
-import { propertyToSimpleGraph } from "functions/graphExchange/propertyToSimpleGraph";
-import { simpleToPropertyGraph } from "functions/graphExchange/simpleToPropertyGraph";
-import { induceWorkload, InductionMethod } from "functions/workloadInduction";
-import { propertyGraphService } from "propertyGraphEntities/propertyGraph";
+import { PropertyGraph } from "propertyGraphEntities/propertyGraph";
 import { PropertyGraphEdge } from "propertyGraphEntities/propertyGraphEdge";
 import { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
-import { derived, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import type { Workload } from "types/workload";
 
-const data = propertyGraphService.data;
+const data = new PropertyGraph();
 
 data.addNode(new PropertyGraphNode({ id: "n1", labels: ["Person"], properties: new Map([["name", "Alice"]]) }));
 data.addNode(new PropertyGraphNode({ id: "n2", labels: ["Person"], properties: new Map([["name", "Bob"]]) }));

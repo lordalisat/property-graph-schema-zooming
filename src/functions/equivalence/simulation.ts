@@ -1,4 +1,4 @@
-import { type SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
+import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
 import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
 import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
 import { toSimpleId } from "types/id";
@@ -106,7 +106,7 @@ export class Simulation extends Equivalence {
   }
 
   private graphFromPIds(): SimpleGraph {
-    const schemaGraph = simpleGraphService.schema;
+    const schemaGraph = new SimpleGraph;
     schemaGraph.emptyGraph();
 
     const schemaNodesMap = new Map(this.nodes.map((node) => {
