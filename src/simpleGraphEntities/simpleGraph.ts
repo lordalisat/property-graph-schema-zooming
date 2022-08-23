@@ -1,10 +1,8 @@
-import { graphType } from "types/graphType";
 import type { Id } from "types/id";
 import type { SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
 import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphNodeType, SimpleGraphPropertyNode } from "./simpleGraphNode";
 
-export interface SimpleGraph {
-  type: graphType;
+export class SimpleGraph {
 
   nodeNodes: Map<Id, SimpleGraphNodeNode>;
   edgeNodes: Map<Id, SimpleGraphEdgeNode>;
@@ -15,40 +13,7 @@ export interface SimpleGraph {
   propertyEdges: Array<SimpleGraphPropertyEdge>;
   edgeEdges: Array<SimpleGraphEdgeEdge>;
 
-  getNode(id: Id): SimpleGraphNodeType;
-
-  emptyGraph(): void;
-
-  addNodeNode(node: SimpleGraphNodeNode): void;
-  addNodeNodes(nodes: SimpleGraphNodeNode[]): void;
-  addEdgeNode(node: SimpleGraphEdgeNode): void;
-  addEdgeNodes(nodes: SimpleGraphEdgeNode[]): void;
-  addLabelNode(node: SimpleGraphLabelNode): void;
-  addLabelNodes(nodes: SimpleGraphLabelNode[]): void;
-  addPropertyNode(node: SimpleGraphPropertyNode): void;
-  addPropertyNodes(nodes: SimpleGraphPropertyNode[]): void;
-  addLabelEdge(edge: SimpleGraphLabelEdge): void;
-  addLabelEdges(edges: SimpleGraphLabelEdge[]): void;
-  addPropertyEdge(edge: SimpleGraphPropertyEdge): void;
-  addPropertyEdges(edges: SimpleGraphPropertyEdge[]): void;
-  addEdgeEdge(edge: SimpleGraphEdgeEdge): void;
-  addEdgeEdges(edges: SimpleGraphEdgeEdge[]): void;
-}
-
-class HiddenSimpleGraph implements SimpleGraph {
-  type: graphType;
-
-  nodeNodes: Map<Id, SimpleGraphNodeNode>;
-  edgeNodes: Map<Id, SimpleGraphEdgeNode>;
-  labelNodes: Map<Id, SimpleGraphLabelNode>;
-  propertyNodes: Map<Id, SimpleGraphPropertyNode>;
-
-  labelEdges: Array<SimpleGraphLabelEdge>;
-  propertyEdges: Array<SimpleGraphPropertyEdge>;
-  edgeEdges: Array<SimpleGraphEdgeEdge>;
-
-  constructor(type: graphType) {
-    this.type = type;
+  constructor() {
     this.emptyGraph();
   }
 
@@ -123,13 +88,3 @@ class HiddenSimpleGraph implements SimpleGraph {
     this.edgeEdges.push(...edges);
   }
 }
-
-export const simpleGraphService: {
-  data: SimpleGraph;
-  induced: SimpleGraph;
-  schema: SimpleGraph;
-} = {
-  data: new HiddenSimpleGraph(graphType.data),
-  induced: new HiddenSimpleGraph(graphType.induced),
-  schema: new HiddenSimpleGraph(graphType.schema),
-};

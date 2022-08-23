@@ -1,4 +1,4 @@
-import { type SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
+import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
 import { SimpleGraphEdge } from "simpleGraphEntities/simpleGraphEdge";
 import { NodeType } from "types/simpleGraph/nodeType";
 import type { FilteredWorkload, Workload } from "types/workload";
@@ -14,12 +14,12 @@ function filterWorkload(workload: Workload, threshold: number): FilteredWorkload
 }
 
 export function induceWorkload(
+  graph: SimpleGraph,
   workload: Workload,
   inductionMethod: InductionMethod,
   threshold: number,
 ): SimpleGraph {
-  const graph = simpleGraphService.data;
-  const inducedGraph = simpleGraphService.induced;
+  const inducedGraph = new SimpleGraph();
   inducedGraph.emptyGraph();
 
   if (threshold === 0) {

@@ -21,4 +21,15 @@ export class PropertyGraphEdge extends PropertyGraphElement {
     super();
     Object.assign(this, args);
   }
+
+  static fromJSON(element: { id: string, source: string, target: string, isDirected: boolean, labels: Array<string>, properties: {} }): PropertyGraphEdge {
+    if (!element.id) throw new Error("Edge needs valid id.");
+    if (!element.source) throw new Error("Edge needs valid source");
+    if (!element.target) throw new Error("Edge needs valid target");
+    return new PropertyGraphEdge({ id: element.id, sourceNode: element.source, targetNode: element.target, isDirected: element.isDirected ?? true, labels: element.labels, properties: new Map(Object.entries(element.properties)) });
+  }
+
+  public toJSON(): { id: string, source: string, target: string, isDirected: boolean, labels: Array<string>, properties: {} } {
+    return {id: this.id, source: this.sourceNode, target: this.targetNode, isDirected: this.isDirected, labels: this.labels, properties: Object.fromEntries(this.properties)}
+  }
 }

@@ -1,5 +1,5 @@
 import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
-import { type SimpleGraph, simpleGraphService } from "simpleGraphEntities/simpleGraph";
+import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
 import { SimpleGraphEdge } from "simpleGraphEntities/simpleGraphEdge";
 import { type SimpleGraphEdgeNode, type SimpleGraphLabelNode, SimpleGraphNode, type SimpleGraphNodeNode, type SimpleGraphPropertyNode } from "simpleGraphEntities/simpleGraphNode";
 import type { Id } from "types/id";
@@ -9,8 +9,7 @@ import type { Value } from "types/propertyGraph/value";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
-  const simpleGraph = simpleGraphService[graph.type.valueOf()] as SimpleGraph;
-  simpleGraph.emptyGraph();
+  const simpleGraph = new SimpleGraph();
 
   const nodeMap: Map<Id, SimpleGraphNodeNode> = new Map();
   const labelMap: Map<Label, SimpleGraphLabelNode> = new Map();

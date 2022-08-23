@@ -1,4 +1,3 @@
-
 import type { Id } from "types/id";
 import type { Label } from "types/label";
 import type { Property } from "types/property";
@@ -13,5 +12,14 @@ export class PropertyGraphNode extends PropertyGraphElement {
   }) {
     super();
     Object.assign(this, args);
+  }
+
+  static fromJSON(element: {id: string, labels: Array<string>, properties: {}}): PropertyGraphNode {
+    if (!element.id) throw new Error("Node needs valid id.");
+    return new PropertyGraphNode({ id: element.id, labels: element.labels, properties: new Map(Object.entries(element.properties)) });
+  }
+
+  public toJSON(): { id: string, labels: Array<string>, properties: {} } {
+    return {id: this.id, labels: this.labels, properties: Object.fromEntries(this.properties)}
   }
 }

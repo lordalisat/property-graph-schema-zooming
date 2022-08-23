@@ -1,28 +1,12 @@
-import { graphType } from "types/graphType";
 import type { Id } from "types/id";
-import type { PropertyGraphEdge } from "./propertyGraphEdge";
-import type { PropertyGraphNode } from "./propertyGraphNode";
+import { PropertyGraphEdge } from "./propertyGraphEdge";
+import { PropertyGraphNode } from "./propertyGraphNode";
 
-export interface PropertyGraph {
-  type: graphType;
-
+export class PropertyGraph {
   nodes: Map<Id, PropertyGraphNode>;
   edges: Map<Id, PropertyGraphEdge>;
 
-  emptyGraph(): void;
-
-  addNode(node: PropertyGraphNode): void;
-  addEdge(edge: PropertyGraphEdge): void;
-}
-
-class HiddenPropertyGraph implements PropertyGraph {
-  type: graphType;
-
-  nodes: Map<Id, PropertyGraphNode>;
-  edges: Map<Id, PropertyGraphEdge>;
-
-  constructor(type: graphType) {
-    this.type = type;
+  constructor() {
     this.emptyGraph();
   }
 
@@ -38,10 +22,40 @@ class HiddenPropertyGraph implements PropertyGraph {
   public addEdge(edge: PropertyGraphEdge) {
     this.edges.set(edge.id, edge);
   }
-}
 
-export const propertyGraphService = {
-  data: new HiddenPropertyGraph(graphType.data),
-  induced: new HiddenPropertyGraph(graphType.induced),
-  schema: new HiddenPropertyGraph(graphType.schema),
-};
+  static fromJSON(json: string): PropertyGraph {
+    const graph = new PropertyGraph();
+    try {
+      const obj = JSON.parse(json);
+      graph.nodes = obj.nodes.map((node) => {
+        const nodeObj = PropertyGraphNode.fromJSON(node);
+        return [nodeObj.id, nodeObj];
+      })
+      graph.edges = obj.edges.map((edge) => {
+        const edgeObj = PropertyGraphEdge.fromJSON(edge);
+        if (!graph.nodes.has(edgeObj.sourceNode)) {
+          throw new Error("Edge needs valid source");
+        }
+        if (!graph.nodes.has(edgeObj.targetNode)) {
+          throw new Error("Edge needs valid target");
+        }
+        return [edgeObj.id, edgeObj];
+      })
+    }
+    catch (error) {
+      console.error("Invalid JSON: ", error);
+      return;
+    }
+  }
+
+  public toJSON(): string {
+    return JSON.stringify({
+      nodes: [...this.nodes.values()].map((node) => {
+        return node.toJSON();
+      }),
+      edges: [...this.edges.values()].map((edge) => {
+        return edge.toJSON();
+      })
+    });
+  }
+}

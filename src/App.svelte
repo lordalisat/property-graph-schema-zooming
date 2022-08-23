@@ -15,7 +15,7 @@
 
   let simpleData = writable(propertyToSimpleGraph($propData));
 
-  let simpleInduced = writable(induceWorkload(workload, inductionMethod, threshold));
+  let simpleInduced = writable(induceWorkload($simpleData, workload, inductionMethod, threshold));
   let propInduced = writable(simpleToPropertyGraph($simpleInduced));
 
   let simpleSchema = writable(new Simulation().calculateSchema($simpleInduced));
@@ -23,7 +23,7 @@
 
   $: simpleData.set(propertyToSimpleGraph($propData));
 
-  $: simpleInduced.set(induceWorkload(workload, inductionMethod, threshold));
+  $: simpleInduced.set(induceWorkload($simpleData, workload, inductionMethod, threshold));
   $: propInduced.set(simpleToPropertyGraph($simpleInduced));
 
   $: simpleSchema.set(new Simulation().calculateSchema($simpleInduced));

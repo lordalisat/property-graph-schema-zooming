@@ -23,7 +23,7 @@ export abstract class PropertyGraphElement {
     this.stringRepres = strings.join('\n');
   }
 
-  private mapToStrings(m: Map<any,any>) {
-    return Array.from(m).map( ([k,v]) => {return `${k}: ${v}`} );
+  private mapToStrings(m: Map<any, any>) {
+    return Array.from(m).map(([k, v]) => { return `${k}: ${v}` });
   };
 }
