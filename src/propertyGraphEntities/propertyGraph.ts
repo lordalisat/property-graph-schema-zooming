@@ -34,10 +34,12 @@ export class PropertyGraph {
       graph.edges = new Map(obj.edges.map((edge) => {
         const edgeObj = PropertyGraphEdge.fromJSON(edge);
         if (!graph.nodes.has(edgeObj.sourceNode)) {
-          throw new Error("Edge needs valid source");
+          console.error("Invalid JSON: ", "Edge needs valid source");
+          return;
         }
         if (!graph.nodes.has(edgeObj.targetNode)) {
-          throw new Error("Edge needs valid target");
+          console.error("Invalid JSON: ", "Edge needs valid target");
+          return;
         }
         return [edgeObj.id, edgeObj];
       }));
@@ -58,5 +60,15 @@ export class PropertyGraph {
         return edge.toJSON();
       })
     });
+  }
+}
+
+const schema = {
+  type: "object",
+  properties: {
+    nodes: {
+      type: "array",
+      
+    }
   }
 }
