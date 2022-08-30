@@ -27,7 +27,7 @@ import type { Writable } from "svelte/store";
   let mLinkNum = {};
   const simulation = forceSimulation();
 
-  graph.subscribe(graph => {
+  const unsubscribe = graph.subscribe(graph => {
     simulation.stop();
     nodes = [...graph.nodes.values(), ...graph.edges.values()];
     nodes.forEach((node) => node.setPrintOptions());
@@ -72,6 +72,7 @@ import type { Writable } from "svelte/store";
 
   onDestroy(() => {
     simulation.stop();
+    unsubscribe();
   })
 
   function simulationUpdate () {
@@ -116,10 +117,6 @@ import type { Writable } from "svelte/store";
       currentEvent.subject.fx = null;
       currentEvent.subject.fy = null;
   }
-
-	function resize() {
-		({ width, height } = svg.getBoundingClientRect());
-	}
 
   // sort the links by source, then target
   function sortEdges(edges) {								

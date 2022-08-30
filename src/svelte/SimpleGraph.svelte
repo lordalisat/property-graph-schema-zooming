@@ -35,7 +35,7 @@ import type { Writable } from "svelte/store";
   let mLinkNum = {};
   const simulation = forceSimulation();
 
-  graph.subscribe(graph => {
+  const unsubscribe = graph.subscribe(graph => {
     simulation.stop();
     nodes = [
       ...graph.nodeNodes.values(),
@@ -76,6 +76,7 @@ import type { Writable } from "svelte/store";
 
   onDestroy(() => {
     simulation.stop();
+    unsubscribe();
   })
 
   function simulationUpdate() {
@@ -117,10 +118,6 @@ import type { Writable } from "svelte/store";
     if (!currentEvent.active) simulation.alphaTarget(0);
     currentEvent.subject.fx = null;
     currentEvent.subject.fy = null;
-  }
-
-  function resize() {
-    ({ width, height } = svg.getBoundingClientRect());
   }
 
   // sort the links by source, then target
