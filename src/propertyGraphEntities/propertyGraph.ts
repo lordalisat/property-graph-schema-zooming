@@ -24,31 +24,37 @@ export class PropertyGraph {
   }
 
   static fromJSON(json: string): PropertyGraph {
+    const errors = [];
     const graph = new PropertyGraph();
-    try {
-      const obj = JSON.parse(json);
-      graph.nodes = new Map(obj.nodes.map((node) => {
+    const obj = JSON.parse(json);
+    graph.nodes = new Map(obj.nodes.map((node) => {
+      try {
         const nodeObj = PropertyGraphNode.fromJSON(node);
         return [nodeObj.id, nodeObj];
-      }));
-      graph.edges = new Map(obj.edges.map((edge) => {
+      } catch (error) {
+        errors.push(error.message);
+        return [];
+      }
+    }));
+    graph.edges = new Map(obj.edges.map((edge) => {
+      try {
         const edgeObj = PropertyGraphEdge.fromJSON(edge);
         if (!graph.nodes.has(edgeObj.sourceNode)) {
-          console.error("Invalid JSON: ", "Edge needs valid source");
-          return;
+          errors.push(`Edge ${edgeObj.id} has invalid source ${edgeObj.sourceNode}`);
         }
         if (!graph.nodes.has(edgeObj.targetNode)) {
-          console.error("Invalid JSON: ", "Edge needs valid target");
-          return;
+          errors.push(`Edge ${edgeObj.id} has invalid source ${edgeObj.targetNode}`);
         }
         return [edgeObj.id, edgeObj];
-      }));
-      return graph;
+      } catch (error) {
+        errors.push(error.message);
+        return [];
+      }
+    }));
+    if (errors.length > 0) {
+      throw new Error(errors.join('; '));
     }
-    catch (error) {
-      console.error("Invalid JSON: ", error);
-      return;
-    }
+    return graph;
   }
 
   public toJSON(): string {
@@ -60,15 +66,5 @@ export class PropertyGraph {
         return edge.toJSON();
       })
     });
-  }
-}
-
-const schema = {
-  type: "object",
-  properties: {
-    nodes: {
-      type: "array",
-      
-    }
   }
 }

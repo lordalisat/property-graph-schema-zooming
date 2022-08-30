@@ -13,7 +13,11 @@ export const inductionMethod = writable(InductionMethod.project);
 export const threshold = writable(0);
 export const workload = writable(workloadData);
 
-export const propData = derived(content, (content) => PropertyGraph.fromJSON(content.text));
+export const propData = writable(new PropertyGraph());
+const unsubscribe = content.subscribe(val => {
+  propData.set(PropertyGraph.fromJSON(val.text));
+});
+unsubscribe();
 export const simpleData = derived(propData, (propData) => propertyToSimpleGraph(propData));
 
 export const simpleInduced = derived([simpleData, workload, inductionMethod, threshold], ([simpleData, workload, inductionMethod, threshold]) => induceWorkload(simpleData, workload, inductionMethod, threshold));

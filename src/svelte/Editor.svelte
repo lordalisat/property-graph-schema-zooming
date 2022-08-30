@@ -1,5 +1,6 @@
 <script>
   import { JSONEditor, Mode, createAjvValidator } from "svelte-jsoneditor";
+import { customValidator } from "./customValidator";
 
   import { content } from "./stores";
 
@@ -20,7 +21,7 @@
         },
       },
     },
-    required: ["edges", "nodes"],
+    required: ["nodes"],
     title: "Graph",
   };
 
@@ -33,7 +34,7 @@
           type: "string",
         },
         source: {
-          $ref: "string",
+          type: "string",
         },
         target: {
           type: "string",
@@ -71,7 +72,7 @@
           $ref: "properties",
         },
       },
-      required: ["id", "labels", "properties"],
+      required: ["id"],
       title: "Node",
     },
     properties: {
@@ -88,4 +89,4 @@
   const validator = createAjvValidator(schema, schemaDefinitions);
 </script>
 
-<JSONEditor bind:content={$content} mode={Mode.text} mainMenuBar={false} validator={validator} />
+<JSONEditor bind:content={$content} mode={Mode.text} mainMenuBar={false} validator={customValidator} />

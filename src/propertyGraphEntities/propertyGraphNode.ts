@@ -15,7 +15,7 @@ export class PropertyGraphNode extends PropertyGraphElement {
   }
 
   static fromJSON(element: {id: string, labels: Array<string>, properties: {}}): PropertyGraphNode {
-    if (!element.id) throw new Error("Node needs valid id.");
+    if (!element.id) throw new Error(`Node is missing id`);
     return new PropertyGraphNode({ id: element.id, labels: element.labels, properties: new Map(Object.entries(element.properties)) });
   }
 

@@ -1,10 +1,21 @@
 <script lang="ts">
+import { PropertyGraph } from "propertyGraphEntities/propertyGraph";
+
   import { getContext } from "svelte";
   import Editor from "./Editor.svelte";
-  import {content, threshold, selectedGraph, graphList } from "./stores";
+  import {content, threshold, selectedGraph, graphList, propData } from "./stores";
 
   const { open } = getContext('simple-modal');
-  const openEditor = () => open(Editor, {content});
+  const openEditor = () => open(Editor, {content}, {}, {
+    onClosed: () => {
+      try {
+        const graph = PropertyGraph.fromJSON($content.text);
+        propData.set(graph);
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  });
 </script>
 
 <label>
