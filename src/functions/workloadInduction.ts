@@ -4,8 +4,8 @@ import { NodeType } from "types/simpleGraph/nodeType";
 import type { FilteredWorkload, Workload } from "types/workload";
 
 export enum InductionMethod {
-  "project",
-  "filter",
+  "project" = "Project",
+  "filter" = "Filter",
 }
 
 function filterWorkload(workload: Workload, threshold: number): FilteredWorkload {

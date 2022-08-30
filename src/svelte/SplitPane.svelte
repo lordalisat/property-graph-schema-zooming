@@ -26,8 +26,8 @@
 	<div bind:this={left} class="left" style="flex-basis: {leftInitialSize}">
 		<slot name="left" />
 	</div>
-	<div class="splitter" on:mousedown={dragstart} />
-	<div class="right">
+	<div class="splitter bg-black dark:bg-gray-500" on:mousedown={dragstart} />
+	<div class="right bg-gray-50 dark:bg-gray-800">
 		<slot name="right" />
 	</div>
 </div>
@@ -37,7 +37,6 @@
 		flex-grow: 0;
 		flex-shrink: 0;
 		width: 5px;
-		background-color: black;
 		cursor: col-resize;
 	}
 

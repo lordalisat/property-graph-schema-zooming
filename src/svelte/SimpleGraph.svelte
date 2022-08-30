@@ -14,11 +14,11 @@
     forceManyBody,
     forceSimulation,
   } from "d3-force";
-import type { SimpleGraph } from "simpleGraphEntities/simpleGraph";
-import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
-import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
+  import type { SimpleGraph } from "simpleGraphEntities/simpleGraph";
+  import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
+  import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
   import { onDestroy, onMount } from "svelte";
-import type { Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
 
   const nodeRadius = 20;
 
@@ -35,7 +35,7 @@ import type { Writable } from "svelte/store";
   let mLinkNum = {};
   const simulation = forceSimulation();
 
-  const unsubscribe = graph.subscribe(graph => {
+  const unsubscribe = graph.subscribe((graph) => {
     simulation.stop();
     nodes = [
       ...graph.nodeNodes.values(),
@@ -45,7 +45,8 @@ import type { Writable } from "svelte/store";
     ];
     edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
     setLinkIndexAndNum(edges);
-    simulation.nodes(nodes)
+    simulation
+      .nodes(nodes)
       .force("link", forceLink(edges).distance(140))
       .force("charge", forceManyBody().strength(-800))
       .on("tick", simulationUpdate);
@@ -77,7 +78,7 @@ import type { Writable } from "svelte/store";
   onDestroy(() => {
     simulation.stop();
     unsubscribe();
-  })
+  });
 
   function simulationUpdate() {
     simulation.tick();
@@ -179,9 +180,8 @@ import type { Writable } from "svelte/store";
   }
 </script>
 
-<!-- <svelte:window on:resize='{resize}'/> -->
 <figure bind:clientWidth={width} bind:clientHeight={height}>
-  <svg bind:this={svg} width={width} height={height}>
+  <svg bind:this={svg} {width} {height}>
     <defs>
       <marker
         id="simple_arrow"
@@ -192,7 +192,10 @@ import type { Writable } from "svelte/store";
         markerHeight="13"
         orient="auto-start-reverse"
       >
-        <path d="M 0 0 L 10 5 L 0 10 z" />
+        <path
+          class="fill-black dark:fill-gray-200 stroke-0"
+          d="M 0 0 L 10 5 L 0 10 z"
+        />
       </marker>
     </defs>
     {#each edges as edge}
@@ -202,19 +205,19 @@ import type { Writable } from "svelte/store";
       >
         <title>{edge.label}</title>
         <path
+          class="stroke-black dark:stroke-gray-200"
           id="{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
           d={arcPath(true, edge)}
+          marker-end="url(#simple_arrow)"
         />
         <path
-          class="invis"
-          id="invis_{edge.source.id}_{edge.target
-            .id}_{edge.linkIndex}"
+          class="stroke-0"
+          id="invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
           d={arcPath(edge.source.x < edge.target.x, edge)}
         />
-        <text>
+        <text class="fill-black dark:fill-gray-200">
           <textPath
-            href="#invis_{edge.source.id}_{edge.target
-              .id}_{edge.linkIndex}"
+            href="#invis_{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
             startOffset="50%"
             style=""
           >
@@ -230,18 +233,21 @@ import type { Writable } from "svelte/store";
       >
         <title>{point.id}</title>
         <circle
+          class="stroke-black"
           r={nodeRadius}
           fill={colourScale(point.type.toString())}
           cx={point.x}
           cy={point.y}
         />
-        <text x={point.x} y={point.y}>{point.label.toString()}</text>
+        <text class="fill-black dark:fill-white" x={point.x} y={point.y}
+          >{point.label.toString()}</text
+        >
       </g>
     {/each}
   </svg>
 </figure>
 
-<style>
+<style lang="scss">
   figure {
     width: 100%;
     height: 100%;
@@ -249,40 +255,16 @@ import type { Writable } from "svelte/store";
   }
 
   svg {
-    float: left;
     font-family: monospace;
   }
 
-  .invis {
+  .edge path {
     fill: none;
-    stroke: none;
-    marker-end: none;
-  }
-
-  circle {
-    stroke: #fff;
-    stroke-width: 1.5;
-  }
-
-  path {
-    fill: none;
-    stroke: #999;
-    stroke-opacity: 0.6;
-    marker-end: url(#simple_arrow);
-  }
-
-  marker path {
-    fill: #999;
-    stroke: none;
   }
 
   text {
     text-anchor: middle;
     pointer-events: none;
-  }
-
-  .edge text {
-    fill: #999;
   }
 
   .node text {

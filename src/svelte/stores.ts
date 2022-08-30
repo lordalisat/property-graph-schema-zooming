@@ -35,4 +35,4 @@ export const graphList = [
   { name: 'PropertySchema', component: PropertyGraphSvelte, graph: propSchema },
 ];
 
-export const selectedGraph = writable(graphList[0]);
+export const selectedGraph = writable(graphList[5]);

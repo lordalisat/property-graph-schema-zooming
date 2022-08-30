@@ -1,18 +1,23 @@
-<script lang='ts'>
+<script lang="ts">
   import { drag, select, zoom, zoomIdentity } from "d3";
 
-  import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force"
+  import {
+    forceCenter,
+    forceLink,
+    forceManyBody,
+    forceSimulation,
+  } from "d3-force";
   import type { PropertyGraphElement } from "propertyGraphEntities/propertyGraphElement";
-import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
+  import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
   import { onDestroy, onMount } from "svelte";
-import type { Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
   import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
 
   interface Edge {
-    source: PropertyGraphElement,
-    target: PropertyGraphElement,
-    directional: boolean,
-    linkIndex?: number,
+    source: PropertyGraphElement;
+    target: PropertyGraphElement;
+    directional: boolean;
+    linkIndex?: number;
   }
 
   // an array of our particles
@@ -23,11 +28,11 @@ import type { Writable } from "svelte/store";
   let height;
   let nodes: PropertyGraphElement[] = [];
   let edges: Edge[] = [];
-	let transform = zoomIdentity;
+  let transform = zoomIdentity;
   let mLinkNum = {};
   const simulation = forceSimulation();
 
-  const unsubscribe = graph.subscribe(graph => {
+  const unsubscribe = graph.subscribe((graph) => {
     simulation.stop();
     nodes = [...graph.nodes.values(), ...graph.edges.values()];
     nodes.forEach((node) => node.setPrintOptions());
@@ -42,11 +47,12 @@ import type { Writable } from "svelte/store";
           source: edge,
           target: graph.nodes.get(edge.targetNode),
           directional: edge.isDirected,
-        }
-      ]
+        },
+      ];
     });
     setLinkIndexAndNum(edges);
-    simulation.nodes(nodes)
+    simulation
+      .nodes(nodes)
       .force("link", forceLink(edges).distance(140))
       .force("charge", forceManyBody().strength(-1200))
       .on("tick", simulationUpdate);
@@ -59,206 +65,225 @@ import type { Writable } from "svelte/store";
 
   onMount(() => {
     select(svg)
-      .call(drag()
-        .container(svg)
-        .subject(dragsubject)
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended))
-      .call(zoom()
-        .scaleExtent([1 / 10, 8])
-        .on('zoom', zoomed));
+      .call(
+        drag()
+          .container(svg)
+          .subject(dragsubject)
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended)
+      )
+      .call(
+        zoom()
+          .scaleExtent([1 / 10, 8])
+          .on("zoom", zoomed)
+      );
   });
 
   onDestroy(() => {
     simulation.stop();
     unsubscribe();
-  })
+  });
 
-  function simulationUpdate () {
+  function simulationUpdate() {
     simulation.tick();
     nodes = [...nodes];
     edges = [...edges];
   }
 
   function zoomed(currentEvent) {
-      transform = currentEvent.transform;
-      simulationUpdate();
+    transform = currentEvent.transform;
+    simulationUpdate();
   }
 
-	function dragsubject(currentEvent) {
+  function dragsubject(currentEvent) {
     const nodes = simulation.nodes();
     const node = nodes.filter((node: PropertyGraphNode) => {
-      return (node.x - (.5 * node.width) < transform.invertX(currentEvent.x))
-      && (node.x + (.5 * node.width) > transform.invertX(currentEvent.x))
-      && (node.y - (.5 * node.height) < transform.invertY(currentEvent.y))
-      && (node.y + (.5 * node.height) > transform.invertY(currentEvent.y))
+      return (
+        node.x - 0.5 * node.width < transform.invertX(currentEvent.x) &&
+        node.x + 0.5 * node.width > transform.invertX(currentEvent.x) &&
+        node.y - 0.5 * node.height < transform.invertY(currentEvent.y) &&
+        node.y + 0.5 * node.height > transform.invertY(currentEvent.y)
+      );
     })[0];
     if (node) {
-        node.x = transform.applyX(node.x);
-        node.y = transform.applyY(node.y);
+      node.x = transform.applyX(node.x);
+      node.y = transform.applyY(node.y);
     }
     return node;
-	}
+  }
 
   function dragstarted(currentEvent) {
-      if (!currentEvent.active) simulation.alphaTarget(0.3).restart();
-      currentEvent.subject.fx = transform.invertX(currentEvent.subject.x);
-      currentEvent.subject.fy = transform.invertY(currentEvent.subject.y);
+    if (!currentEvent.active) simulation.alphaTarget(0.3).restart();
+    currentEvent.subject.fx = transform.invertX(currentEvent.subject.x);
+    currentEvent.subject.fy = transform.invertY(currentEvent.subject.y);
   }
 
   function dragged(currentEvent) {
-      currentEvent.subject.fx = transform.invertX(currentEvent.x);
-      currentEvent.subject.fy = transform.invertY(currentEvent.y);
+    currentEvent.subject.fx = transform.invertX(currentEvent.x);
+    currentEvent.subject.fy = transform.invertY(currentEvent.y);
   }
 
   function dragended(currentEvent) {
-      if (!currentEvent.active) simulation.alphaTarget(0);
-      currentEvent.subject.fx = null;
-      currentEvent.subject.fy = null;
+    if (!currentEvent.active) simulation.alphaTarget(0);
+    currentEvent.subject.fx = null;
+    currentEvent.subject.fy = null;
   }
 
   // sort the links by source, then target
-  function sortEdges(edges) {								
-    edges.sort(function(a,b) {
-      if (a.source > b.source) 
-      {
+  function sortEdges(edges) {
+    edges.sort(function (a, b) {
+      if (a.source > b.source) {
+        return 1;
+      } else if (a.source < b.source) {
+        return -1;
+      } else {
+        if (a.target > b.target) {
           return 1;
-      }
-      else if (a.source < b.source) 
-      {
+        }
+        if (a.target < b.target) {
           return -1;
-      }
-      else 
-      {
-          if (a.target > b.target) 
-          {
-              return 1;
-          }
-          if (a.target < b.target) 
-          {
-              return -1;
-          }
-          else 
-          {
-              return 0;
-          }
+        } else {
+          return 0;
+        }
       }
     });
   }
-    
+
   //any links with duplicate source and target get an incremented 'linknum'
-  function setLinkIndexAndNum(edges)
-  {
+  function setLinkIndexAndNum(edges) {
     sortEdges(edges);
     for (var i = 0; i < edges.length; i++) {
-      if (i != 0 &&
-        edges[i].source == edges[i-1].source &&
-        edges[i].target == edges[i-1].target) 
-      {
-        edges[i].linkIndex = edges[i-1].linkIndex + 1;
-      }
-      else 
-      {
+      if (
+        i != 0 &&
+        edges[i].source == edges[i - 1].source &&
+        edges[i].target == edges[i - 1].target
+      ) {
+        edges[i].linkIndex = edges[i - 1].linkIndex + 1;
+      } else {
         edges[i].linkIndex = 1;
       }
       // save the total number of links between two nodes
-      mLinkNum[edges[i].source.id + ':' + edges[i].target.id] = edges[i].linkIndex;
+      mLinkNum[edges[i].source.id + ":" + edges[i].target.id] =
+        edges[i].linkIndex;
     }
   }
-  
+
   function arcPath(d) {
-    const xSmaller = d.source.x < (d.target.x - (.5 * d.target.width));
-    const ySmaller = d.source.y < (d.target.y - (.5 *  d.target.height));
-    const xGreater = d.source.x > (d.target.x + (.5 * d.target.width));
-    const yGreater = d.source.y > (d.target.y + (.5 *  d.target.height));
+    const xSmaller = d.source.x < d.target.x - 0.5 * d.target.width;
+    const ySmaller = d.source.y < d.target.y - 0.5 * d.target.height;
+    const xGreater = d.source.x > d.target.x + 0.5 * d.target.width;
+    const yGreater = d.source.y > d.target.y + 0.5 * d.target.height;
     let x1, x2, y1, y2: number;
     if (xSmaller && ySmaller) {
       x1 = d.source.x;
-      y1 = d.source.y + (.5 * d.source.height);
-      x2 = d.target.x - (.5 * d.target.width);
+      y1 = d.source.y + 0.5 * d.source.height;
+      x2 = d.target.x - 0.5 * d.target.width;
       y2 = d.target.y;
-    }
-    else if (xSmaller && yGreater) {
-      x1 = d.source.x + (.5 * d.source.width);
+    } else if (xSmaller && yGreater) {
+      x1 = d.source.x + 0.5 * d.source.width;
       y1 = d.source.y;
       x2 = d.target.x;
-      y2 = d.target.y + (.5 * d.target.height);
-    }
-    else if (xSmaller) {
-      x1 = d.source.x + (.5 * d.source.width);
+      y2 = d.target.y + 0.5 * d.target.height;
+    } else if (xSmaller) {
+      x1 = d.source.x + 0.5 * d.source.width;
       y1 = d.source.y;
-      x2 = d.target.x - (.5 * d.target.width);
+      x2 = d.target.x - 0.5 * d.target.width;
       y2 = d.target.y;
-    }
-    else if (xGreater && ySmaller) {
-      x1 = d.source.x - (.5 * d.source.width);
+    } else if (xGreater && ySmaller) {
+      x1 = d.source.x - 0.5 * d.source.width;
       y1 = d.source.y;
       x2 = d.target.x;
-      y2 = d.target.y - (.5 * d.target.height);
-    }
-    else if (xGreater && yGreater) {
+      y2 = d.target.y - 0.5 * d.target.height;
+    } else if (xGreater && yGreater) {
       x1 = d.source.x;
-      y1 = d.source.y - (.5 * d.source.height);
-      x2 = d.target.x + (.5 * d.target.width);
+      y1 = d.source.y - 0.5 * d.source.height;
+      x2 = d.target.x + 0.5 * d.target.width;
       y2 = d.target.y;
-    }
-    else if (xGreater) {
-      x1 = d.source.x - (.5 * d.source.width);
+    } else if (xGreater) {
+      x1 = d.source.x - 0.5 * d.source.width;
       y1 = d.source.y;
-      x2 = d.target.x + (.5 * d.target.width);
+      x2 = d.target.x + 0.5 * d.target.width;
       y2 = d.target.y;
-    }
-    else if (ySmaller) {
+    } else if (ySmaller) {
       x1 = d.source.x;
-      y1 = d.source.y + (.5 * d.source.height);
+      y1 = d.source.y + 0.5 * d.source.height;
       x2 = d.target.x;
-      y2 = d.target.y - (.5 * d.target.height);
-    }
-    else {
+      y2 = d.target.y - 0.5 * d.target.height;
+    } else {
       x1 = d.source.x;
-      y1 = d.source.y - (.5 * d.source.height);
+      y1 = d.source.y - 0.5 * d.source.height;
       x2 = d.target.x;
-      y2 = d.target.y + (.5 * d.target.height);
-
+      y2 = d.target.y + 0.5 * d.target.height;
     }
     var dx = x2 - x1,
-        dy = y2 - y1,
-        dr = Math.sqrt(dx * dx + dy * dy);
-        // get the total link numbers between source and target node
-        var lTotalLinkNum = mLinkNum[d.source.id + ":" + d.target.id];
+      dy = y2 - y1,
+      dr = Math.sqrt(dx * dx + dy * dy);
+    // get the total link numbers between source and target node
+    var lTotalLinkNum = mLinkNum[d.source.id + ":" + d.target.id];
 
-        if (lTotalLinkNum > 1) {
-          dr = dr/(1 + (1/lTotalLinkNum) * (d.linkIndex - 1));
-        }
+    if (lTotalLinkNum > 1) {
+      dr = dr / (1 + (1 / lTotalLinkNum) * (d.linkIndex - 1));
+    }
 
-        return `M${x1} ${y1} A ${dr}, ${dr} 0, 0, 0 ${x2}, ${y2}`;
-}
+    return `M${x1} ${y1} A ${dr}, ${dr} 0, 0, 0 ${x2}, ${y2}`;
+  }
 </script>
 
 <figure bind:clientHeight={height} bind:clientWidth={width}>
   <svg bind:this={svg} {width} {height}>
     <defs>
-      <marker id="prop_arrow" viewBox="0 0 10 10" refX="10" refY="5"
-      markerWidth="13" markerHeight="13"
-      orient="auto-start-reverse">
-        <path d="M 0 0 L 10 5 L 0 10 z" fill='#999' style='stroke: none'/>
+      <marker
+        id="prop_arrow"
+        viewBox="0 0 10 10"
+        refX="10"
+        refY="5"
+        markerWidth="13"
+        markerHeight="13"
+        orient="auto-start-reverse"
+      >
+        <path
+          class="fill-black dark:fill-gray-200 stroke-0"
+          d="M 0 0 L 10 5 L 0 10 z"
+        />
       </marker>
     </defs>
     {#each edges as edge}
-    <g class="edge" transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
-      <path id='{edge.source.id}_{edge.target.id}_{edge.linkIndex}' d={arcPath(edge)} marker-end={edge.directional ? 'url(#prop_arrow)' : null}/>
-    </g>
+      <g
+        class="edge"
+        transform="translate({transform.x} {transform.y}) scale({transform.k} {transform.k})"
+      >
+        <path
+          class="stroke-black dark:stroke-gray-200"
+          id="{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
+          d={arcPath(edge)}
+          marker-end={edge.directional ? "url(#prop_arrow)" : null}
+        />
+      </g>
     {/each}
     {#each nodes as point}
-      <g class="node" transform='translate({transform.x} {transform.y}) scale({transform.k} {transform.k})'>
+      <g
+        class="node"
+        transform="translate({transform.x} {transform.y}) scale({transform.k} {transform.k})"
+      >
         <title>{point.id}</title>
-        <rect x={point.x - (.5 * point.width)} y={point.y - (.5 * point.height)} width={point.width} height={point.height} />
-        <foreignObject x={point.x - (.5 * point.width)} y={point.y - (.5 * point.height)} width={point.width} height={point.height}>
-          <pre>{point.stringRepres}</pre>
+        <rect
+          class="stroke-black dark:stroke-gray-200"
+          x={point.x - 0.5 * point.width}
+          y={point.y - 0.5 * point.height}
+          width={point.width}
+          height={point.height}
+        />
+        <foreignObject
+          x={point.x - 0.5 * point.width}
+          y={point.y - 0.5 * point.height}
+          width={point.width}
+          height={point.height}
+        >
+          <pre class="text-black dark:text-gray-200">{point.stringRepres}</pre>
         </foreignObject>
       </g>
-	  {/each}
+    {/each}
   </svg>
 </figure>
 
@@ -269,32 +294,20 @@ import type { Writable } from "svelte/store";
     margin: 0;
   }
 
-	svg {
+  svg {
     font-family: monospace;
-	}
-
-  path {
-    fill: none;
-    stroke: #999;
-    stroke-opacity: 0.6;
   }
 
-  marker path{
-    fill:#999;
-    stroke: none;
+  .edge path {
+    fill: none;
   }
 
   rect {
     fill: none;
-    stroke: #999;
-    stroke-opacity: 0.6;
   }
   
   pre {
     text-align: left;
     white-space: pre-line;
-    margin: 0;
-    color: #999;
   }
-
 </style>
