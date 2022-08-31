@@ -48,14 +48,15 @@ export function graphValidator(json): ValidationError[] {
           severity: ValidationSeverity.error,
         });
       }
-      if (
-        typeof prop[1] !== "string" &&
-        typeof prop[1] !== "number" &&
-        typeof prop[1] !== "boolean"
-      ) {
+      if (!(
+          prop[1].constructor === String ||
+          prop[1].constructor === Number ||
+          prop[1].constructor === Boolean ||
+          prop[1].constructor === Array
+        )) {
         errors.push({
           path: [path, index, "properties", prop[0]],
-          message: `must be string, number, boolean`,
+          message: `must be string, number, boolean, array`,
           severity: ValidationSeverity.error,
         });
       }

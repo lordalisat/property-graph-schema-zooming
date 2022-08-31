@@ -29,7 +29,7 @@ export class PropertyGraphEdge extends PropertyGraphElement {
     target: string;
     isDirected: boolean;
     labels: Array<string>;
-    properties: Record<string, string | boolean | number>;
+    properties: Record<string, Value>;
   }): PropertyGraphEdge {
     if (!element.id) throw new Error(`Edge is missing id`);
     if (!element.source) throw new Error("Edge is missing source");
@@ -50,7 +50,7 @@ export class PropertyGraphEdge extends PropertyGraphElement {
     target: string;
     isDirected: boolean;
     labels: Array<string>;
-    properties: Record<string, string | boolean | number>;
+    properties: Record<string, Value>;
   } {
     return {
       id: this.id,

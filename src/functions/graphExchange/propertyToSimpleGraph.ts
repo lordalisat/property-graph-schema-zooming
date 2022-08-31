@@ -30,24 +30,21 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
 
   function getProperty(sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode, value: Value, key: Property) {
     let type;
-    switch (typeof value) {
-      case "string": {
-        type = PropertyType.string;
-        break;
-      }
-      case "number": {
-        type = PropertyType.number;
-        break;
-      }
-      case "boolean": {
-        type = PropertyType.boolean;
-        break;
-      }
-      default: {
-        type = PropertyType.other;
-        break;
-      }
-    };
+    if (value.constructor === String) {
+      type = PropertyType.string;
+    }
+    else if (value.constructor === Number) {
+      type = PropertyType.number;
+    }
+    else if (value.constructor === Boolean) {
+      type = PropertyType.boolean;
+    }
+    else if (value.constructor === Array) {
+      type = PropertyType.array;
+    }
+    else {
+      type = PropertyType.other;
+    }
     let propertyNode;
     if (!propertyMap.has(type)) {
       propertyNode = SimpleGraphNode.propertyNode(type);
