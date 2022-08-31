@@ -12,7 +12,7 @@
   import { onDestroy, onMount } from "svelte";
   import type { Writable } from "svelte/store";
   import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
-import { elementType } from "types/propertyGraph/elementType";
+  import { elementType } from "types/propertyGraph/elementType";
 
   interface Edge {
     source: PropertyGraphElement;
@@ -40,9 +40,9 @@ import { elementType } from "types/propertyGraph/elementType";
     edges = [...graph.edges.values()].flatMap((edge) => {
       return [
         {
-          source: graph.nodes.get(edge.sourceNode),
-          target: edge,
-          directional: false,
+          source: edge.isDirected ? graph.nodes.get(edge.sourceNode) : edge,
+          target: edge.isDirected ? edge : graph.nodes.get(edge.sourceNode),
+          directional: edge.isDirected,
         },
         {
           source: edge,
@@ -248,6 +248,20 @@ import { elementType } from "types/propertyGraph/elementType";
           d="M 0 0 L 10 5 L 0 10 z"
         />
       </marker>
+      <marker
+        id="prop_dot"
+        viewBox="0 0 10 10"
+        refX="10"
+        refY="5"
+        markerWidth="13"
+        markerHeight="13"
+        orient="auto-start-reverse"
+      >
+        <circle 
+          class="fill-black dark:fill-gray-200 stroke-0"
+          cx="5" cy="5" r="5"
+        />
+      </marker>
     </defs>
     {#each edges as edge}
       <g
@@ -258,7 +272,7 @@ import { elementType } from "types/propertyGraph/elementType";
           class="stroke-black dark:stroke-gray-200"
           id="{edge.source.id}_{edge.target.id}_{edge.linkIndex}"
           d={arcPath(edge)}
-          marker-end={edge.directional ? "url(#prop_arrow)" : null}
+          marker-end={edge.directional ? "url(#prop_arrow)" : "url(#prop_dot)"}
         />
       </g>
     {/each}
