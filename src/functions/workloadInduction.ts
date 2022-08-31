@@ -1,4 +1,5 @@
 import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
+import { SimpleGraphNode } from "simpleGraphEntities/simpleGraphNode";
 import { NodeType } from "types/simpleGraph/nodeType";
 import type { FilteredWorkload, Workload } from "types/workload";
 
@@ -69,9 +70,9 @@ export function induceWorkload(
 
   // Get edges that end at the label nodes.
   const workloadEdges = [
-    ...graph.labelEdges.filter((edge) => {
-      return filteredWorkload.has(graph.labelNodes.get(edge.target.id).label);
-    }),
+    ...graph.labelEdges.filter((edge) => (
+      filteredWorkload.has(graph.labelNodes.get(edge.target.id).label)
+    ))
   ];
 
   workloadEdges.forEach((edge) => {
@@ -91,12 +92,10 @@ export function induceWorkload(
 
   //Get all Property edges connected to the Node or Edge nodes
   inducedGraph.propertyEdges = graph.propertyEdges
-    .filter((edge) => {
-      return (
+    .filter((edge) => (
         inducedGraph.nodeNodes.has(edge.source.id) ||
         inducedGraph.edgeNodes.has(edge.source.id)
-      );
-    })
+      ))
     .map((edge) => {
       if (!inducedGraph.propertyNodes.has(edge.target.id)) {
         inducedGraph.addPropertyNode({ ...edge.target });
@@ -110,12 +109,10 @@ export function induceWorkload(
 
   //Get all Label edges connected to the Node or Edge nodes
   inducedGraph.labelEdges = graph.labelEdges
-    .filter((edge) => {
-      return (
+    .filter((edge) => (
         inducedGraph.nodeNodes.has(edge.source.id) ||
         inducedGraph.edgeNodes.has(edge.source.id)
-      );
-    })
+      ))
     .map((edge) => {
       if (!inducedGraph.labelNodes.has(edge.target.id)) {
         inducedGraph.addLabelNode({ ...edge.target });
@@ -151,18 +148,27 @@ export function induceWorkload(
   } else if (inductionMethod === InductionMethod.filter) {
     //Add all Edge edges where both start and end nodes are included in the graph
     //TODO check for existance of both edges per Edge node?
+    let addNode = false;
+    const emptyNode = SimpleGraphNode.nodeNode("_empty");
     inducedGraph.edgeEdges = graph.edgeEdges
-      .filter((edge) => {
-        return (
-          inducedGraph.edgeNodes.has(edge.source.id) &&
-          inducedGraph.nodeNodes.has(edge.target.id)
-        );
-      })
-      .map((edge) => ({
-        ...edge,
-        source: inducedGraph.getNode(edge.source.id),
-        target: inducedGraph.getNode(edge.target.id),
-      }));
+      .filter((edge) => inducedGraph.edgeNodes.has(edge.source.id))
+      .map((edge) => {
+        let targetNode;
+        if (inducedGraph.nodeNodes.has(edge.target.id)) {
+          targetNode = inducedGraph.nodeNodes.get(edge.target.id);
+        } else {
+          targetNode = emptyNode;
+          addNode = true;
+        }
+        return {
+          ...edge,
+          source: inducedGraph.edgeNodes.get(edge.source.id),
+          target: targetNode,
+        }
+      });
+    if (addNode) {
+      inducedGraph.addNodeNode(emptyNode);
+    }
   }
 
   return inducedGraph;

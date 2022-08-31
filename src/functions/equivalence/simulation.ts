@@ -13,7 +13,7 @@ import { Equivalence } from "./equivalence";
 export class Simulation extends Equivalence {
   private currentPId: PId;
   private storage: SignatureStorage;
-  private k = 2;
+  private k = 3;
   private nodes: SimpleGraphNodeType[];
   private edges: SimpleGraphEdgeType[];
   private pIds: PIdMaps = {
