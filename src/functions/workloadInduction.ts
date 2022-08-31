@@ -70,9 +70,9 @@ export function induceWorkload(
 
   // Get edges that end at the label nodes.
   const workloadEdges = [
-    ...graph.labelEdges.filter((edge) => (
+    ...graph.labelEdges.filter((edge) =>
       filteredWorkload.has(graph.labelNodes.get(edge.target.id).label)
-    ))
+    ),
   ];
 
   workloadEdges.forEach((edge) => {
@@ -92,10 +92,11 @@ export function induceWorkload(
 
   //Get all Property edges connected to the Node or Edge nodes
   inducedGraph.propertyEdges = graph.propertyEdges
-    .filter((edge) => (
+    .filter(
+      (edge) =>
         inducedGraph.nodeNodes.has(edge.source.id) ||
         inducedGraph.edgeNodes.has(edge.source.id)
-      ))
+    )
     .map((edge) => {
       if (!inducedGraph.propertyNodes.has(edge.target.id)) {
         inducedGraph.addPropertyNode({ ...edge.target });
@@ -109,10 +110,11 @@ export function induceWorkload(
 
   //Get all Label edges connected to the Node or Edge nodes
   inducedGraph.labelEdges = graph.labelEdges
-    .filter((edge) => (
+    .filter(
+      (edge) =>
         inducedGraph.nodeNodes.has(edge.source.id) ||
         inducedGraph.edgeNodes.has(edge.source.id)
-      ))
+    )
     .map((edge) => {
       if (!inducedGraph.labelNodes.has(edge.target.id)) {
         inducedGraph.addLabelNode({ ...edge.target });
@@ -164,7 +166,7 @@ export function induceWorkload(
           ...edge,
           source: inducedGraph.edgeNodes.get(edge.source.id),
           target: targetNode,
-        }
+        };
       });
     if (addNode) {
       inducedGraph.addNodeNode(emptyNode);

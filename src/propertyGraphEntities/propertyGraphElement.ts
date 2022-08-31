@@ -28,7 +28,7 @@ export abstract class PropertyGraphElement {
     this.stringRepres = strings.join("\n");
   }
 
-  private mapToStrings(m: Map<string, string | number | boolean>) {
+  private mapToStrings(m: Map<string, Value>) {
     return Array.from(m).map(([k, v]) => {
       return `${k}: ${v}`;
     });
