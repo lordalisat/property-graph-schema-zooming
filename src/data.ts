@@ -6,7 +6,7 @@ export const data = `{
         "Person"
       ],
       "properties": {
-        "name": "Alic"
+        "name": "Alice"
       }
     },
     {
@@ -97,7 +97,7 @@ export const data = `{
     },
     {
       "id": "e4",
-      "source": "n1",
+      "source": "n3",
       "target": "n2",
       "isDirected": true,
       "labels": [
