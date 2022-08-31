@@ -1,3 +1,10 @@
+/*
+* Based on the work of Luo, Y.
+* Designing algorithms for big graph datasets : a study of
+* computing bisimulation and joins
+* 2015
+*/
+
 import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
 import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
 import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
