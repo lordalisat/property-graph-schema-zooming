@@ -6,7 +6,7 @@ import { type ValidationError, ValidationSeverity } from "svelte-jsoneditor"
  * - a team must have 4 members
  * - at lease one member of the team must be adult
  */
-export function customValidator(json): ValidationError[] {
+export function graphValidator(json): ValidationError[] {
   const errors: ValidationError[] = [];
   const nodes = [];
   const edges = [];

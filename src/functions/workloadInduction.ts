@@ -1,5 +1,4 @@
 import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
-import { SimpleGraphEdge } from "simpleGraphEntities/simpleGraphEdge";
 import { NodeType } from "types/simpleGraph/nodeType";
 import type { FilteredWorkload, Workload } from "types/workload";
 

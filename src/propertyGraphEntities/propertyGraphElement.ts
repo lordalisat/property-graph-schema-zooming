@@ -1,6 +1,7 @@
 import type { Id } from "types/id";
 import type { Label } from "types/label";
 import type { Property } from "types/property";
+import type { elementType } from "types/propertyGraph/elementType";
 import type { Value } from "types/propertyGraph/value";
 
 export abstract class PropertyGraphElement {
@@ -12,6 +13,7 @@ export abstract class PropertyGraphElement {
   readonly id!: Id;
   readonly labels!: Array<Label>;
   readonly properties!: Map<Property, Value>;
+  readonly type!: elementType;
 
   public setPrintOptions(textWidth = 9, textHeight = 24) {
     const strings = [...this.labels, ...this.mapToStrings(this.properties)];
@@ -23,7 +25,7 @@ export abstract class PropertyGraphElement {
     this.stringRepres = strings.join('\n');
   }
 
-  private mapToStrings(m: Map<any, any>) {
+  private mapToStrings(m: Map<string, string | number | boolean>) {
     return Array.from(m).map(([k, v]) => { return `${k}: ${v}` });
   };
 }

@@ -12,6 +12,7 @@
   import { onDestroy, onMount } from "svelte";
   import type { Writable } from "svelte/store";
   import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
+import { elementType } from "types/propertyGraph/elementType";
 
   interface Edge {
     source: PropertyGraphElement;
@@ -269,6 +270,7 @@
         <title>{point.id}</title>
         <rect
           class="stroke-black dark:stroke-gray-200"
+          stroke-dasharray={point.type === elementType.edge ? "5,3" : null}
           x={point.x - 0.5 * point.width}
           y={point.y - 0.5 * point.height}
           width={point.width}

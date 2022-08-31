@@ -8,13 +8,19 @@ import { derived, writable } from "svelte/store";
 import PropertyGraphSvelte from "./PropertyGraph.svelte";
 import SimpleGraphSvelte from "./SimpleGraph.svelte";
 
-export const content = writable({ text: data });
+export const graphContent = writable({ text: data });
 export const inductionMethod = writable(InductionMethod.project);
 export const threshold = writable(0);
-export const workload = writable(workloadData);
+
+export const workloadContent = writable({ text: workloadData });
+export const workload = writable([]);
+let unsubscribe = workloadContent.subscribe(val => {
+  workload.set(JSON.parse(val.text));
+});
+unsubscribe();
 
 export const propData = writable(new PropertyGraph());
-const unsubscribe = content.subscribe(val => {
+unsubscribe = graphContent.subscribe(val => {
   propData.set(PropertyGraph.fromJSON(val.text));
 });
 unsubscribe();
