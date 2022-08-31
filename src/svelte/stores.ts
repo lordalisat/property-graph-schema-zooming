@@ -14,31 +14,47 @@ export const threshold = writable(0);
 
 export const workloadContent = writable({ text: workloadData });
 export const workload = writable([]);
-let unsubscribe = workloadContent.subscribe(val => {
+let unsubscribe = workloadContent.subscribe((val) => {
   workload.set(JSON.parse(val.text));
 });
 unsubscribe();
 
 export const propData = writable(new PropertyGraph());
-unsubscribe = graphContent.subscribe(val => {
+unsubscribe = graphContent.subscribe((val) => {
   propData.set(PropertyGraph.fromJSON(val.text));
 });
 unsubscribe();
-export const simpleData = derived(propData, (propData) => propertyToSimpleGraph(propData));
+export const simpleData = derived(propData, (propData) =>
+  propertyToSimpleGraph(propData)
+);
 
-export const simpleInduced = derived([simpleData, workload, inductionMethod, threshold], ([simpleData, workload, inductionMethod, threshold]) => induceWorkload(simpleData, workload, inductionMethod, threshold));
-export const propInduced = derived(simpleInduced, (simpleInduced) => simpleToPropertyGraph(simpleInduced));
+export const simpleInduced = derived(
+  [simpleData, workload, inductionMethod, threshold],
+  ([simpleData, workload, inductionMethod, threshold]) =>
+    induceWorkload(simpleData, workload, inductionMethod, threshold)
+);
+export const propInduced = derived(simpleInduced, (simpleInduced) =>
+  simpleToPropertyGraph(simpleInduced)
+);
 
-export const simpleSchema = derived(simpleInduced, (simpleInduced) => new Simulation().calculateSchema(simpleInduced));
-export const propSchema = derived(simpleSchema, (simpleSchema) => simpleToPropertyGraph(simpleSchema));
+export const simpleSchema = derived(simpleInduced, (simpleInduced) =>
+  new Simulation().calculateSchema(simpleInduced)
+);
+export const propSchema = derived(simpleSchema, (simpleSchema) =>
+  simpleToPropertyGraph(simpleSchema)
+);
 
 export const graphList = [
-  { name: 'SimpleData', component: SimpleGraphSvelte, graph: simpleData },
-  { name: 'SimpleInduced', component: SimpleGraphSvelte, graph: simpleInduced },
-  { name: 'SimpleSchema', component: SimpleGraphSvelte, graph: simpleSchema },
-  { name: 'PropertyData', component: PropertyGraphSvelte, graph: propData },
-  { name: 'PropertyInduced', component: PropertyGraphSvelte, graph: propInduced },
-  { name: 'PropertySchema', component: PropertyGraphSvelte, graph: propSchema },
+  { name: "SimpleData", component: SimpleGraphSvelte, graph: simpleData },
+  { name: "SimpleInduced", component: SimpleGraphSvelte, graph: simpleInduced },
+  { name: "SimpleSchema", component: SimpleGraphSvelte, graph: simpleSchema },
+  { name: "PropertyData", component: PropertyGraphSvelte, graph: propData },
+  {
+    name: "PropertyInduced",
+    component: PropertyGraphSvelte,
+    graph: propInduced,
+  },
+  { name: "PropertySchema", component: PropertyGraphSvelte, graph: propSchema },
 ];
 
 export const selectedGraph = writable(graphList[5]);

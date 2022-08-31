@@ -18,14 +18,19 @@ export abstract class PropertyGraphElement {
   public setPrintOptions(textWidth = 9, textHeight = 24) {
     const strings = [...this.labels, ...this.mapToStrings(this.properties)];
     if (strings.length === 0) strings.push(`\xa0*\xa0`);
-    const maxLen = strings.reduce((prev, cur) => prev > cur.length ? prev : cur.length, 0);
+    const maxLen = strings.reduce(
+      (prev, cur) => (prev > cur.length ? prev : cur.length),
+      0
+    );
     this.width = maxLen * textWidth;
     this.height = strings.length * textHeight;
 
-    this.stringRepres = strings.join('\n');
+    this.stringRepres = strings.join("\n");
   }
 
   private mapToStrings(m: Map<string, string | number | boolean>) {
-    return Array.from(m).map(([k, v]) => { return `${k}: ${v}` });
-  };
+    return Array.from(m).map(([k, v]) => {
+      return `${k}: ${v}`;
+    });
+  }
 }

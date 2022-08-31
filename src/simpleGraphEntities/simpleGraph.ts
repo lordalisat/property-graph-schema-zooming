@@ -1,9 +1,17 @@
 import type { Id } from "types/id";
-import type { SimpleGraphEdgeEdge, SimpleGraphLabelEdge, SimpleGraphPropertyEdge } from "./simpleGraphEdge";
-import type { SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphNodeNode, SimpleGraphNodeType, SimpleGraphPropertyNode } from "./simpleGraphNode";
+import type {
+  SimpleGraphEdgeEdge,
+  SimpleGraphLabelEdge,
+  SimpleGraphPropertyEdge,
+} from "./simpleGraphEdge";
+import type {
+  SimpleGraphEdgeNode,
+  SimpleGraphLabelNode,
+  SimpleGraphNodeNode,
+  SimpleGraphPropertyNode,
+} from "./simpleGraphNode";
 
 export class SimpleGraph {
-
   nodeNodes: Map<Id, SimpleGraphNodeNode>;
   edgeNodes: Map<Id, SimpleGraphEdgeNode>;
   labelNodes: Map<Id, SimpleGraphLabelNode>;
@@ -18,7 +26,12 @@ export class SimpleGraph {
   }
 
   public getNode(id: Id) {
-    return this.nodeNodes.get(id) ?? this.edgeNodes.get(id) ?? this.labelNodes.get(id) ?? this.propertyNodes.get(id);
+    return (
+      this.nodeNodes.get(id) ??
+      this.edgeNodes.get(id) ??
+      this.labelNodes.get(id) ??
+      this.propertyNodes.get(id)
+    );
   }
 
   public emptyGraph() {

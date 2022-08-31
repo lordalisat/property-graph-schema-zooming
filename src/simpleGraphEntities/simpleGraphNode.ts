@@ -17,9 +17,7 @@ export type SimpleGraphPropertyNode = SimpleGraphNodeType;
 export type SimpleGraphLabelNode = SimpleGraphNodeType;
 
 export class SimpleGraphNode {
-  static nodeNode(
-    id: Id
-  ): SimpleGraphNodeNode {
+  static nodeNode(id: Id): SimpleGraphNodeNode {
     return {
       id: toSimpleId(NodeType.node, id),
       label: "node",
@@ -27,9 +25,7 @@ export class SimpleGraphNode {
     } as SimpleGraphNodeNode;
   }
 
-  static edgeNode(
-    id: Id
-  ): SimpleGraphEdgeNode {
+  static edgeNode(id: Id): SimpleGraphEdgeNode {
     return {
       id: toSimpleId(NodeType.edge, id),
       label: "edge",
@@ -37,9 +33,7 @@ export class SimpleGraphNode {
     } as SimpleGraphEdgeNode;
   }
 
-  static labelNode(
-    label: Label
-  ): SimpleGraphPropertyNode {
+  static labelNode(label: Label): SimpleGraphPropertyNode {
     return {
       id: toSimpleId(NodeType.label, label),
       label: label,
@@ -47,9 +41,7 @@ export class SimpleGraphNode {
     } as SimpleGraphPropertyNode;
   }
 
-  static propertyNode(
-    propertyType: PropertyType
-  ): SimpleGraphLabelNode {
+  static propertyNode(propertyType: PropertyType): SimpleGraphLabelNode {
     return {
       id: toSimpleId(NodeType.propertyType, propertyType.toString()),
       label: propertyType.toString(),

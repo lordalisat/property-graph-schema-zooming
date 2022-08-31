@@ -26,7 +26,7 @@ export class PropertyGraphNode extends PropertyGraphElement {
     return new PropertyGraphNode({
       id: element.id,
       labels: element.labels,
-      properties: new Map(Object.entries(element.properties))
+      properties: new Map(Object.entries(element.properties)),
     });
   }
 
@@ -38,7 +38,7 @@ export class PropertyGraphNode extends PropertyGraphElement {
     return {
       id: this.id,
       labels: this.labels,
-      properties: Object.fromEntries(this.properties)
+      properties: Object.fromEntries(this.properties),
     };
   }
 }

@@ -1,4 +1,4 @@
-import { type ValidationError, ValidationSeverity } from "svelte-jsoneditor"
+import { type ValidationError, ValidationSeverity } from "svelte-jsoneditor";
 
 /**
  * rules:
@@ -14,18 +14,18 @@ export function graphValidator(json): ValidationError[] {
   function checkLabels(labels, index, path) {
     if (!Array.isArray(labels)) {
       errors.push({
-        path: [path, index, 'labels'],
+        path: [path, index, "labels"],
         message: `must be array`,
-        severity: ValidationSeverity.error
+        severity: ValidationSeverity.error,
       });
       return;
     }
     labels.forEach((label, i) => {
-      if (typeof label !== 'string') {
+      if (typeof label !== "string") {
         errors.push({
-          path: [path, index, 'labels', i],
+          path: [path, index, "labels", i],
           message: `must be string`,
-          severity: ValidationSeverity.error
+          severity: ValidationSeverity.error,
         });
       }
     });
@@ -34,80 +34,82 @@ export function graphValidator(json): ValidationError[] {
   function checkProperties(properties, index, path) {
     if (typeof properties !== "object") {
       errors.push({
-        path: [path, index, 'properties'],
+        path: [path, index, "properties"],
         message: `must be object`,
-        severity: ValidationSeverity.error
+        severity: ValidationSeverity.error,
       });
       return;
     }
     Object.entries(properties).forEach((prop) => {
-      if (typeof prop[0] !== 'string') {
+      if (typeof prop[0] !== "string") {
         errors.push({
-          path: [path, index, 'properties', prop[0]],
+          path: [path, index, "properties", prop[0]],
           message: `key must be string`,
-          severity: ValidationSeverity.error
+          severity: ValidationSeverity.error,
         });
       }
-      if (typeof prop[1] !== 'string' && typeof prop[1] !== 'number' && typeof prop[1] !== 'boolean') {
+      if (
+        typeof prop[1] !== "string" &&
+        typeof prop[1] !== "number" &&
+        typeof prop[1] !== "boolean"
+      ) {
         errors.push({
-          path: [path, index, 'properties', prop[0]],
+          path: [path, index, "properties", prop[0]],
           message: `must be string, number, boolean`,
-          severity: ValidationSeverity.error
+          severity: ValidationSeverity.error,
         });
       }
     });
   }
 
-  if ('nodes' in json) {
+  if ("nodes" in json) {
     if (!Array.isArray(json.nodes)) {
       errors.push({
-        path: ['nodes'],
-        message: 'must be array',
-        severity: ValidationSeverity.error
+        path: ["nodes"],
+        message: "must be array",
+        severity: ValidationSeverity.error,
       });
-    }
-    else {
+    } else {
       // check whether each node has id filled in correctly
       json.nodes.forEach((node, index) => {
-        if (typeof node !== 'object') {
+        if (typeof node !== "object") {
           errors.push({
-            path: ['nodes', index],
+            path: ["nodes", index],
             message: `must be object`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
           return;
         }
-        if ('id' in node) {
-          if (typeof node.id !== 'string') {
+        if ("id" in node) {
+          if (typeof node.id !== "string") {
             errors.push({
-              path: ['nodes', index, 'id'],
+              path: ["nodes", index, "id"],
               message: `must be string`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
           } else if (nodes.includes(node.id)) {
             errors.push({
-              path: ['nodes', index, 'id'],
+              path: ["nodes", index, "id"],
               message: `id already exists`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
-          }
-          else {
+          } else {
             nodes.push(node.id);
           }
         } else {
           errors.push({
-            path: ['nodes', index],
+            path: ["nodes", index],
             message: `must have required property 'id'`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
         }
 
-        if ('labels' in node) {
-          checkLabels(node.labels, index, 'nodes');
+        if ("labels" in node) {
+          checkLabels(node.labels, index, "nodes");
         }
 
-        if ('properties' in node) {
-          checkProperties(node.properties, index, 'nodes');
+        if ("properties" in node) {
+          checkProperties(node.properties, index, "nodes");
         }
       });
     }
@@ -115,104 +117,100 @@ export function graphValidator(json): ValidationError[] {
     errors.push({
       path: [],
       message: `must have required property 'nodes'`,
-      severity: ValidationSeverity.error
-    })
+      severity: ValidationSeverity.error,
+    });
   }
 
-  if ('edges' in json) {
+  if ("edges" in json) {
     if (!Array.isArray(json.edges)) {
       errors.push({
-        path: ['edges'],
-        message: 'must be array',
-        severity: ValidationSeverity.error
+        path: ["edges"],
+        message: "must be array",
+        severity: ValidationSeverity.error,
       });
-    }
-    else {
+    } else {
       // check whether each node has id filled in correctly
       json.edges.forEach((edge, index) => {
-        if (typeof edge !== 'object') {
+        if (typeof edge !== "object") {
           errors.push({
-            path: ['edges', index],
+            path: ["edges", index],
             message: `must be object`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
           return;
         }
-        if ('id' in edge) {
-          if (typeof edge.id !== 'string') {
+        if ("id" in edge) {
+          if (typeof edge.id !== "string") {
             errors.push({
-              path: ['edges', index, 'id'],
+              path: ["edges", index, "id"],
               message: `must be string`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
           } else if (edges.includes(edge.id)) {
             errors.push({
-              path: ['edges', index, 'id'],
+              path: ["edges", index, "id"],
               message: `id already exists`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
-          }
-          else {
+          } else {
             edges.push(edge.id);
           }
         } else {
           errors.push({
-            path: ['edges', index],
+            path: ["edges", index],
             message: `must have required property 'id'`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
         }
-        if ('source' in edge) {
-          if (typeof edge.source !== 'string') {
+        if ("source" in edge) {
+          if (typeof edge.source !== "string") {
             errors.push({
-              path: ['edges', index, 'source'],
+              path: ["edges", index, "source"],
               message: `must be string`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
-          }
-          else if (!nodes.includes(edge.source)) {
+          } else if (!nodes.includes(edge.source)) {
             errors.push({
-              path: ['edges', index, 'source'],
+              path: ["edges", index, "source"],
               message: `must point to a valid node`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
           }
         } else {
           errors.push({
-            path: ['edges', index],
+            path: ["edges", index],
             message: `must have required property 'source'`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
         }
-        if ('target' in edge) {
-          if (typeof edge.target !== 'string') {
+        if ("target" in edge) {
+          if (typeof edge.target !== "string") {
             errors.push({
-              path: ['edges', index, 'target'],
+              path: ["edges", index, "target"],
               message: `must be string`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
-          }
-          else if (!nodes.includes(edge.target)) {
+          } else if (!nodes.includes(edge.target)) {
             errors.push({
-              path: ['edges', index, 'target'],
+              path: ["edges", index, "target"],
               message: `must point to a valid node`,
-              severity: ValidationSeverity.error
+              severity: ValidationSeverity.error,
             });
           }
         } else {
           errors.push({
-            path: ['edges', index],
+            path: ["edges", index],
             message: `must have required property 'target'`,
-            severity: ValidationSeverity.error
+            severity: ValidationSeverity.error,
           });
         }
 
-        if ('labels' in edge) {
-          checkLabels(edge.labels, index, 'edges');
+        if ("labels" in edge) {
+          checkLabels(edge.labels, index, "edges");
         }
 
-        if ('properties' in edge) {
-          checkProperties(edge.properties, index, 'edges');
+        if ("properties" in edge) {
+          checkProperties(edge.properties, index, "edges");
         }
       });
     }
@@ -220,8 +218,8 @@ export function graphValidator(json): ValidationError[] {
     errors.push({
       path: [],
       message: `must have required property 'nodes'`,
-      severity: ValidationSeverity.error
-    })
+      severity: ValidationSeverity.error,
+    });
   }
 
   return errors;

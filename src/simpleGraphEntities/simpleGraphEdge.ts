@@ -1,7 +1,13 @@
 import type { Property } from "types/property";
 import type { EdgeLabel, EdgeDirection } from "types/simpleGraph/edgeLabel";
 import { EdgeType } from "types/simpleGraph/edgeType";
-import type { SimpleGraphNodeType, SimpleGraphNodeNode, SimpleGraphEdgeNode, SimpleGraphLabelNode, SimpleGraphPropertyNode } from "./simpleGraphNode";
+import type {
+  SimpleGraphNodeType,
+  SimpleGraphNodeNode,
+  SimpleGraphEdgeNode,
+  SimpleGraphLabelNode,
+  SimpleGraphPropertyNode,
+} from "./simpleGraphNode";
 
 export interface SimpleGraphEdgeType {
   source: SimpleGraphNodeType;

@@ -27,32 +27,40 @@ export class PropertyGraph {
     const errors = [];
     const graph = new PropertyGraph();
     const obj = JSON.parse(json);
-    graph.nodes = new Map(obj.nodes.map((node) => {
-      try {
-        const nodeObj = PropertyGraphNode.fromJSON(node);
-        return [nodeObj.id, nodeObj];
-      } catch (error) {
-        errors.push(error.message);
-        return [];
-      }
-    }));
-    graph.edges = new Map(obj.edges.map((edge) => {
-      try {
-        const edgeObj = PropertyGraphEdge.fromJSON(edge);
-        if (!graph.nodes.has(edgeObj.sourceNode)) {
-          errors.push(`Edge ${edgeObj.id} has invalid source ${edgeObj.sourceNode}`);
+    graph.nodes = new Map(
+      obj.nodes.map((node) => {
+        try {
+          const nodeObj = PropertyGraphNode.fromJSON(node);
+          return [nodeObj.id, nodeObj];
+        } catch (error) {
+          errors.push(error.message);
+          return [];
         }
-        if (!graph.nodes.has(edgeObj.targetNode)) {
-          errors.push(`Edge ${edgeObj.id} has invalid source ${edgeObj.targetNode}`);
+      })
+    );
+    graph.edges = new Map(
+      obj.edges.map((edge) => {
+        try {
+          const edgeObj = PropertyGraphEdge.fromJSON(edge);
+          if (!graph.nodes.has(edgeObj.sourceNode)) {
+            errors.push(
+              `Edge ${edgeObj.id} has invalid source ${edgeObj.sourceNode}`
+            );
+          }
+          if (!graph.nodes.has(edgeObj.targetNode)) {
+            errors.push(
+              `Edge ${edgeObj.id} has invalid source ${edgeObj.targetNode}`
+            );
+          }
+          return [edgeObj.id, edgeObj];
+        } catch (error) {
+          errors.push(error.message);
+          return [];
         }
-        return [edgeObj.id, edgeObj];
-      } catch (error) {
-        errors.push(error.message);
-        return [];
-      }
-    }));
+      })
+    );
     if (errors.length > 0) {
-      throw new Error(errors.join('; '));
+      throw new Error(errors.join("; "));
     }
     return graph;
   }
@@ -64,7 +72,7 @@ export class PropertyGraph {
       }),
       edges: [...this.edges.values()].map((edge) => {
         return edge.toJSON();
-      })
+      }),
     });
   }
 }

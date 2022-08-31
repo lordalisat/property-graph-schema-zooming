@@ -3,7 +3,7 @@ import { createAjvValidator } from "svelte-jsoneditor";
 const schema = {
   type: "array",
   items: {
-    $ref: "workloadElement"
+    $ref: "workloadElement",
   },
 };
 
@@ -13,20 +13,17 @@ const schemaDefinitions = {
     additionalProperties: false,
     properties: {
       label: {
-        type: "string"
+        type: "string",
       },
       occurence: {
         type: "number",
         minimum: 0,
         maximum: 1,
-      }
+      },
     },
-    required: [
-      "label",
-      "occurence"
-    ],
-    title: "workloadElement"
-  }
+    required: ["label", "occurence"],
+    title: "workloadElement",
+  },
 };
 
 export const workloadValidator = createAjvValidator(schema, schemaDefinitions);
