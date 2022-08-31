@@ -1,14 +1,16 @@
-import neo4j from "neo4j-driver";
+import {driver, auth, session, type Session} from "neo4j-driver";
 
-const driver = neo4j.driver("neo4j+s://demo.neo4jlabs.com",
-neo4j.auth.basic('movies', 'movies'),
-{ disableLosslessIntegers: true });
+export function connectDatabase(url: string, database: string, username: string, password: string): Session {
+  return driver(url,
+    auth.basic(username, password),
+    { disableLosslessIntegers: true })
+    .session({
+      database: database,
+      defaultAccessMode: session.READ
+    });
+}
 
-export async function getData(): Promise<string> {
-  const session = driver.session({
-    database: 'movies',
-    defaultAccessMode: neo4j.session.READ
-  });
+export async function loadNeo4JGraph(session: Session): Promise<string> {
   const nodes = await session
     .run("MATCH (n) RETURN n")
     .then(result => {
@@ -20,9 +22,6 @@ export async function getData(): Promise<string> {
           properties: node.properties,
         }
       });
-    })
-    .catch(error => {
-      console.log(error)
     });
   const edges = await session
     .run("MATCH ()-[n]->() RETURN n")
@@ -37,9 +36,6 @@ export async function getData(): Promise<string> {
           properties: edge.properties,
         }
       });
-    })
-    .catch(error => {
-      console.log(error)
     });
   await session.close();
 
