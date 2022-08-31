@@ -39,5 +39,7 @@ export async function loadNeo4JGraph(session: Session): Promise<string> {
     });
   await session.close();
 
+  console.log(nodes.length, edges.length);
+
   return JSON.stringify({ nodes, edges }, null, 2);
 }

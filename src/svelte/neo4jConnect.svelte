@@ -15,14 +15,25 @@
 	}
 	
 	async function submit() {
-    try {
-		  const session = connectDatabase(url, database, username, password);
-      graphContent.set({text: await loadNeo4JGraph(session)});
+    let timeoutId;
+
+    const delay = new Promise(async (_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error('timeout'));
+      }, 100000);
+    });
+    const load = new Promise(async () => {
+      console.log("test");
+      const session = connectDatabase(url, database, username, password);
+      graphContent.set({text: await loadNeo4JGraph(session)})
+      clearTimeout(timeoutId);
       close();
-    } catch (error) {
-      hasError = true;
-      console.log(error);
-    }
+    });
+    await Promise.race([delay, load])
+      .catch( (error) => {
+        hasError = true;
+        console.error(error.message);
+      });
 	}
 </script>
 
