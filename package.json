@@ -33,6 +33,7 @@
   "dependencies": {
     "@types/d3": "^7.4.0",
     "d3": "^7.6.1",
+    "neo4j-driver": "^4.4.7",
     "svelte-jsoneditor": "^0.6.4",
     "svelte-simple-modal": "^1.4.1"
   }
