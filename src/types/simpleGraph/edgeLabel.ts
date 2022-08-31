@@ -5,5 +5,6 @@ export type EdgeLabel = Property | EdgeDirection | "label";
 export enum EdgeDirection {
   "from" = "from",
   "to" = "to",
-  "connects" = "connects",
+  "connects1" = "connects1",
+  "connects2" = "connects2"
 }

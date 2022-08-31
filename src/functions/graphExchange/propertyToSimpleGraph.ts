@@ -82,8 +82,8 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
       simpleGraph.addEdgeEdge(SimpleGraphEdge.edgeEdge(edgeNode, targetNode, EdgeDirection.to));
     }
     else {
-      simpleGraph.addEdgeEdge(SimpleGraphEdge.edgeEdge(edgeNode, sourceNode, EdgeDirection.connects));
-      simpleGraph.addEdgeEdge(SimpleGraphEdge.edgeEdge(edgeNode, targetNode, EdgeDirection.connects));
+      simpleGraph.addEdgeEdge(SimpleGraphEdge.edgeEdge(edgeNode, sourceNode, EdgeDirection.connects1));
+      simpleGraph.addEdgeEdge(SimpleGraphEdge.edgeEdge(edgeNode, targetNode, EdgeDirection.connects2));
     }
 
     edge.labels.forEach((label) => getLabel(edgeNode, label));

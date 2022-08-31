@@ -49,8 +49,10 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
       }
 
       if (
-        (connectedEdges[0].label === EdgeDirection.connects &&
-          !(connectedEdges[1].label === EdgeDirection.connects)) ||
+        (connectedEdges[0].label === EdgeDirection.connects1 &&
+          !(connectedEdges[1].label === EdgeDirection.connects2)) ||
+        (connectedEdges[0].label === EdgeDirection.connects2 &&
+          !(connectedEdges[1].label === EdgeDirection.connects1)) ||
         (connectedEdges[0].label === EdgeDirection.to &&
           !(connectedEdges[1].label === EdgeDirection.from)) ||
         (connectedEdges[0].label === EdgeDirection.from &&
@@ -59,7 +61,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
         throw new Error("Edges must have same directionality");
       }
 
-      const isDirected = connectedEdges[0].label !== EdgeDirection.connects;
+      const isDirected = (connectedEdges[0].label !== EdgeDirection.connects1 && connectedEdges[0].label !== EdgeDirection.connects2);
       let source;
       let target;
       if (!isDirected || connectedEdges[0].label === EdgeDirection.from) {
