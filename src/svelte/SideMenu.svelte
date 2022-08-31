@@ -16,7 +16,7 @@
   import { graphValidator } from "./graphValidator";
   import { workloadValidator } from "./workloadValidator";
 
-  const { open } = getContext("simple-modal");
+  const { open } = getContext("simple-modal") as any;
   const openGraphEditor = () => {
     open(
       Editor,
