@@ -73,6 +73,6 @@ export class PropertyGraph {
       edges: [...this.edges.values()].map((edge) => {
         return edge.toJSON();
       }),
-    });
+    }, null, 2);
   }
 }
