@@ -24,7 +24,9 @@ export const propData = writable(new PropertyGraph());
 export function setPropGraph() {
   try {
     unsubscribe = graphContent.subscribe((val) => {
+      console.time('setPropertyDataGraph');
       propData.set(PropertyGraph.fromJSON(val.text));
+      console.timeEnd('setPropertyDataGraph');
     });
     unsubscribe();
   } catch (error) {

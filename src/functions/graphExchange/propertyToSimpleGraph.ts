@@ -9,6 +9,7 @@ import type { Value } from "types/propertyGraph/value";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
+  console.time('propertyToSimpleGraph');
   const simpleGraph = new SimpleGraph();
 
   const nodeMap: Map<Id, SimpleGraphNodeNode> = new Map();
@@ -87,6 +88,7 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
 
     edge.properties.forEach((value, key) => getProperty(edgeNode, value, key));
   })
+  console.timeEnd('propertyToSimpleGraph');
 
   return simpleGraph;
 }

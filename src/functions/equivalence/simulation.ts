@@ -8,7 +8,7 @@
 import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
 import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
 import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
-import { toSimpleId } from "types/id";
+import { type SimpleId, toSimpleId } from "types/id";
 import type { Label } from "types/label";
 import { EdgeType } from "types/simpleGraph/edgeType";
 import { NodeType } from "types/simpleGraph/nodeType";
@@ -26,7 +26,6 @@ export class Simulation extends Equivalence {
   private pIds: PIdMaps = {
     old_pid: new Map(),
     new_pid: new Map(),
-    j_pid: new Map(),
   };
 
   private insert(s: string): PId {
@@ -38,12 +37,21 @@ export class Simulation extends Equivalence {
     return this.currentPId;
   }
 
+  private getNodePid(node: SimpleGraphNodeType, edgeTIds: EdgeTId[]): [SimpleId, number] {
+    const pid_0 = this.pIds.j_pid_0.get(node.id).toString();
+    const sigParts = edgeTIds.filter((edge) => edge.source.id === node.id)
+      .map((edge) => `(${edge.label},${edge.oldPId})`);
+    const sig = [pid_0, ...sigParts].join();
+    const pId = this.insert(sig);
+    return [node.id, pId];
+  }
+
   private uniqEdgeTId(edgeTIds: Array<EdgeTId>) {
     const seen = {};
-    return edgeTIds.filter((edge) => {
+    return [...new Map(edgeTIds.map((edge) => {
       const key = JSON.stringify(edge);
-      return seen[key] ? false : (seen[key] = true);
-    })
+      return [key, edge];
+    })).values()];
   }
   
   private groupBy(arr, property) {
@@ -63,20 +71,26 @@ export class Simulation extends Equivalence {
   }
 
   public calculateSchema(graph: SimpleGraph): SimpleGraph {
+    console.time('calculateSchema');
     this.currentPId = 0;
     this.storage = new Map();
 
     this.nodes = [...graph.nodeNodes.values(), ...graph.edgeNodes.values(), ...graph.labelNodes.values(), ...graph.propertyNodes.values()];
     this.edges = [...graph.edgeEdges, ...graph.labelEdges, ...graph.propertyEdges];
 
+    console.time(`build_bsim_${this.k}`);
     this.build_bsim(this.k);
+    console.timeEnd(`build_bsim_${this.k}`);
 
-    return this.graphFromPIds();
+    const schemaGraph = this.graphFromPIds();
+    console.timeEnd('calculateSchema');
+    return schemaGraph;
   }
   
   private build_bsim(k: number)
     : void {
     if (k === 0) {
+      this.pIds.j_pid_0 = new Map();
       this.nodes.sort((a, b) => a.label.localeCompare(b.label))
       let label: Label = this.nodes[0].label;
       this.nodes.forEach((node) => {
@@ -85,13 +99,16 @@ export class Simulation extends Equivalence {
           label = node.label;
         }
         this.pIds.new_pid.set(node.id, this.currentPId);
-        this.pIds.j_pid.set(node.id, [this.currentPId]);
-      })
+        this.pIds.j_pid_0.set(node.id, this.currentPId);
+      });
       return;
     }
+    console.time(`build_bsim_${k-1}`);
     this.build_bsim(k - 1);
+    console.timeEnd(`build_bsim_${k-1}`);
     this.pIds.old_pid = new Map(this.pIds.new_pid);
 
+    console.time(`build_bsim_${k-1}_get_unique_edges`);
     const edgeTIds: Array<EdgeTId> = this.uniqEdgeTId(this.edges.map((edge) => {
       const oldPId = this.pIds.old_pid.get(edge.target.id);
       return {
@@ -100,19 +117,19 @@ export class Simulation extends Equivalence {
         oldPId: oldPId,
       }
     }));
-
-    this.nodes.forEach((node) => {
-      let sig = this.pIds.j_pid.get(node.id)[0].toString();
-      edgeTIds.filter((edge) => edge.source.id === node.id).forEach((edge) => {
-        sig = `${sig}(${edge.label},${edge.oldPId})`;
-      });
-      const pId = this.insert(sig);
-      this.pIds.new_pid.set(node.id, pId);
-      this.pIds.j_pid.get(node.id).push(pId);
-    })
+    console.timeEnd(`build_bsim_${k-1}_get_unique_edges`);
+    
+    console.time(`build_bsim_${k - 1}_get_node_signatures`);
+    const pIds = this.nodes.map((node) => {
+      return this.getNodePid(node, edgeTIds);
+    });
+    this.pIds.new_pid = new Map(pIds);
+    this.pIds[`j_pid_${k}`] = new Map(pIds);
+    console.timeEnd(`build_bsim_${k-1}_get_node_signatures`);
   }
 
   private graphFromPIds(): SimpleGraph {
+    console.time('graphFromPIds');
     const schemaGraph = new SimpleGraph;
     schemaGraph.emptyGraph();
 
@@ -137,8 +154,12 @@ export class Simulation extends Equivalence {
       }
     }))
 
+    console.time('splitEdges');
     const splitEdges = this.groupBy(edges, "type");
+    console.timeEnd('splitEdges');
+    console.time('splitNodes');
     const splitNodes = this.groupBy([...schemaNodesMap.values()], "type");
+    console.timeEnd('splitNodes');
 
     schemaGraph.nodeNodes = splitNodes[NodeType.node] ?? [];
     schemaGraph.edgeNodes = splitNodes[NodeType.edge] ?? [];
@@ -148,6 +169,7 @@ export class Simulation extends Equivalence {
     schemaGraph.edgeEdges = splitEdges[EdgeType.edge] ?? [];
     schemaGraph.labelEdges = splitEdges[EdgeType.label] ?? [];
     schemaGraph.propertyEdges = splitEdges[EdgeType.property] ?? [];
+    console.timeEnd('graphFromPIds');
 
     return schemaGraph;
   }

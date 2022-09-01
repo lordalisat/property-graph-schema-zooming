@@ -11,6 +11,8 @@ export function connectDatabase(url: string, database: string, username: string,
 }
 
 export async function loadNeo4JGraph(session: Session): Promise<string> {
+  console.time('loadNeo4JGraph');
+  console.time('loadNeo4JNodes');
   const nodes = await session
     .run("MATCH (n) RETURN n")
     .then(result => {
@@ -23,6 +25,8 @@ export async function loadNeo4JGraph(session: Session): Promise<string> {
         }
       });
     });
+  console.timeEnd('loadNeo4JNodes');
+  console.time('loadNeo4JEdges');
   const edges = await session
     .run("MATCH ()-[n]->() RETURN n")
     .then(result => {
@@ -37,9 +41,11 @@ export async function loadNeo4JGraph(session: Session): Promise<string> {
         }
       });
     });
+  console.timeEnd('loadNeo4JEdges');
   await session.close();
 
   console.log(nodes.length, edges.length);
+  console.timeEnd('loadNeo4JGraph');
 
   return JSON.stringify({ nodes, edges }, null, 2);
 }

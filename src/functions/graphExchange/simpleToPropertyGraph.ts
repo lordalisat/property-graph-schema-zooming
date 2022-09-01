@@ -6,6 +6,7 @@ import { fromSimpleId } from "types/id";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
+  console.time('simpleToPropertyGraph');
   const propertyGraph = new PropertyGraph();
 
   propertyGraph.nodes = new Map(
@@ -85,6 +86,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
       return [fromSimpleId(node.id), propertyEdge];
     })
   );
+  console.timeEnd('simpleToPropertyGraph');
 
   return propertyGraph;
 }

@@ -24,6 +24,7 @@ export function induceWorkload(
   inductionMethod: InductionMethod,
   threshold: number
 ): SimpleGraph {
+  console.time('induceWorkload');
   const inducedGraph = new SimpleGraph();
   inducedGraph.emptyGraph();
 
@@ -63,6 +64,7 @@ export function induceWorkload(
       })),
     ];
 
+    console.timeEnd('induceWorkload');
     return inducedGraph;
   }
 
@@ -74,7 +76,8 @@ export function induceWorkload(
       filteredWorkload.has(graph.labelNodes.get(edge.target.id).label)
     ),
   ];
-
+  console.time('induceWorkloadGetLabelConnecs');
+  // Add all nodes and edges that are connected to required label nodes
   workloadEdges.forEach((edge) => {
     const source =
       graph.nodeNodes.get(edge.source.id) ??
@@ -89,7 +92,9 @@ export function induceWorkload(
       }
     }
   });
+  console.timeEnd('induceWorkloadGetLabelConnects');
 
+  console.time('induceWorkloadGetProperties');
   //Get all Property edges connected to the Node or Edge nodes
   inducedGraph.propertyEdges = graph.propertyEdges
     .filter(
@@ -107,7 +112,9 @@ export function induceWorkload(
         target: inducedGraph.propertyNodes.get(edge.target.id),
       };
     });
+  console.timeEnd('induceWorkloadGetProperties');
 
+  console.time('induceWorkloadGetLabels');
   //Get all Label edges connected to the Node or Edge nodes
   inducedGraph.labelEdges = graph.labelEdges
     .filter(
@@ -125,8 +132,10 @@ export function induceWorkload(
         target: inducedGraph.labelNodes.get(edge.target.id),
       };
     });
+  console.timeEnd('induceWorkloadGetLabels');
 
   if (inductionMethod === InductionMethod.project) {
+    console.time('induceWorkloadProject');
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
     [...graph.nodeNodes.values()].map((node) => {
       if (!inducedGraph.nodeNodes.has(node.id)) {
@@ -147,7 +156,9 @@ export function induceWorkload(
         target: inducedGraph.nodeNodes.get(edge.target.id),
       })),
     ];
+    console.timeEnd('induceWorkloadProject');
   } else if (inductionMethod === InductionMethod.filter) {
+    console.time('induceWorkloadFilter');
     //Add all Edge edges where both start and end nodes are included in the graph
     //TODO check for existance of both edges per Edge node?
     let addNode = false;
@@ -171,7 +182,9 @@ export function induceWorkload(
     if (addNode) {
       inducedGraph.addNodeNode(emptyNode);
     }
+    console.timeEnd('induceWorkloadFilter');
   }
 
+  console.timeEnd('induceWorkload');
   return inducedGraph;
 }
