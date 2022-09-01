@@ -20,10 +20,18 @@ let unsubscribe = workloadContent.subscribe((val) => {
 unsubscribe();
 
 export const propData = writable(new PropertyGraph());
-unsubscribe = graphContent.subscribe((val) => {
-  propData.set(PropertyGraph.fromJSON(val.text));
-});
-unsubscribe();
+
+export function setPropGraph() {
+  try {
+    unsubscribe = graphContent.subscribe((val) => {
+      propData.set(PropertyGraph.fromJSON(val.text));
+    });
+    unsubscribe();
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+setPropGraph();
 export const simpleData = derived(propData, (propData) =>
   propertyToSimpleGraph(propData)
 );

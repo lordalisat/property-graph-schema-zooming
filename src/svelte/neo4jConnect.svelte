@@ -2,7 +2,7 @@
   import { connectDatabase, loadNeo4JGraph } from 'functions/loadNeo4JGraph';
 
   import { getContext } from 'svelte';
-  import { graphContent } from './stores';
+  import { graphContent, setPropGraph } from './stores';
 
   const { close } = getContext('simple-modal');
 	
@@ -20,17 +20,19 @@
     const delay = new Promise(async (_, reject) => {
       timeoutId = setTimeout(() => {
         reject(new Error('timeout'));
-      }, 100000);
+      }, 50000);
     });
     const load = new Promise(async () => {
       console.log("test");
       const session = connectDatabase(url, database, username, password);
-      graphContent.set({text: await loadNeo4JGraph(session)})
-      clearTimeout(timeoutId);
+      const data = await loadNeo4JGraph(session);
       close();
+      clearTimeout(timeoutId);
+      graphContent.set({text: data});
+      setPropGraph();
     });
     await Promise.race([delay, load])
-      .catch( (error) => {
+      .catch((error) => {
         hasError = true;
         console.error(error.message);
       });

@@ -12,6 +12,7 @@
     propData,
     inductionMethod,
     propSchema,
+setPropGraph,
   } from "./stores";
   import { InductionMethod } from "functions/workloadInduction";
   import { graphValidator } from "./graphValidator";
@@ -21,14 +22,6 @@ import Neo4jConnect from "./neo4jConnect.svelte";
 
   const { open } = getContext("simple-modal") as any;
 
-  function setPropGraph() {
-    try {
-      const graph = PropertyGraph.fromJSON($graphContent.text);
-      propData.set(graph);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
   const openGraphEditor = () => {
     open(
       Editor,
@@ -71,14 +64,7 @@ import Neo4jConnect from "./neo4jConnect.svelte";
   }
   const openNeo4JConnect = () => {
     open(
-      Neo4jConnect,
-      { },
-      {},
-      {
-        onClosed: () => {
-          setPropGraph();
-        },
-      }
+      Neo4jConnect
     );
   }
 </script>
