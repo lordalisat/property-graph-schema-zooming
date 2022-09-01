@@ -54,7 +54,7 @@
     setLinkIndexAndNum(edges);
     simulation
       .nodes(nodes)
-      .force("link", forceLink(edges).distance(140))
+      .force("link", forceLink(edges).distance(250))
       .force("charge", forceManyBody().strength(-1200))
       .on("tick", simulationUpdate);
     simulation.alpha(1).restart();
