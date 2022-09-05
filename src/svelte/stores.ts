@@ -14,10 +14,19 @@ export const threshold = writable(0);
 
 export const workloadContent = writable({ text: workloadData });
 export const workload = writable([]);
-let unsubscribe = workloadContent.subscribe((val) => {
-  workload.set(JSON.parse(val.text));
-});
-unsubscribe();
+let unsubscribe;
+export function setWorkload() {
+  try {
+    unsubscribe = workloadContent.subscribe((val) => {
+      workload.set(JSON.parse(val.text));
+    });
+    unsubscribe();
+  } catch (error) {
+    console.error(error.message);
+    unsubscribe();
+  }
+}
+setWorkload();
 
 export const propData = writable(new PropertyGraph());
 
@@ -31,6 +40,7 @@ export function setPropGraph() {
     unsubscribe();
   } catch (error) {
     console.error(error.message);
+    unsubscribe();
   }
 }
 setPropGraph();

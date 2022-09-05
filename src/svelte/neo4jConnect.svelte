@@ -2,7 +2,7 @@
   import { connectDatabase, loadNeo4JGraph } from 'functions/loadNeo4JGraph';
 
   import { getContext } from 'svelte';
-  import { graphContent, setPropGraph } from './stores';
+  import { graphContent, setPropGraph, setWorkload, workloadContent } from './stores';
 
   const { close } = getContext('simple-modal');
 	
@@ -25,11 +25,13 @@
     const load = new Promise(async () => {
       console.log("test");
       const session = connectDatabase(url, database, username, password);
-      const data = await loadNeo4JGraph(session);
+      const {data, workload} = await loadNeo4JGraph(session);
       close();
       clearTimeout(timeoutId);
       graphContent.set({text: data});
+      workloadContent.set({text: workload});
       setPropGraph();
+      setWorkload();
     });
     await Promise.race([delay, load])
       .catch((error) => {
