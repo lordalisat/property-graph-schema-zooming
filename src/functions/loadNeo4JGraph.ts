@@ -47,7 +47,6 @@ export async function loadNeo4JGraph(session: Session): Promise<{ data: string; 
     .run("MATCH (n) RETURN count(labels(n)), labels(n)")
     .then(result => {
       return result.records.map(record => {
-        console.log(record);
         return {
           label: record.get('labels(n)')[0],
           occurence: record.get('count(labels(n))'),
@@ -59,7 +58,6 @@ export async function loadNeo4JGraph(session: Session): Promise<{ data: string; 
     .run("MATCH ()-[n]->() RETURN count(type(n)), type(n)")
     .then(result => {
       return result.records.map(record => {
-        console.log(record);
         return {
           label: record.get('type(n)'),
           occurence: record.get('count(type(n))'),
