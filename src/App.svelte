@@ -16,7 +16,7 @@ import SplitPane from 'svelte/SplitPane.svelte';
       {/key}
     </svelte:fragment>
     <svelte:fragment slot="right" >
-      <Modal>
+      <Modal closeOnEsc={false} closeOnOuterClick={false}>
         <SideMenu />
       </Modal>
     </svelte:fragment>
