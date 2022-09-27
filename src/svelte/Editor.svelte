@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { JSONEditor, Mode, createAjvValidator, type Validator } from "svelte-jsoneditor";
+  import { JSONEditor, Mode, type Validator } from "svelte-jsoneditor";
   import type { Writable } from "svelte/store";
 
   export let content: Writable<{ text: string }>;

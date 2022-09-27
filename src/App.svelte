@@ -1,7 +1,7 @@
 <script lang='ts'>
   import Modal from 'svelte-simple-modal';
-import SideMenu from 'svelte/SideMenu.svelte';
-import SplitPane from 'svelte/SplitPane.svelte';
+  import SideMenu from 'svelte/SideMenu.svelte';
+  import SplitPane from 'svelte/SplitPane.svelte';
   import { selectedGraph } from 'svelte/stores';
   import TailwindCss from 'svelte/TailwindCSS.svelte';
 </script>

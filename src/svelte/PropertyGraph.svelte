@@ -10,7 +10,7 @@
   import type { PropertyGraphElement } from "propertyGraphEntities/propertyGraphElement";
   import type { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
   import { onDestroy, onMount } from "svelte";
-  import type { Writable } from "svelte/store";
+  import type { Readable } from "svelte/store";
   import type { PropertyGraph } from "propertyGraphEntities/propertyGraph";
   import { elementType } from "types/propertyGraph/elementType";
 
@@ -22,7 +22,7 @@
   }
 
   // an array of our particles
-  export let graph: Writable<PropertyGraph>;
+  export let graph: Readable<PropertyGraph>;
 
   let svg;
   let width;

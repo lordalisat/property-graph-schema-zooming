@@ -18,12 +18,12 @@
   import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
   import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
   import { onDestroy, onMount } from "svelte";
-  import type { Writable } from "svelte/store";
+  import type { Readable } from "svelte/store";
 
   const nodeRadius = 20;
 
   // an array of our particles
-  export let graph: Writable<SimpleGraph>;
+  export let graph: Readable<SimpleGraph>;
 
   let svg;
   let width;

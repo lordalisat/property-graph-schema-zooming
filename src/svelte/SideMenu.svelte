@@ -9,7 +9,6 @@
     threshold,
     selectedGraph,
     graphList,
-    propData,
     inductionMethod,
     propSchema,
 setPropGraph,
