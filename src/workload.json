@@ -1,0 +1,18 @@
+[
+  {
+    "label":"Person",
+    "occurence":1
+  },
+  {
+    "label":"Club",
+    "occurence":0.5
+  },
+  {
+    "label":"follows",
+    "occurence":1
+  },
+  {
+    "label":"Random",
+    "occurence":0.8
+  }
+]
