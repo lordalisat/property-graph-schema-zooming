@@ -11,6 +11,7 @@ import SimpleGraphSvelte from "./SimpleGraph.svelte";
 export const graphContent = writable({ text: data });
 export const inductionMethod = writable(InductionMethod.project);
 export const threshold = writable(0);
+export const distance = writable(0);
 
 export const workloadContent = writable({ text: workloadData });
 export const workload = writable([]);
@@ -49,9 +50,9 @@ export const simpleData = derived(propData, (propData) =>
 );
 
 export const simpleInduced = derived(
-  [simpleData, workload, inductionMethod, threshold],
-  ([simpleData, workload, inductionMethod, threshold]) =>
-    induceWorkload(simpleData, workload, inductionMethod, threshold)
+  [simpleData, workload, inductionMethod, threshold, distance],
+  ([simpleData, workload, inductionMethod, threshold, distance]) =>
+    induceWorkload(simpleData, workload, inductionMethod, threshold, distance)
 );
 export const propInduced = derived(simpleInduced, (simpleInduced) =>
   simpleToPropertyGraph(simpleInduced)

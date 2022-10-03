@@ -22,7 +22,8 @@ export function induceWorkload(
   graph: SimpleGraph,
   workload: Workload,
   inductionMethod: InductionMethod,
-  threshold: number
+  threshold: number,
+  distance: number
 ): SimpleGraph {
   console.time('induceWorkload');
   const inducedGraph = new SimpleGraph();
@@ -93,6 +94,24 @@ export function induceWorkload(
     }
   });
   console.timeEnd('induceWorkloadGetLabelConnects');
+
+  if (distance > 0) {
+    for (let i = 0; i < distance; i++) {
+      const nodeConnectedEdges = graph.edgeEdges.filter((edge) => inducedGraph.nodeNodes.has(edge.target.id));
+      const edgeConnectedEdges = graph.edgeEdges.filter((edge) => inducedGraph.edgeNodes.has(edge.source.id));
+
+      nodeConnectedEdges.forEach((edge) => {
+        if (!inducedGraph.edgeNodes.has(edge.source.id)) {
+          inducedGraph.addEdgeNode({ ...graph.edgeNodes.get(edge.source.id) });
+        }
+      });
+      edgeConnectedEdges.forEach((edge) => {
+        if (!inducedGraph.nodeNodes.has(edge.target.id)) {
+          inducedGraph.addNodeNode({ ...graph.nodeNodes.get(edge.target.id) });
+        }
+      });
+    }
+  }
 
   console.time('induceWorkloadGetProperties');
   //Get all Property edges connected to the Node or Edge nodes

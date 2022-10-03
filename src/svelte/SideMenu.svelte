@@ -7,11 +7,12 @@
     workloadContent,
     workload,
     threshold,
+    distance,
     selectedGraph,
     graphList,
     inductionMethod,
     propSchema,
-setPropGraph,
+    setPropGraph,
   } from "./stores";
   import { InductionMethod } from "functions/workloadInduction";
   import { graphValidator } from "./graphValidator";
@@ -81,6 +82,19 @@ import Neo4jConnect from "./neo4jConnect.svelte";
         min="0"
         max="1"
         step=".1"
+        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+      />
+    </li>
+    <li>
+      <h4 class="mb-1 font-semibold text-gray-900 dark:text-white">
+        Distance: {$distance}
+      </h4>
+      <input
+        type="range"
+        bind:value={$distance}
+        min="0"
+        max="2"
+        step="1"
         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
       />
     </li>
