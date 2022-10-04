@@ -408,7 +408,7 @@
         "MasterThesis"
       ],
       "properties": {
-        "year": "2018",
+        "year": "2019",
         "finished": true
       }
     },
@@ -1062,7 +1062,7 @@
         "studiesAt"
       ],
       "properties": {
-        "since": 2020
+        "since": 2018
       }
     },
     {
@@ -1135,6 +1135,461 @@
       ],
       "properties": {
         "since": 2020
+      }
+    },
+    {
+      "id": "e58",
+      "source": "StudentBach0",
+      "target": "Thesis0",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e59",
+      "source": "StudentBach2",
+      "target": "Thesis1",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e60",
+      "source": "StudentBach6",
+      "target": "Thesis2",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e61",
+      "source": "StudentMaster0",
+      "target": "Thesis3",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e62",
+      "source": "StudentMaster3",
+      "target": "Thesis4",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e63",
+      "source": "StudentMaster6",
+      "target": "Thesis5",
+      "isDirected": true,
+      "labels": [
+        "worksOn"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e64",
+      "source": "EmpTeacher1",
+      "target": "Thesis0",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e65",
+      "source": "EmpProf0",
+      "target": "Thesis1",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e66",
+      "source": "EmpTeacher1",
+      "target": "Thesis2",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e67",
+      "source": "EmpProf3",
+      "target": "Thesis3",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e67",
+      "source": "EmpProf3",
+      "target": "Thesis3",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e68",
+      "source": "EmpTeacher0",
+      "target": "Thesis4",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e69",
+      "source": "EmpTeacher2",
+      "target": "Thesis5",
+      "isDirected": true,
+      "labels": [
+        "supervises"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e70",
+      "source": "EmpProf3",
+      "target": "Course0",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e71",
+      "source": "EmpTeacher2",
+      "target": "Course0",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e72",
+      "source": "EmpTeacher2",
+      "target": "Course1",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e73",
+      "source": "EmpTeacher2",
+      "target": "Course1",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e74",
+      "source": "EmpProf2",
+      "target": "Course2",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e75",
+      "source": "EmpProf4",
+      "target": "Course2",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e76",
+      "source": "EmpTeacher3",
+      "target": "Course3",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e77",
+      "source": "EmpTeacher0",
+      "target": "Course4",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e78",
+      "source": "EmpTeacher3",
+      "target": "Course5",
+      "isDirected": true,
+      "labels": [
+        "teaches"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e79",
+      "source": "StudentBach3",
+      "target": "Course0",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e80",
+      "source": "StudentBach5",
+      "target": "Course0",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e81",
+      "source": "StudentBach2",
+      "target": "Course0",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e82",
+      "source": "StudentMaster5",
+      "target": "Course1",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e83",
+      "source": "StudentBach2",
+      "target": "Course1",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e84",
+      "source": "StudentMaster6",
+      "target": "Course2",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e85",
+      "source": "StudentMaster2",
+      "target": "Course2",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e86",
+      "source": "StudentBach2",
+      "target": "Course2",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e87",
+      "source": "StudentBach7",
+      "target": "Course3",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e88",
+      "source": "StudentBach6",
+      "target": "Course3",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e89",
+      "source": "StudentBach3",
+      "target": "Course3",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2022
+      }
+    },
+    {
+      "id": "e90",
+      "source": "StudentMaster9",
+      "target": "Course4",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e91",
+      "source": "StudentMaster5",
+      "target": "Course4",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e92",
+      "source": "StudentMaster2",
+      "target": "Course4",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2021
+      }
+    },
+    {
+      "id": "e93",
+      "source": "StudentBach3",
+      "target": "Course5",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e94",
+      "source": "StudentBach1",
+      "target": "Course5",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
+      }
+    },
+    {
+      "id": "e95",
+      "source": "StudentBach0",
+      "target": "Course5",
+      "isDirected": true,
+      "labels": [
+        "follows"
+      ],
+      "properties": {
+        "in": 2020
       }
     }
   ]
