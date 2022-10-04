@@ -1,18 +1,82 @@
 [
   {
-    "label":"Person",
+    "label":"Employee",
     "occurence":1
   },
   {
-    "label":"Club",
-    "occurence":0.5
+    "label":"Student",
+    "occurence":0.8
+  },
+  {
+    "label":"Thesis",
+    "occurence":0.7
+  },
+  {
+    "label":"Course",
+    "occurence":0.6
+  },
+  {
+    "label":"University",
+    "occurence":0.3
+  },
+  {
+    "label":"mentors",
+    "occurence":0.7
+  },
+  {
+    "label":"worksAt",
+    "occurence":0.3
+  },
+  {
+    "label":"studiesAt",
+    "occurence":0.2
+  },
+  {
+    "label":"worksOn",
+    "occurence":0.7
+  },
+  {
+    "label":"supervises",
+    "occurence":0.7
+  },
+  {
+    "label":"teaches",
+    "occurence":0.6
   },
   {
     "label":"follows",
-    "occurence":1
+    "occurence":0.6
   },
   {
-    "label":"Random",
-    "occurence":0.8
+    "label":"Core",
+    "occurence":0
+  },
+  {
+    "label":"Elective",
+    "occurence":0
+  },
+  {
+    "label":"MasterThesis",
+    "occurence":0
+  },
+  {
+    "label":"BachelorThesis",
+    "occurence":0
+  },
+  {
+    "label":"Professor",
+    "occurence":0
+  },
+  {
+    "label":"Teacher",
+    "occurence":0
+  },
+  {
+    "label":"Ph.D.",
+    "occurence":0
+  },
+  {
+    "label":"Researcher",
+    "occurence":0
   }
 ]
