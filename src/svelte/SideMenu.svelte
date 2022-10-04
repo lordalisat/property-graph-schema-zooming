@@ -17,8 +17,11 @@
   import { InductionMethod } from "functions/workloadInduction";
   import { graphValidator } from "./graphValidator";
   import { workloadValidator } from "./workloadValidator";
-import { download } from "./exportJson";
-import Neo4jConnect from "./neo4jConnect.svelte";
+  import { download } from "./exportJson";
+  import Neo4jConnect from "./neo4jConnect.svelte";
+
+  export let allowInduction = true;
+  export let testMode = false;
 
   const { open } = getContext("simple-modal") as any;
 
@@ -72,6 +75,7 @@ import Neo4jConnect from "./neo4jConnect.svelte";
 <div class="m-2">
   <h2 class="font-semibold text-2xl text-gray-900 dark:text-white">Options</h2>
   <menu class="space-y-1 max-w-md list-inside">
+    {#if allowInduction}
     <li>
       <h4 class="mb-1 font-semibold text-gray-900 dark:text-white">
         Threshold: {$threshold}
@@ -121,6 +125,8 @@ import Neo4jConnect from "./neo4jConnect.svelte";
         {/each}
       </div>
     </li>
+    {/if}
+    {#if !testMode}
     <li>
       <h4 class="mb-1 font-semibold text-gray-900 dark:text-white">
         Selected graph type:
@@ -136,6 +142,7 @@ import Neo4jConnect from "./neo4jConnect.svelte";
         {/each}
       </select>
     </li>
+    {/if}
     <li>
       <h4 class="mb-1 font-semibold text-gray-900 dark:text-white">
         Edit data:
@@ -145,12 +152,15 @@ import Neo4jConnect from "./neo4jConnect.svelte";
         on:click={openGraphEditor}>
         Edit Graph
       </button>
+      {#if allowInduction}
       <button
         class="py-2.5 px-5 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         on:click={openWorkloadEditor}>
         Edit Workload
       </button>
+      {/if}
     </li>
+    {#if !testMode}
     <li>
       <h4 class="mb-1 font-semibold text-gray-900 dark:text-white">
         Export schema:
@@ -171,5 +181,6 @@ import Neo4jConnect from "./neo4jConnect.svelte";
         Import from Neo4J
       </button>
     </li>
+    {/if}
   </menu>
 </div>
