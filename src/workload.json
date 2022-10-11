@@ -40,6 +40,10 @@
     "occurence":0.7
   },
   {
+    "label":"worksWith",
+    "occurence":0.3
+  },
+  {
     "label":"teaches",
     "occurence":0.6
   },

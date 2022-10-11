@@ -1248,17 +1248,6 @@
       }
     },
     {
-      "id": "e67",
-      "source": "EmpProf3",
-      "target": "Thesis3",
-      "isDirected": true,
-      "labels": [
-        "supervises"
-      ],
-      "properties": {
-      }
-    },
-    {
       "id": "e68",
       "source": "EmpTeacher0",
       "target": "Thesis4",
@@ -1590,6 +1579,28 @@
       ],
       "properties": {
         "in": 2020
+      }
+    },
+    {
+      "id": "e96",
+      "source": "EmpProf2",
+      "target": "EmpResearch2",
+      "isDirected": false,
+      "labels": [
+        "worksWith"
+      ],
+      "properties": {
+      }
+    },
+    {
+      "id": "e97",
+      "source": "EmpProf3",
+      "target": "EmpResearch1",
+      "isDirected": false,
+      "labels": [
+        "worksWith"
+      ],
+      "properties": {
       }
     }
   ]
