@@ -4,6 +4,7 @@
 
   export let content: Writable<{ text: string }>;
   export let validator: Validator;
+  export let testMode = false;
 </script>
 
-<JSONEditor bind:content={$content} mode={Mode.text} mainMenuBar={false} validator={validator} />
+<JSONEditor bind:content={$content} mode={Mode.text} mainMenuBar={false} readOnly={testMode} validator={validator} />

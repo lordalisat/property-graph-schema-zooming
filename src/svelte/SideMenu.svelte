@@ -28,7 +28,7 @@
   const openGraphEditor = () => {
     open(
       Editor,
-      { content: graphContent, validator: graphValidator },
+      { content: graphContent, validator: graphValidator, testMode: testMode },
       {},
       {
         onClosed: () => {
