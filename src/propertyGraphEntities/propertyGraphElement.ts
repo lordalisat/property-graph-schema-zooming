@@ -16,7 +16,9 @@ export abstract class PropertyGraphElement {
   readonly type!: elementType;
 
   public setPrintOptions(textWidth = 9, textHeight = 24) {
-    const strings = [...this.labels, ...this.mapToStrings(this.properties)];
+    const labels = this.labels.map((label) => `<b>${label}</b>`);
+    const properties = this.mapToStrings(this.properties);
+    const strings = [...labels, ...properties];
     if (strings.length === 0) strings.push(`\xa0*\xa0`);
     const maxLen = strings.reduce(
       (prev, cur) => (prev > cur.length ? prev : cur.length),
@@ -30,7 +32,7 @@ export abstract class PropertyGraphElement {
 
   private mapToStrings(m: Map<string, Value>) {
     return Array.from(m).map(([k, v]) => {
-      return `${k}: ${v}`;
+      return `<i>${k}</i>: ${v}`;
     });
   }
 }

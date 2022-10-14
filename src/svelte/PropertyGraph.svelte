@@ -232,7 +232,7 @@
 </script>
 
 <figure bind:clientHeight={height} bind:clientWidth={width}>
-  <svg bind:this={svg} {width} {height}>
+  <svg bind:this={svg} {width} {height} xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker
         id="prop_arrow"
@@ -296,7 +296,7 @@
           width={point.width}
           height={point.height}
         >
-          <pre class="text-black dark:text-gray-200">{point.stringRepres}</pre>
+          {@html `<pre class="text-black dark:text-gray-200">${point.stringRepres}<pre>`}
         </foreignObject>
       </g>
     {/each}
