@@ -4,7 +4,7 @@ import { NodeType } from "types/simpleGraph/nodeType";
 import type { FilteredWorkload, Workload } from "types/workload";
 
 export enum InductionMethod {
-  "project" = "Project",
+  "mask" = "Mask",
   "filter" = "Filter",
 }
 
@@ -153,8 +153,8 @@ export function induceWorkload(
     });
   console.timeEnd('induceWorkloadGetLabels');
 
-  if (inductionMethod === InductionMethod.project) {
-    console.time('induceWorkloadProject');
+  if (inductionMethod === InductionMethod.mask) {
+    console.time('induceWorkloadMask');
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
     [...graph.nodeNodes.values()].map((node) => {
       if (!inducedGraph.nodeNodes.has(node.id)) {
@@ -175,7 +175,7 @@ export function induceWorkload(
         target: inducedGraph.nodeNodes.get(edge.target.id),
       })),
     ];
-    console.timeEnd('induceWorkloadProject');
+    console.timeEnd('induceWorkloadMask');
   } else if (inductionMethod === InductionMethod.filter) {
     console.time('induceWorkloadFilter');
     //Add all Edge edges where both start and end nodes are included in the graph

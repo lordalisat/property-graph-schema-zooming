@@ -9,7 +9,7 @@ import PropertyGraphSvelte from "./PropertyGraph.svelte";
 import SimpleGraphSvelte from "./SimpleGraph.svelte";
 
 export const graphContent = writable({ text: data });
-export const inductionMethod = writable(InductionMethod.project);
+export const inductionMethod = writable(InductionMethod.mask);
 export const threshold = writable(0);
 export const distance = writable(0);
 
