@@ -1,0 +1,30 @@
+[
+  {
+    "label":"label",
+    "occurence":0.5
+  },
+  {
+    "label":"node0",
+    "occurence":0.8
+  },
+  {
+    "label":"node1",
+    "occurence":0.9
+  },
+  {
+    "label":"directed",
+    "occurence":0.6
+  },
+  {
+    "label":"undirected",
+    "occurence":0.5
+  },
+  {
+    "label":"edge0",
+    "occurence":0.5
+  },
+  {
+    "label":"edge1",
+    "occurence":0.5
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "nodes": [
+    {
+      "id": "n0",
+      "labels": [
+        "node0",
+        "label"
+      ],
+      "properties": {
+        "property": "value"
+      }
+    },
+    {
+      "id": "n1",
+      "labels": [
+        "node1",
+        "label"
+      ],
+      "properties": {
+        "property": "value"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "source": "n0",
+      "target": "n1",
+      "isDirected": false,
+      "labels": [
+        "edge0",
+        "undirected",
+        "label"
+      ],
+      "properties": {
+        "property": "value"
+      }
+    },
+    {
+      "id": "e1",
+      "source": "n0",
+      "target": "n1",
+      "isDirected": true,
+      "labels": [
+        "edge1",
+        "directed",
+        "label"
+      ],
+      "properties": {
+        "property": "value"
+      }
+    }
+  ]
+}
