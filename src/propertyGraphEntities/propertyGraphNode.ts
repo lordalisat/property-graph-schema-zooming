@@ -1,6 +1,6 @@
 import type { Id } from "types/id";
 import type { Label } from "types/label";
-import type { Property, PropertyType } from "types/property";
+import type { Property } from "types/property";
 import { elementType } from "types/propertyGraph/elementType";
 import type { Value } from "types/propertyGraph/value";
 import { PropertyGraphElement } from "./propertyGraphElement";
@@ -12,6 +12,8 @@ export class PropertyGraphNode extends PropertyGraphElement {
     id: Id;
     labels: Array<Label>;
     properties: Map<Property, Value>;
+    x?: number;
+    y?: number;
   }) {
     super();
     Object.assign(this, args);

@@ -1,10 +1,11 @@
+import type { SimulationNodeDatum } from "d3";
 import type { Id } from "types/id";
 import type { Label } from "types/label";
 import type { Property } from "types/property";
 import type { elementType } from "types/propertyGraph/elementType";
 import type { Value } from "types/propertyGraph/value";
 
-export abstract class PropertyGraphElement {
+export abstract class PropertyGraphElement implements SimulationNodeDatum {
   x?: number;
   y?: number;
   width?: number;

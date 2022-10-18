@@ -30,40 +30,14 @@ export function induceWorkload(
   inducedGraph.emptyGraph();
 
   if (threshold === 0) {
-    inducedGraph.nodeNodes = new Map(
-      [...graph.nodeNodes.values()].map((node) => [node.id, { ...node }])
-    );
-    inducedGraph.edgeNodes = new Map(
-      [...graph.edgeNodes.values()].map((node) => [node.id, { ...node }])
-    );
-    inducedGraph.labelNodes = new Map(
-      [...graph.labelNodes.values()].map((node) => [node.id, { ...node }])
-    );
-    inducedGraph.propertyNodes = new Map(
-      [...graph.propertyNodes.values()].map((node) => [node.id, { ...node }])
-    );
+    inducedGraph.nodeNodes = graph.nodeNodes;
+    inducedGraph.edgeNodes = graph.edgeNodes;
+    inducedGraph.labelNodes = graph.labelNodes;
+    inducedGraph.propertyNodes = graph.propertyNodes;
 
-    inducedGraph.edgeEdges = [
-      ...graph.edgeEdges.map((edge) => ({
-        ...edge,
-        source: inducedGraph.edgeNodes.get(edge.source.id),
-        target: inducedGraph.nodeNodes.get(edge.target.id),
-      })),
-    ];
-    inducedGraph.labelEdges = [
-      ...graph.labelEdges.map((edge) => ({
-        ...edge,
-        source: inducedGraph.getNode(edge.source.id),
-        target: inducedGraph.labelNodes.get(edge.target.id),
-      })),
-    ];
-    inducedGraph.propertyEdges = [
-      ...graph.propertyEdges.map((edge) => ({
-        ...edge,
-        source: inducedGraph.getNode(edge.source.id),
-        target: inducedGraph.propertyNodes.get(edge.target.id),
-      })),
-    ];
+    inducedGraph.edgeEdges = graph.edgeEdges;
+    inducedGraph.labelEdges = graph.labelEdges;
+    inducedGraph.propertyEdges = graph.propertyEdges;
 
     console.timeEnd('induceWorkload');
     return inducedGraph;
@@ -85,11 +59,11 @@ export function induceWorkload(
       graph.edgeNodes.get(edge.source.id);
     if (source.type == NodeType.node) {
       if (!inducedGraph.nodeNodes.has(edge.source.id)) {
-        inducedGraph.addNodeNode({ ...source });
+        inducedGraph.addNodeNode(source);
       }
     } else {
       if (!inducedGraph.edgeNodes.has(edge.source.id)) {
-        inducedGraph.addEdgeNode({ ...source });
+        inducedGraph.addEdgeNode(source);
       }
     }
   });
@@ -102,12 +76,12 @@ export function induceWorkload(
 
       nodeConnectedEdges.forEach((edge) => {
         if (!inducedGraph.edgeNodes.has(edge.source.id)) {
-          inducedGraph.addEdgeNode({ ...graph.edgeNodes.get(edge.source.id) });
+          inducedGraph.addEdgeNode(graph.edgeNodes.get(edge.source.id));
         }
       });
       edgeConnectedEdges.forEach((edge) => {
         if (!inducedGraph.nodeNodes.has(edge.target.id)) {
-          inducedGraph.addNodeNode({ ...graph.nodeNodes.get(edge.target.id) });
+          inducedGraph.addNodeNode(graph.nodeNodes.get(edge.target.id));
         }
       });
     }
@@ -123,13 +97,9 @@ export function induceWorkload(
     )
     .map((edge) => {
       if (!inducedGraph.propertyNodes.has(edge.target.id)) {
-        inducedGraph.addPropertyNode({ ...edge.target });
+        inducedGraph.addPropertyNode(edge.target);
       }
-      return {
-        ...edge,
-        source: inducedGraph.getNode(edge.source.id),
-        target: inducedGraph.propertyNodes.get(edge.target.id),
-      };
+      return edge;
     });
   console.timeEnd('induceWorkloadGetProperties');
 
@@ -143,38 +113,18 @@ export function induceWorkload(
     )
     .map((edge) => {
       if (!inducedGraph.labelNodes.has(edge.target.id)) {
-        inducedGraph.addLabelNode({ ...edge.target });
+        inducedGraph.addLabelNode(edge.target);
       }
-      return {
-        ...edge,
-        source: inducedGraph.getNode(edge.source.id),
-        target: inducedGraph.labelNodes.get(edge.target.id),
-      };
+      return edge;
     });
   console.timeEnd('induceWorkloadGetLabels');
 
   if (inductionMethod === InductionMethod.mask) {
     console.time('induceWorkloadMask');
     //Add all Node and Edge nodes, as well as all connecting edges, so only properties and labels may be missing
-    [...graph.nodeNodes.values()].map((node) => {
-      if (!inducedGraph.nodeNodes.has(node.id)) {
-        inducedGraph.addNodeNode({ ...node });
-      }
-      [node.id, { ...node }];
-    });
-    [...graph.edgeNodes.values()].map((node) => {
-      if (!inducedGraph.edgeNodes.has(node.id)) {
-        inducedGraph.addEdgeNode({ ...node });
-      }
-      [node.id, { ...node }];
-    });
-    inducedGraph.edgeEdges = [
-      ...graph.edgeEdges.map((edge) => ({
-        ...edge,
-        source: inducedGraph.edgeNodes.get(edge.source.id),
-        target: inducedGraph.nodeNodes.get(edge.target.id),
-      })),
-    ];
+    inducedGraph.nodeNodes = graph.nodeNodes;
+    inducedGraph.edgeNodes = graph.edgeNodes;
+    inducedGraph.edgeEdges = graph.edgeEdges;
     console.timeEnd('induceWorkloadMask');
   } else if (inductionMethod === InductionMethod.filter) {
     console.time('induceWorkloadFilter');
@@ -185,18 +135,10 @@ export function induceWorkload(
     inducedGraph.edgeEdges = graph.edgeEdges
       .filter((edge) => inducedGraph.edgeNodes.has(edge.source.id))
       .map((edge) => {
-        let targetNode;
-        if (inducedGraph.nodeNodes.has(edge.target.id)) {
-          targetNode = inducedGraph.nodeNodes.get(edge.target.id);
-        } else {
-          targetNode = emptyNode;
+        if (!inducedGraph.nodeNodes.has(edge.target.id)) {
           addNode = true;
         }
-        return {
-          ...edge,
-          source: inducedGraph.edgeNodes.get(edge.source.id),
-          target: targetNode,
-        };
+        return edge;
       });
     if (addNode) {
       inducedGraph.addNodeNode(emptyNode);

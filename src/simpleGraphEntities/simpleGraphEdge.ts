@@ -49,7 +49,7 @@ export class SimpleGraphEdge {
   static edgeEdge(
     sourceNode: SimpleGraphEdgeNode,
     targetNode: SimpleGraphNodeNode,
-    direction: EdgeDirection
+    direction: EdgeDirection,
   ): SimpleGraphEdgeEdge {
     return {
       source: sourceNode,

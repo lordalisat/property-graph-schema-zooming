@@ -19,7 +19,7 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
   function getLabel(sourceNode: SimpleGraphNodeNode | SimpleGraphEdgeNode, label: Label) {
     let labelNode: SimpleGraphLabelNode;
     if (!labelMap.has(label)) {
-      labelNode = SimpleGraphNode.labelNode(label);
+      labelNode = SimpleGraphNode.labelNode(label, sourceNode.x, sourceNode.y);
       labelMap.set(label, labelNode)
       simpleGraph.addLabelNode(labelNode);
     }
@@ -48,7 +48,7 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
     }
     let propertyNode;
     if (!propertyMap.has(type)) {
-      propertyNode = SimpleGraphNode.propertyNode(type);
+      propertyNode = SimpleGraphNode.propertyNode(type, sourceNode.x, sourceNode.y);
       propertyMap.set(type, propertyNode)
       simpleGraph.addPropertyNode(propertyNode);
     }
@@ -59,7 +59,7 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
   }
 
   graph.nodes.forEach((node) => {
-    const nodeNode = SimpleGraphNode.nodeNode(node.id);
+    const nodeNode = SimpleGraphNode.nodeNode(node.id, node.x, node.y);
     nodeMap.set(node.id, nodeNode);
     simpleGraph.addNodeNode(nodeNode);
 
@@ -69,7 +69,7 @@ export function propertyToSimpleGraph(graph: PropertyGraph): SimpleGraph {
   })
 
   graph.edges.forEach((edge) => {
-    const edgeNode = SimpleGraphNode.edgeNode(edge.id);
+    const edgeNode = SimpleGraphNode.edgeNode(edge.id, edge.x, edge.y);
     simpleGraph.addEdgeNode(edgeNode);
 
     const sourceNode = nodeMap.get(edge.sourceNode);

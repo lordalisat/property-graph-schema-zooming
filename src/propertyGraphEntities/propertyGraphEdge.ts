@@ -18,6 +18,8 @@ export class PropertyGraphEdge extends PropertyGraphElement {
     sourceNode: Id;
     targetNode: Id;
     isDirected?: boolean;
+    x?: number;
+    y?: number;
   }) {
     super();
     Object.assign(this, args);

@@ -24,7 +24,9 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
       const propertyNode = new PropertyGraphNode({
         id: id,
         labels: labels,
-        properties: properties
+        properties: properties,
+        x: node.x,
+        y: node.y,
       });
 
       return [fromSimpleId(node.id), propertyNode];
@@ -80,7 +82,9 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
         properties: properties,
         sourceNode: source,
         targetNode: target,
-        isDirected: isDirected
+        isDirected: isDirected,
+        x: node.x,
+        y: node.y,
       });
 
       return [fromSimpleId(node.id), propertyEdge];
