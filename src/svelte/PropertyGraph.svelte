@@ -56,10 +56,10 @@
       .nodes(nodes)
       .force("link", forceLink(edges).distance(250))
       .force("charge", forceManyBody().strength(-1200))
+      .force("center", forceCenter(500, 500))
       .on("tick", simulationUpdate);
     simulation.alpha(1).restart();
   });
-  $: simulation.force("center", forceCenter(500, 500)).restart();
 
   // $: console.log(nodes);
   // $: console.log(edges);
