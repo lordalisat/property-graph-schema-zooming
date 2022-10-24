@@ -59,7 +59,7 @@
       .on("tick", simulationUpdate);
     simulation.alpha(1).restart();
   });
-  $: simulation.force("center", forceCenter(width / 2, height / 2)).restart();
+  $: simulation.force("center", forceCenter(500, 500)).restart();
 
   // $: console.log(nodes);
   // $: console.log(edges);
@@ -127,8 +127,8 @@
 
   function dragended(currentEvent) {
     if (!currentEvent.active) simulation.alphaTarget(0);
-    currentEvent.subject.fx = null;
-    currentEvent.subject.fy = null;
+    // currentEvent.subject.fx = null;
+    // currentEvent.subject.fy = null;
   }
 
   // sort the links by source, then target

@@ -1,3 +1,4 @@
+import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3";
 import { data, workloadData } from "data";
 import { Simulation } from "functions/equivalence/simulation";
 import { propertyToSimpleGraph } from "functions/graphExchange/propertyToSimpleGraph";
@@ -61,9 +62,79 @@ export const propInduced = derived(simpleInduced, (simpleInduced) =>
 export const simpleSchema = derived(simpleInduced, (simpleInduced) =>
   new Simulation().calculateSchema(simpleInduced)
 );
-export const propSchema = derived(simpleSchema, (simpleSchema) =>
-  simpleToPropertyGraph(simpleSchema)
-);
+
+export const propSchemaFull = writable(new PropertyGraph);
+
+unsubscribe = simpleSchema.subscribe((simpleSchema) => {
+  const schema = simpleToPropertyGraph(simpleSchema);
+  const nodes = [...schema.nodes.values(), ...schema.edges.values()];
+    nodes.forEach((node) => node.setPrintOptions());
+    const edges = [...schema.edges.values()].flatMap((edge) => {
+      return [
+        {
+          source: edge.isDirected ? schema.nodes.get(edge.sourceNode) : edge,
+          target: edge.isDirected ? edge : schema.nodes.get(edge.sourceNode),
+          directional: edge.isDirected,
+        },
+        {
+          source: edge,
+          target: schema.nodes.get(edge.targetNode),
+          directional: edge.isDirected,
+        },
+      ];
+    });
+  forceSimulation()
+    .nodes(nodes)
+    .force("link", forceLink(edges).distance(250))
+    .force("charge", forceManyBody().strength(-1200))
+    .force("center", forceCenter(500, 500))
+    .tick(600)
+    .stop();
+  nodes.forEach((node) => {
+    node.fx = node.x;
+    node.fy = node.y;
+  });
+  console.log(schema);
+  propSchemaFull.set(schema);
+});
+unsubscribe();
+
+export const propSchema = derived([simpleSchema, propSchemaFull], ([simpleSchema, propSchemaFull]) => {
+  const graph = simpleToPropertyGraph(simpleSchema);
+  graph.nodes.forEach((value, key) => {
+    if (value.labels.length > 0 || value.properties.size > 0) {
+      const node = [...propSchemaFull.nodes.values()].find((node) => 
+      JSON.stringify(node.labels) === JSON.stringify(value.labels) &&
+      node.properties.size === value.properties.size &&
+      Array.from(node.properties.keys()).every((key) => node.properties.get(key) == value.properties.get(key))
+      )
+      if (node) {
+        graph.nodes.set(key, node);
+      }
+    }
+  });
+  graph.edges.forEach((value, key) => {
+    if (value.labels.length > 0 || value.properties.size > 0) {
+      const node = [...propSchemaFull.edges.values()].find((node) => (
+        JSON.stringify(node.labels) === JSON.stringify(value.labels) &&
+        node.properties.size === value.properties.size &&
+        Array.from(node.properties.keys()).every((key) => node.properties.get(key) == value.properties.get(key)) &&
+        propSchemaFull.nodes.get(node.origSourceNode) === graph.nodes.get(value.sourceNode) &&
+        propSchemaFull.nodes.get(node.origTargetNode) === graph.nodes.get(value.targetNode)
+      ));
+      if (node) {
+        node.sourceNode = value.sourceNode;
+        node.targetNode = value.targetNode;
+        graph.edges.set(key, node);
+      }
+      else {
+        console.log(value);
+      }
+    }
+  });
+  console.log(graph);
+  return graph;
+});
 
 export const graphList = [
   { name: "SimpleData", component: SimpleGraphSvelte, graph: simpleData },

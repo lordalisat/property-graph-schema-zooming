@@ -8,6 +8,8 @@ import type { Value } from "types/propertyGraph/value";
 export abstract class PropertyGraphElement implements SimulationNodeDatum {
   x?: number;
   y?: number;
+  fx?: number;
+  fy?: number;
   width?: number;
   height?: number;
   stringRepres?: string;

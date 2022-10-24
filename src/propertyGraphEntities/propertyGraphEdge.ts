@@ -6,8 +6,10 @@ import type { Value } from "types/propertyGraph/value";
 import { PropertyGraphElement } from "./propertyGraphElement";
 
 export class PropertyGraphEdge extends PropertyGraphElement {
-  readonly sourceNode!: Id;
-  readonly targetNode!: Id;
+  sourceNode!: Id;
+  targetNode!: Id;
+  readonly origSourceNode: Id;
+  readonly origTargetNode: Id;
   readonly isDirected: boolean = true;
   readonly type = elementType.edge;
 
@@ -23,6 +25,8 @@ export class PropertyGraphEdge extends PropertyGraphElement {
   }) {
     super();
     Object.assign(this, args);
+    this.origSourceNode = this.sourceNode;
+    this.origTargetNode = this.targetNode;
   }
 
   static fromJSON(element: {
