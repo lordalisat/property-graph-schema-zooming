@@ -34,7 +34,6 @@
   const simulation = forceSimulation();
 
   const unsubscribe = graph.subscribe((graph) => {
-    simulation.stop();
     nodes = [...graph.nodes.values(), ...graph.edges.values()];
     nodes.forEach((node) => node.setPrintOptions());
     edges = [...graph.edges.values()].flatMap((edge) => {
@@ -56,9 +55,13 @@
       .nodes(nodes)
       .force("link", forceLink(edges).distance(250))
       .force("charge", forceManyBody().strength(-1200))
-      .force("center", forceCenter(500, 500))
-      .on("tick", simulationUpdate);
-    simulation.alpha(1).restart();
+      .on("tick", simulationUpdate)
+      .alpha(1)
+      .tick(600);
+    nodes.forEach((node) => {
+      node.fx = node.x;
+      node.fy = node.y;
+    });
   });
 
   // $: console.log(nodes);
