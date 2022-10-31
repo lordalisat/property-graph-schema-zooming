@@ -137,6 +137,7 @@ export function induceWorkload(
       .map((edge) => {
         if (!inducedGraph.nodeNodes.has(edge.target.id)) {
           addNode = true;
+          return {...edge, target: emptyNode}
         }
         return edge;
       });
