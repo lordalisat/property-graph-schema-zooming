@@ -6,6 +6,8 @@ import { NodeType } from "types/simpleGraph/nodeType";
 export interface SimpleGraphNodeType {
   x?: number;
   y?: number;
+  fx?: number;
+  fy?: number;
   id: SimpleId;
   label: Label;
   type: NodeType;

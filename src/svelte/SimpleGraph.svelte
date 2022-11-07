@@ -36,7 +36,6 @@
   const simulation = forceSimulation();
 
   const unsubscribe = graph.subscribe((graph) => {
-    simulation.stop();
     nodes = [
       ...graph.nodeNodes.values(),
       ...graph.edgeNodes.values(),
@@ -47,11 +46,15 @@
     setLinkIndexAndNum(edges);
     simulation
       .nodes(nodes)
-      .force("link", forceLink(edges).distance(140))
-      .force("charge", forceManyBody().strength(-800))
-      .on("tick", simulationUpdate);
-    simulation.alpha(1).restart();
-    console.log(simulation);
+      .force("link", forceLink(edges).distance(250))
+      .force("charge", forceManyBody().strength(-1200))
+      .on("tick", simulationUpdate)
+      .alpha(1)
+      .tick(600);
+    nodes.forEach((node) => {
+      node.fx = node.x;
+      node.fy = node.y;
+    });
   });
 
   // $: console.log(nodes);
@@ -117,8 +120,8 @@
 
   function dragended(currentEvent) {
     if (!currentEvent.active) simulation.alphaTarget(0);
-    currentEvent.subject.fx = null;
-    currentEvent.subject.fy = null;
+    // currentEvent.subject.fx = null;
+    // currentEvent.subject.fy = null;
   }
 
   // sort the links by source, then target

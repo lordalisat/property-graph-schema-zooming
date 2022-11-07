@@ -87,7 +87,7 @@ unsubscribe = simpleSchema.subscribe((simpleSchema) => {
     .nodes(nodes)
     .force("link", forceLink(edges).distance(250))
     .force("charge", forceManyBody().strength(-1200))
-    .force("center", forceCenter(500, 500))
+    .force("center", forceCenter(700, 500))
     .tick(600)
     .stop();
   nodes.forEach((node) => {
