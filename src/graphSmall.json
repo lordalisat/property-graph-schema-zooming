@@ -3,21 +3,19 @@
     {
       "id": "n0",
       "labels": [
-        "node0",
-        "label"
+        "Person"
       ],
       "properties": {
-        "property": "value"
+        "name": "Bob"
       }
     },
     {
       "id": "n1",
       "labels": [
-        "node1",
-        "label"
+        "Person"
       ],
       "properties": {
-        "property": "value"
+        "name": "alice"
       }
     }
   ],
@@ -28,12 +26,9 @@
       "target": "n1",
       "isDirected": false,
       "labels": [
-        "edge0",
-        "undirected",
-        "label"
+        "siblings"
       ],
       "properties": {
-        "property": "value"
       }
     },
     {
@@ -42,12 +37,9 @@
       "target": "n1",
       "isDirected": true,
       "labels": [
-        "edge1",
-        "directed",
-        "label"
+        "looksUpTo"
       ],
       "properties": {
-        "property": "value"
       }
     }
   ]

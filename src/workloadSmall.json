@@ -1,30 +1,14 @@
 [
   {
-    "label":"label",
-    "occurence":0.5
-  },
-  {
-    "label":"node0",
+    "label":"Person",
     "occurence":0.8
   },
   {
-    "label":"node1",
-    "occurence":0.9
-  },
-  {
-    "label":"directed",
+    "label":"looksUpTo",
     "occurence":0.6
   },
   {
-    "label":"undirected",
-    "occurence":0.5
-  },
-  {
-    "label":"edge0",
-    "occurence":0.5
-  },
-  {
-    "label":"edge1",
+    "label":"siblings",
     "occurence":0.5
   }
 ]
