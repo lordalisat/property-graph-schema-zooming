@@ -15,7 +15,17 @@
         "Person"
       ],
       "properties": {
-        "name": "alice"
+        "name": "Alice"
+      }
+    },
+    {
+      "id": "n2",
+      "labels": [
+        "Person",
+        "Adult"
+      ],
+      "properties": {
+        "name": "Charlie"
       }
     }
   ],
@@ -41,6 +51,28 @@
       ],
       "properties": {
       }
+    },
+    {
+      "id": "e2",
+      "source": "n2",
+      "target": "n1",
+      "isDirected": true,
+      "labels": [
+        "parent"
+      ],
+      "properties": {
+
+      }
+    },
+    {
+      "id": "e3",
+      "source": "n2",
+      "target": "n0",
+      "isDirected": true,
+      "labels": [
+        "parent"
+      ],
+      "properties": {}
     }
   ]
 }

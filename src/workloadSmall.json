@@ -4,11 +4,19 @@
     "occurence":0.8
   },
   {
-    "label":"looksUpTo",
-    "occurence":0.6
+    "label": "Adult",
+    "occurence": 1
   },
   {
     "label":"siblings",
     "occurence":0.5
+  },
+  {
+    "label":"looksUpTo",
+    "occurence":0.6
+  },
+  {
+    "label": "parent",
+    "occurence": 0.8
   }
 ]
