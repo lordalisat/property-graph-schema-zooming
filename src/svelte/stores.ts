@@ -94,20 +94,26 @@ unsubscribe = simpleSchema.subscribe((simpleSchema) => {
     node.fx = node.x;
     node.fy = node.y;
   });
-  console.log(schema);
   propSchemaFull.set(schema);
 });
 unsubscribe();
+
+function nodeEquals(node, comp) {
+  return JSON.stringify(node.labels) === JSON.stringify(comp.labels) &&
+  node.properties.size === comp.properties.size &&
+  Array.from(node.properties.keys()).every((key) => node.properties.get(key) == comp.properties.get(key))
+}
 
 export const propSchema = derived([simpleSchema, propSchemaFull], ([simpleSchema, propSchemaFull]) => {
   const graph = simpleToPropertyGraph(simpleSchema);
   graph.nodes.forEach((value, key) => {
     if (value.labels.length > 0 || value.properties.size > 0) {
-      const node = [...propSchemaFull.nodes.values()].find((node) => 
-      JSON.stringify(node.labels) === JSON.stringify(value.labels) &&
-      node.properties.size === value.properties.size &&
-      Array.from(node.properties.keys()).every((key) => node.properties.get(key) == value.properties.get(key))
-      )
+      const node = [...propSchemaFull.nodes.values()].find((node) => (
+        nodeEquals(value, node) &&
+        [...graph.edges.values()].filter((edge) => edge.sourceNode === value.id || edge.targetNode === value.id).forEach((edge) => {
+          [...propSchemaFull.edges.values()].some((compEdge) => nodeEquals(edge, compEdge))
+        })
+      ));
       if (node) {
         graph.nodes.set(key, node);
       }
@@ -127,12 +133,11 @@ export const propSchema = derived([simpleSchema, propSchemaFull], ([simpleSchema
         node.targetNode = value.targetNode;
         graph.edges.set(key, node);
       }
-      else {
-        console.log(value);
-      }
+      // else {
+      //   console.log(value);
+      // }
     }
   });
-  console.log(graph);
   return graph;
 });
 
