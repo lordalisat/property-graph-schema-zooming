@@ -127,7 +127,7 @@ export class Simulation extends Equivalence {
     this.pIds.old_pid = new Map(this.pIds.new_pid);
 
     console.time(`build_bsim_${k - 1}_get_unique_edges`);
-    const edgeTIds: Array<EdgeTId> = this.uniqEdgeTId(
+    const outgoingEdgeTIds: Array<EdgeTId> = this.uniqEdgeTId(
       this.edges.map((edge) => {
         const oldPId = this.pIds.old_pid.get(edge.target.id);
         return {
@@ -137,11 +137,21 @@ export class Simulation extends Equivalence {
         };
       })
     );
+    const incomingEdgeTIds: Array<EdgeTId> = this.uniqEdgeTId(
+      this.edges.map((edge) => {
+        const oldPId = this.pIds.old_pid.get(edge.source.id);
+        return {
+          source: edge.target,
+          label: edge.label,
+          oldPId: oldPId,
+        };
+      })
+    );
     console.timeEnd(`build_bsim_${k - 1}_get_unique_edges`);
 
     console.time(`build_bsim_${k - 1}_get_node_signatures`);
     const pIds = this.nodes.map((node) => {
-      return this.getNodePid(node, edgeTIds);
+      return this.getNodePid(node, [...outgoingEdgeTIds, ...incomingEdgeTIds]);
     });
     this.pIds.new_pid = new Map(pIds);
     this.pIds[`j_pid_${k}`] = new Map(pIds);
