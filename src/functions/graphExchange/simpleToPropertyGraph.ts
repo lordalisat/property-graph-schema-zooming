@@ -2,7 +2,7 @@ import { PropertyGraph } from "propertyGraphEntities/propertyGraph";
 import { PropertyGraphEdge } from "propertyGraphEntities/propertyGraphEdge";
 import { PropertyGraphNode } from "propertyGraphEntities/propertyGraphNode";
 import type { SimpleGraph } from "simpleGraphEntities/simpleGraph";
-import { fromSimpleId } from "types/id";
+import { fromSimpleId, type Id, type SimpleId } from "types/id";
 import { EdgeDirection } from "types/simpleGraph/edgeLabel";
 
 export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
@@ -34,7 +34,7 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
   );
 
   propertyGraph.edges = new Map(
-    [...graph.edgeNodes.values()].map((node) => {
+    [...graph.edgeNodes.values()].flatMap((node) => {
       const labels = graph.labelEdges
         .filter((edge) => edge.source === node)
         .map((edge) => edge.target.label);
@@ -47,55 +47,44 @@ export function simpleToPropertyGraph(graph: SimpleGraph): PropertyGraph {
         (edge) => edge.source === node
       );
 
-      if (connectedEdges.length != 2) {
-        if (connectedEdges[0].label === EdgeDirection.connects) {
-          connectedEdges[1] = connectedEdges[0];
+      if (connectedEdges[0].label === EdgeDirection.connects) {
+        if (connectedEdges.some((edge) => edge.label !== EdgeDirection.connects)) {
+          throw new Error("Edges must have same directionality");
         }
-        else {
-          throw new Error("Edge must have 2 connected nodes");
-        }  
+        if (connectedEdges.length < 2) {
+          return [[fromSimpleId(node.id), createEdges(node.id, connectedEdges[0].target.id, connectedEdges[0].target.id, false, labels, properties)]];
+        }
+        return connectedEdges.flatMap((v, i) => connectedEdges.slice(i + 1).map((w, o) =>
+          [fromSimpleId(node.id) + i + o, createEdges(node.id + i + o, v.target.id, w.target.id, false, labels, properties)]
+        ))
       }
 
-      if (
-        (connectedEdges[0].label === EdgeDirection.connects &&
-          !(connectedEdges[1].label === EdgeDirection.connects)) ||
-        (connectedEdges[0].label === EdgeDirection.connects &&
-          !(connectedEdges[1].label === EdgeDirection.connects)) ||
-        (connectedEdges[0].label === EdgeDirection.to &&
-          !(connectedEdges[1].label === EdgeDirection.from)) ||
-        (connectedEdges[0].label === EdgeDirection.from &&
-          !(connectedEdges[1].label === EdgeDirection.to))
-      ) {
-        throw new Error("Edges must have same directionality");
+      const fromEdges = connectedEdges.filter((edge) => edge.label === EdgeDirection.from);
+      const toEdges = connectedEdges.filter((edge) => edge.label === EdgeDirection.to);
+
+      if (fromEdges.length === 0 || toEdges.length === 0) {
+        throw new Error("Edge must have 2 connected nodes");
       }
 
-      const isDirected = (connectedEdges[0].label !== EdgeDirection.connects && connectedEdges[0].label !== EdgeDirection.connects);
-      let source;
-      let target;
-      if (!isDirected || connectedEdges[0].label === EdgeDirection.from) {
-        source = fromSimpleId(connectedEdges[0].target.id);
-        target = fromSimpleId(connectedEdges[1].target.id);
-      } else {
-        source = fromSimpleId(connectedEdges[1].target.id);
-        target = fromSimpleId(connectedEdges[0].target.id);
-      }
-
-      const id = fromSimpleId(node.id);
-      const propertyEdge = new PropertyGraphEdge({
-        id: id,
-        labels: labels,
-        properties: properties,
-        sourceNode: source,
-        targetNode: target,
-        isDirected: isDirected,
-        x: node.x,
-        y: node.y,
-      });
-
-      return [fromSimpleId(node.id), propertyEdge];
+      return fromEdges.flatMap((fromEdge, i) => toEdges.map((toEdge, o) =>
+        [fromSimpleId(node.id) + i + o, createEdges(node.id + i + o, fromEdge.target.id, toEdge.target.id, true, labels, properties)]
+      ))
     })
   );
   console.timeEnd('simpleToPropertyGraph');
 
   return propertyGraph;
 }
+
+function createEdges(id: Id, source: SimpleId, target: SimpleId, isDirected: boolean, labels: string[], properties: Map<string, string>) {
+  const propertyEdge = new PropertyGraphEdge({
+    id: id,
+    labels: labels,
+    properties: properties,
+    sourceNode: fromSimpleId(source),
+    targetNode: fromSimpleId(target),
+    isDirected: isDirected,
+  });
+  return propertyEdge;
+}
+
