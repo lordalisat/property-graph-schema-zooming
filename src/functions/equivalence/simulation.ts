@@ -6,70 +6,66 @@
  */
 
 import { SimpleGraph } from "simpleGraphEntities/simpleGraph";
-import type { SimpleGraphEdgeType } from "simpleGraphEntities/simpleGraphEdge";
-import type { SimpleGraphNodeType } from "simpleGraphEntities/simpleGraphNode";
-import { type SimpleId, toSimpleId } from "types/id";
+import {
+  SimpleGraphEdge,
+  type SimpleGraphEdgeType,
+} from "simpleGraphEntities/simpleGraphEdge";
+import { SimpleGraphNode } from "simpleGraphEntities/simpleGraphNode";
+import { toSimpleId } from "types/id";
 import type { Label } from "types/label";
-import { EdgeType } from "types/simpleGraph/edgeType";
+import type { Property, PropertyType } from "types/property";
+import type { EdgeDirection } from "types/simpleGraph/edgeLabel";
 import { NodeType } from "types/simpleGraph/nodeType";
-import type { EdgeTId } from "types/simulation/edgeTId";
-import type { PId, PIdMaps } from "types/simulation/pIdMaps";
+import type { PId, PIdMap, PIdMaps } from "types/simulation/pIdMaps";
 import type { SignatureStorage } from "types/simulation/signatureStorage";
 import { Equivalence } from "./equivalence";
 
 export class Simulation extends Equivalence {
   private currentPId: PId;
   private storage: SignatureStorage;
-  private k = 3;
-  private nodes: SimpleGraphNodeType[];
-  private edges: SimpleGraphEdgeType[];
+  private k = 0;
+  private graph: SimpleGraph;
   private pIds: PIdMaps = {
     old_pid: new Map(),
     new_pid: new Map(),
   };
 
-  private insert(s: string): PId {
-    if (this.storage.has(s)) {
-      return this.storage.get(s);
+  private insert(
+    labels: Label[],
+    properties: Map<Property, PropertyType>,
+    edges: Set<{ label: EdgeDirection; pId: PId }>
+  ): PId {
+    const pID = [...this.storage.entries()].find(
+      (val) =>
+        JSON.stringify(val[0].labels) === JSON.stringify(labels) &&
+        JSON.stringify(Object.fromEntries(val[0].properties)) ===
+          JSON.stringify(Object.fromEntries(properties)) &&
+        JSON.stringify(edges) === JSON.stringify(val[0].edges)
+    );
+    if (pID) {
+      return pID[1];
     }
     this.currentPId++;
-    this.storage.set(s, this.currentPId);
+    this.storage.set({ labels, properties, edges }, this.currentPId);
     return this.currentPId;
   }
 
-  private getNodePid(
-    node: SimpleGraphNodeType,
-    edgeTIds: EdgeTId[]
-  ): [SimpleId, number] {
-    const pid_0 = this.pIds.j_pid_0.get(node.id).toString();
-    const sigParts = edgeTIds
-      .filter((edge) => edge.source.id === node.id)
-      .map((edge) => `(${edge.label},${edge.oldPId})`);
-    const sig = [pid_0, ...sigParts].join();
-    const pId = this.insert(sig);
-    return [node.id, pId];
-  }
-
-  private uniqEdgeTId(edgeTIds: Array<EdgeTId>) {
-    const seen = {};
-    return [
-      ...new Map(
-        edgeTIds.map((edge) => {
-          const key = JSON.stringify(edge);
-          return [key, edge];
-        })
-      ).values(),
-    ];
-  }
-
-  private groupBy(arr, property) {
-    return arr.reduce(function (split, item) {
-      if (!split[item[property]]) {
-        split[item[property]] = [];
-      }
-      split[item[property]].push(item);
-      return split;
-    }, {});
+  private getPId(
+    labels: SimpleGraphEdgeType[],
+    properties: SimpleGraphEdgeType[],
+    edges: Set<{ label: EdgeDirection; pId: PId }>
+  ): PId {
+    const pId = this.insert(
+      labels.map((edge) => edge.target.label),
+      new Map(
+        properties.map((edge) => [
+          edge.label,
+          edge.target.label as PropertyType,
+        ])
+      ),
+      edges
+    );
+    return pId;
   }
 
   private uniqEdges(edges: Array<SimpleGraphEdgeType>) {
@@ -83,19 +79,7 @@ export class Simulation extends Equivalence {
   public calculateSchema(graph: SimpleGraph): SimpleGraph {
     console.time("calculateSchema");
     this.currentPId = 0;
-    this.storage = new Map();
-
-    this.nodes = [
-      ...graph.nodeNodes.values(),
-      ...graph.edgeNodes.values(),
-      ...graph.labelNodes.values(),
-      ...graph.propertyNodes.values(),
-    ];
-    this.edges = [
-      ...graph.edgeEdges,
-      ...graph.labelEdges,
-      ...graph.propertyEdges,
-    ];
+    this.graph = graph;
 
     console.time(`build_bsim_${this.k}`);
     this.build_bsim(this.k);
@@ -107,55 +91,69 @@ export class Simulation extends Equivalence {
   }
 
   private build_bsim(k: number): void {
+    this.pIds[`j_pid_${k}`] = new Map();
     if (k === 0) {
-      this.pIds.j_pid_0 = new Map();
-      this.nodes.sort((a, b) => a.label.localeCompare(b.label));
-      let label: Label = this.nodes[0].label;
-      this.nodes.forEach((node) => {
-        if (node.label !== label) {
-          this.currentPId++;
-          label = node.label;
-        }
-        this.pIds.new_pid.set(node.id, this.currentPId);
-        this.pIds.j_pid_0.set(node.id, this.currentPId);
+      console.time("build_bsim_nodes_k_0");
+      this.storage = new Map();
+      this.graph.nodeNodes.forEach((node) => {
+        const pId = this.getPId(
+          this.graph.labelEdges.filter((edge) => edge.source === node),
+          this.graph.propertyEdges.filter((edge) => edge.source === node),
+          new Set()
+        );
+        this.pIds.j_pid_0.set(node.id, pId);
+        this.pIds.new_pid.set(node.id, pId);
       });
+      console.timeEnd("build_bsim_nodes_k_0");
       return;
     }
-    console.time(`build_bsim_${k - 1}`);
     this.build_bsim(k - 1);
-    console.timeEnd(`build_bsim_${k - 1}`);
     this.pIds.old_pid = new Map(this.pIds.new_pid);
 
     console.time(`build_bsim_${k - 1}_get_unique_edges`);
-    const outgoingEdgeTIds: Array<EdgeTId> = this.uniqEdgeTId(
-      this.edges.map((edge) => {
-        const oldPId = this.pIds.old_pid.get(edge.target.id);
-        return {
-          source: edge.source,
-          label: edge.label,
-          oldPId: oldPId,
-        };
-      })
-    );
-    const incomingEdgeTIds: Array<EdgeTId> = this.uniqEdgeTId(
-      this.edges.map((edge) => {
-        const oldPId = this.pIds.old_pid.get(edge.source.id);
-        return {
-          source: edge.target,
-          label: edge.label,
-          oldPId: oldPId,
-        };
-      })
-    );
+    this.storage = new Map();
+
+    const edgeTIds: PIdMap = this.getEdgeTIds();
     console.timeEnd(`build_bsim_${k - 1}_get_unique_edges`);
 
-    console.time(`build_bsim_${k - 1}_get_node_signatures`);
-    const pIds = this.nodes.map((node) => {
-      return this.getNodePid(node, [...outgoingEdgeTIds, ...incomingEdgeTIds]);
-    });
-    this.pIds.new_pid = new Map(pIds);
-    this.pIds[`j_pid_${k}`] = new Map(pIds);
     console.timeEnd(`build_bsim_${k - 1}_get_node_signatures`);
+    this.storage = new Map();
+
+    this.graph.nodeNodes.forEach((node) => {
+      const edges = this.graph.edgeEdges
+        .filter((edge) => edge.target === node)
+        .map((edge) => ({
+          label: edge.label as EdgeDirection,
+          pId: edgeTIds.get(edge.source.id),
+        }));
+      const pId = this.getPId(
+        this.graph.labelEdges.filter((edge) => edge.source === node),
+        this.graph.propertyEdges.filter((edge) => edge.source === node),
+        new Set(edges)
+      );
+      this.pIds[`j_pid_${k}`].set(node.id, pId);
+      this.pIds.new_pid.set(node.id, pId);
+    });
+    console.time(`build_bsim_${k - 1}_get_node_signatures`);
+  }
+
+  private getEdgeTIds(): PIdMap {
+    return new Map(
+      [...this.graph.edgeNodes.values()].map((node) => {
+        const edges = this.graph.edgeEdges
+          .filter((edge) => edge.source === node)
+          .map((edge) => ({
+            label: edge.label as EdgeDirection,
+            pId: this.pIds.old_pid.get(edge.target.id),
+          }));
+        const pId = this.getPId(
+          this.graph.labelEdges.filter((edge) => edge.source === node),
+          this.graph.propertyEdges.filter((edge) => edge.source === node),
+          new Set(edges)
+        );
+        return [node.id, pId];
+      })
+    );
   }
 
   private graphFromPIds(): SimpleGraph {
@@ -163,58 +161,87 @@ export class Simulation extends Equivalence {
     const schemaGraph = new SimpleGraph();
     schemaGraph.emptyGraph();
 
-    const schemaNodesMap = new Map(
-      this.nodes.map((node) => {
-        const simpleId = toSimpleId(
-          node.type,
-          this.pIds.new_pid.get(node.id).toString()
-        );
-        return [
-          this.pIds.new_pid.get(node.id),
-          {
-            id: simpleId,
-            label: node.label,
-            type: node.type,
-            x: node.x,
-            y: node.y,
-          },
-        ];
+    schemaGraph.labelNodes = new Map(this.graph.labelNodes);
+    schemaGraph.propertyNodes = new Map(this.graph.propertyNodes);
+
+    const edgeTIds = this.getEdgeTIds();
+
+    schemaGraph.edgeNodes = new Map(
+      [...edgeTIds.values()].map((node) => {
+        const simpleId = toSimpleId(NodeType.edge, node.toString());
+        return [simpleId, SimpleGraphNode.edgeNode(simpleId)];
       })
     );
 
-    const edges = this.uniqEdges(
-      this.edges.map((edge) => {
-        const source = schemaNodesMap.get(
-          this.pIds.new_pid.get(edge.source.id)
-        );
-        const target = schemaNodesMap.get(
-          this.pIds.new_pid.get(edge.target.id)
-        );
-        return {
-          source: source,
-          label: edge.label,
-          target: target,
-          type: edge.type,
-        };
+    schemaGraph.nodeNodes = new Map(
+      [...this.pIds.new_pid.values()].map((node) => {
+        const simpleId = toSimpleId(NodeType.node, node.toString());
+        return [simpleId, SimpleGraphNode.nodeNode(simpleId)];
       })
     );
 
-    console.time("splitEdges");
-    const splitEdges = this.groupBy(edges, "type");
-    console.timeEnd("splitEdges");
-    console.time("splitNodes");
-    const splitNodes = this.groupBy([...schemaNodesMap.values()], "type");
-    console.timeEnd("splitNodes");
-
-    schemaGraph.nodeNodes = splitNodes[NodeType.node] ?? [];
-    schemaGraph.edgeNodes = splitNodes[NodeType.edge] ?? [];
-    schemaGraph.labelNodes = splitNodes[NodeType.label] ?? [];
-    schemaGraph.propertyNodes = splitNodes[NodeType.propertyType] ?? [];
-
-    schemaGraph.edgeEdges = splitEdges[EdgeType.edge] ?? [];
-    schemaGraph.labelEdges = splitEdges[EdgeType.label] ?? [];
-    schemaGraph.propertyEdges = splitEdges[EdgeType.property] ?? [];
+    schemaGraph.labelEdges = this.uniqEdges(
+      this.graph.labelEdges.map((edge) => {
+        const source =
+          edge.source.type === NodeType.node
+            ? schemaGraph.nodeNodes.get(
+                toSimpleId(
+                  NodeType.node,
+                  this.pIds.new_pid.get(edge.source.id).toString()
+                )
+              )
+            : schemaGraph.edgeNodes.get(
+                toSimpleId(
+                  NodeType.edge,
+                  edgeTIds.get(edge.source.id).toString()
+                )
+              );
+        return SimpleGraphEdge.labelEdge(source, edge.target);
+      })
+    );
+    schemaGraph.propertyEdges = this.uniqEdges(
+      this.graph.propertyEdges.map((edge) => {
+        const source =
+          edge.source.type === NodeType.node
+            ? schemaGraph.nodeNodes.get(
+                toSimpleId(
+                  NodeType.node,
+                  this.pIds.new_pid.get(edge.source.id).toString()
+                )
+              )
+            : schemaGraph.edgeNodes.get(
+                toSimpleId(
+                  NodeType.edge,
+                  edgeTIds.get(edge.source.id).toString()
+                )
+              );
+        return SimpleGraphEdge.propertyEdge(source, edge.target, edge.label);
+      })
+    );
+    schemaGraph.edgeEdges = this.uniqEdges(
+      this.graph.edgeEdges.map((edge) => {
+        const source = schemaGraph.edgeNodes.get(
+          toSimpleId(
+            NodeType.edge,
+            edgeTIds.get(edge.source.id).toString()
+          )
+        );
+        const target = schemaGraph.nodeNodes.get(
+          toSimpleId(
+            NodeType.node,
+            this.pIds.new_pid.get(edge.target.id).toString()
+          )
+        );
+        return SimpleGraphEdge.edgeEdge(
+          source,
+          target,
+          edge.label as EdgeDirection
+        );
+      })
+    );
     console.timeEnd("graphFromPIds");
+
+    console.log(schemaGraph);
 
     return schemaGraph;
   }
