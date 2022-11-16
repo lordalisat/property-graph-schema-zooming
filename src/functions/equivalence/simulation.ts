@@ -36,11 +36,11 @@ export class Simulation extends Equivalence {
     edges: Set<{ label: EdgeDirection; pId: PId }>
   ): PId {
     const pID = [...this.storage.entries()].find(
-      (val) =>
+      (val) => 
         JSON.stringify(val[0].labels) === JSON.stringify(labels) &&
         JSON.stringify(Object.fromEntries(val[0].properties)) ===
-          JSON.stringify(Object.fromEntries(properties)) &&
-        JSON.stringify(edges) === JSON.stringify(val[0].edges)
+        JSON.stringify(Object.fromEntries(properties)) &&
+        JSON.stringify(Array.from(edges)) === JSON.stringify(Array.from(val[0].edges))
     );
     if (pID) {
       return pID[1];
@@ -144,7 +144,7 @@ export class Simulation extends Equivalence {
           .filter((edge) => edge.source === node)
           .map((edge) => ({
             label: edge.label as EdgeDirection,
-            pId: this.pIds.old_pid.get(edge.target.id),
+            pId: this.pIds.new_pid.get(edge.target.id),
           }));
         const pId = this.getPId(
           this.graph.labelEdges.filter((edge) => edge.source === node),
@@ -165,6 +165,7 @@ export class Simulation extends Equivalence {
     schemaGraph.propertyNodes = new Map(this.graph.propertyNodes);
 
     const edgeTIds = this.getEdgeTIds();
+    console.log(edgeTIds);
 
     schemaGraph.edgeNodes = new Map(
       [...edgeTIds.values()].map((node) => {
