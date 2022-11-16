@@ -64,8 +64,8 @@
     });
   });
 
-  // $: console.log(nodes);
-  // $: console.log(edges);
+  console.log(nodes);
+  console.log(edges);
 
   onMount(() => {
     select(svg)
