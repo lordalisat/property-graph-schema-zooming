@@ -91,19 +91,19 @@ export class Simulation extends Equivalence {
   }
 
   private build_bsim(k: number): void {
-    this.pIds[`j_pid_${k}`] = new Map();
     if (k === 0) {
       console.time("build_bsim_nodes_k_0");
       this.storage = new Map();
-      this.graph.nodeNodes.forEach((node) => {
-        const pId = this.getPId(
-          this.graph.labelEdges.filter((edge) => edge.source === node),
-          this.graph.propertyEdges.filter((edge) => edge.source === node),
-          new Set()
-        );
-        this.pIds.j_pid_0.set(node.id, pId);
-        this.pIds.new_pid.set(node.id, pId);
-      });
+      this.pIds.new_pid = new Map(
+        [...this.graph.nodeNodes.values()].map((node) => {
+          const pId = this.getPId(
+            this.graph.labelEdges.filter((edge) => edge.source === node),
+            this.graph.propertyEdges.filter((edge) => edge.source === node),
+            new Set()
+          );
+          return [node.id, pId];
+        })
+      );
       console.timeEnd("build_bsim_nodes_k_0");
       return;
     }
@@ -119,21 +119,22 @@ export class Simulation extends Equivalence {
     console.timeEnd(`build_bsim_${k - 1}_get_node_signatures`);
     this.storage = new Map();
 
-    this.graph.nodeNodes.forEach((node) => {
+    this.pIds.new_pid = new Map(
+    [...this.graph.nodeNodes.values()].map((node) => {
       const edges = this.graph.edgeEdges
         .filter((edge) => edge.target === node)
         .map((edge) => ({
           label: edge.label as EdgeDirection,
           pId: edgeTIds.get(edge.source.id),
         }));
-      const pId = this.getPId(
-        this.graph.labelEdges.filter((edge) => edge.source === node),
-        this.graph.propertyEdges.filter((edge) => edge.source === node),
-        new Set(edges)
-      );
-      this.pIds[`j_pid_${k}`].set(node.id, pId);
-      this.pIds.new_pid.set(node.id, pId);
-    });
+        const pId = this.getPId(
+          this.graph.labelEdges.filter((edge) => edge.source === node),
+          this.graph.propertyEdges.filter((edge) => edge.source === node),
+          new Set(edges)
+        );
+        return [node.id, pId];
+      })
+    );
     console.time(`build_bsim_${k - 1}_get_node_signatures`);
   }
 
