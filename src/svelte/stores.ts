@@ -109,10 +109,7 @@ export const propSchema = derived([simpleSchema, propSchemaFull], ([simpleSchema
   graph.nodes.forEach((value, key) => {
     if (value.labels.length > 0 || value.properties.size > 0) {
       const node = [...propSchemaFull.nodes.values()].find((node) => (
-        nodeEquals(value, node) &&
-        [...graph.edges.values()].filter((edge) => edge.sourceNode === value.id || edge.targetNode === value.id).forEach((edge) => {
-          [...propSchemaFull.edges.values()].some((compEdge) => nodeEquals(edge, compEdge))
-        })
+        nodeEquals(value, node)
       ));
       if (node) {
         graph.nodes.set(key, node);
